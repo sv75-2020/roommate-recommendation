@@ -1,0 +1,32 @@
+package backward;
+
+import com.ftn.sbnz.model.models.Phone;
+
+query isContainedIn( String x, String y )
+    Phone( x, y; )
+    or
+    ( Phone( z, y; ) and isContainedIn( x, z; ) )
+end
+
+// rule "Find all"
+//     when
+//         isContainedIn(item, "S Serija";)
+//     then
+//         System.out.println(item + " is in S Serija");
+// end
+
+rule "Find a 20 in series"
+    when
+        isContainedIn("A20", "A Serija";)
+    then
+        System.out.println("A20 is in S Serija");
+end
+// a 20 u a seriji?
+// sve kombinacije moguce
+
+// rule "Find all combos"
+//     when
+//         isContainedIn($item, $value;)
+//     then
+//         System.out.println($item + "is in " + $value);
+// end
