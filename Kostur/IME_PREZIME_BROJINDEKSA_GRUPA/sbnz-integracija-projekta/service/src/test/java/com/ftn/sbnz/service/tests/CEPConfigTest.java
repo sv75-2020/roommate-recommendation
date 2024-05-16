@@ -2,9 +2,7 @@ package com.ftn.sbnz.service.tests;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import org.drools.core.time.SessionPseudoClock;
 import org.junit.Test;
@@ -12,7 +10,6 @@ import org.kie.api.KieServices;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 
-import com.ftn.sbnz.model.events.TransactionEvent;
 import com.ftn.sbnz.model.models.Location;
 import com.ftn.sbnz.model.models.User;
 
@@ -42,7 +39,7 @@ public class CEPConfigTest {
           "John Doe",
           "password123",
           Gender.MALE,
-          new Date(), // Note: Date constructor is deprecated, consider using java.time.LocalDate
+          LocalDate.of(2001, 10, 10), // Note: Date constructor is deprecated, consider using java.time.LocalDate
           true,
           false,
           PersonalityType.EXTROVERT,
@@ -65,7 +62,7 @@ User user2 = new User(
           "Jane Smith",
           "password456",
           Gender.FEMALE,
-          new Date(), // Note: Date constructor is deprecated, consider using java.time.LocalDate
+          LocalDate.of(2002, 10, 10), // Note: Date constructor is deprecated, consider using java.time.LocalDate
           true,
           false,
           PersonalityType.INTROVERT,
@@ -89,7 +86,7 @@ User user2 = new User(
         "John Does",
         "password123",
         Gender.MALE,
-        new Date(), // Note: Date constructor is deprecated, consider using java.time.LocalDate
+        LocalDate.of(2002, 10, 10), // Note: Date constructor is deprecated, consider using java.time.LocalDate
         true,
         false,
         PersonalityType.INTROVERT,
@@ -112,7 +109,7 @@ User user2 = new User(
       "John Doess",
       "password123",
       Gender.MALE,
-      new Date(), // Note: Date constructor is deprecated, consider using java.time.LocalDate
+      LocalDate.of(2010, 10, 10), // Note: Date constructor is deprecated, consider using java.time.LocalDate
       false,
       false,
       PersonalityType.INTROVERT,
@@ -130,6 +127,7 @@ User user2 = new User(
       false
   );
       ksession.setGlobal("loggedInId", user1.getId());
+      ksession.setGlobal("compatibilityLevel", 0);
       ksession.setGlobal("recommendedRoommates", new ArrayList<User>());
    
         ksession.insert(user1);

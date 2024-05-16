@@ -33,10 +33,10 @@ public class User {
     private String fullName;
     private String password;
     private Gender gender;
-    private Date dateOfBirth;
+    private LocalDate dateOfBirth;
     private boolean smoker;
     private boolean hasPets;
-    private PersonalityType personality;
+    private PersonalityType personalityType;
     private JobStatus jobStatus;
     private List<String> interests;
     private CleaningHabit cleaningHabit;
@@ -57,6 +57,7 @@ public class User {
         }
     return addresses;
     }
+
 
     @Override
     public String toString() {

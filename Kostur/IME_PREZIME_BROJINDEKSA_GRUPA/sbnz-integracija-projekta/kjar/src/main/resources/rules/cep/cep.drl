@@ -2,11 +2,15 @@ package cep;
 
 
 import java.util.HashMap;
+import java.util.List;
 import com.ftn.sbnz.model.models.User
+import com.ftn.sbnz.model.models.Location
 
 // Definisanje globalne promenljive za listu preporučenih cimera
-global HashMap<com.ftn.sbnz.model.models.User> recommendedRoommates;
+global List<com.ftn.sbnz.model.models.User> recommendedRoommates;
 global java.lang.Long loggedInId;
+global java.lang.Integer compatibilityLevel;
+
 
 rule "Gender Matching"
 when
@@ -18,31 +22,41 @@ end
 
 rule "Budget and Location Matching"
 when
-    $loggedInUser: User(loggedInId == id, $budget: budget, $locations: locations)
-    $otherUser: User(this != $loggedInUser, $otherBudget: budget, 
-                     $otherLocations: locations)
-    eval(Math.abs($otherBudget - $budget) <= 50 && $locations.containsAll($otherLocations))
+    $loggedInUser: User(loggedInId == id, $budget1: budget, $locations1: locations)
+    $otherUser: User($budget2 : budget, $locations2: locations, this != $loggedInUser)
+    $count: Number(intValue >= 0) from accumulate(
+        Location($locationName: address) from $locations1 and
+        Location(address == $locationName) from $locations2,
+        count($locationName))
+    eval(Math.abs($budget1 - $budget2) < 50 && $count.intValue() == $locations1.size())
 then
     compatibilityLevel += 50; 
 end
 
 rule "Budget and Location Matching with Small Difference"
 when
-    $loggedInUser: User(loggedInId == id, $budget: budget, $locations: locations)
-    $otherUser: User(this != $loggedInUser, $otherBudget: budget, 
-                     $otherLocations: locations)
-    eval(Math.abs($budget - $otherBudget) <= 50 && $locations.containsAny($otherLocations))
+    $loggedInUser: User(loggedInId == id, $budget1: budget, $locations1: locations)
+    $otherUser: User($budget2 : budget, $locations2: locations, this != $loggedInUser)
+    $count: Number(intValue >= 0) from accumulate(
+        Location($locationName: address) from $locations1 and
+        Location(address == $locationName) from $locations2,
+        count($locationName))
+    eval(Math.abs($budget1 - $budget2) < 50 && $count.intValue() > 0)
 then
     compatibilityLevel += 30; 
 end
 
 rule "Remove Users with Large Budget Difference or No Common Locations"
 when
-    $loggedInUser: User(loggedInId == id, $budget: budget, $locations: locations)
-    $otherUser: User($budgetDifference : Math.abs(budget - $budget), this != $loggedInUser,
-                     $otherLocations: locations,
-                     $budgetDifference > 100 || not(eval($locations.containsAny($otherLocations))))
+    $loggedInUser: User(loggedInId == id, $budget1: budget, $locations1: locations)
+    $otherUser: User($budget2 : budget, $locations2: locations, this != $loggedInUser)
+    $count: Number(intValue >= 0) from accumulate(
+        Location($locationName: address) from $locations1 and
+        Location(address == $locationName) from $locations2,
+        count($locationName))
+    eval(Math.abs($budget1 - $budget2) > 100 || $count.intValue() == 0)
 then
+    recommendedRoommates.remove($otherUser);
     retract($otherUser); 
 end
 
@@ -92,6 +106,113 @@ then
     retract($user2); 
 end
 
+rule "Similar Hobbies and Interests"
+when
+    $user1: User($interests1: interests)
+    $user2: User($interests2: interests, this != $user1)
+    $count: Number(intValue >= 0) from accumulate(
+			String($i1: this) from $interests1 and
+			String(this == $i1) from $interests2,
+			count($i1))
+then
+    compatibilityLevel += $count.intValue();
+end
+
+rule "Small age difference"
+when
+    $loggedInUser: User(loggedInId == id, $dateOfBirth1: dateOfBirth.getYear())
+    $otherUser: User($dateOfBirth2: dateOfBirth.getYear(), this != $loggedInUser)
+    eval(Math.abs($dateOfBirth1 - $dateOfBirth2) <= 2)
+then
+    compatibilityLevel += 10;
+end
+
+rule "Medium age difference"
+when
+    $loggedInUser: User(loggedInId == id, $dateOfBirth1: dateOfBirth.getYear())
+    $otherUser: User($dateOfBirth2: dateOfBirth.getYear(), this != $loggedInUser)
+    eval(Math.abs($dateOfBirth1 - $dateOfBirth2) > 2 && Math.abs($dateOfBirth1 - $dateOfBirth2) <= 5)
+then
+    compatibilityLevel += 10;
+end
+
+rule "Big age difference"
+when
+    $loggedInUser: User(loggedInId == id, $dateOfBirth1: dateOfBirth.getYear())
+    $otherUser: User($dateOfBirth2: dateOfBirth.getYear(), this != $loggedInUser)
+    eval(5 < Math.abs($dateOfBirth1 - $dateOfBirth2))
+then
+    compatibilityLevel -= 50;
+end
+
+rule "Same Cleaning habits"
+when
+    $loggedInUser: User(loggedInId == id, $cleaningHabit1: cleaningHabit)
+    $otherUser: User($cleaningHabit2: cleaningHabit, this != $loggedInUser)
+    eval(Math.abs($cleaningHabit1.getValue() - $cleaningHabit2.getValue()) == 0)
+then
+    compatibilityLevel += 10;
+end
+
+rule "Similar Cleaning habits"
+when
+    $loggedInUser: User(loggedInId == id, $cleaningHabit1: cleaningHabit)
+    $otherUser: User($cleaningHabit2: cleaningHabit, this != $loggedInUser)
+    eval(Math.abs($cleaningHabit1.getValue() - $cleaningHabit2.getValue()) == 1)
+then
+    compatibilityLevel += 5;
+end
+
+rule "Different Cleaning habits"
+when
+    $loggedInUser: User(loggedInId == id, $cleaningHabit1: cleaningHabit)
+    $otherUser: User($cleaningHabit2: cleaningHabit, this != $loggedInUser)
+    eval(Math.abs($cleaningHabit1.getValue() - $cleaningHabit2.getValue()) == 2)
+then
+    compatibilityLevel -= 10;
+end
+
+rule "Same preference for peace and quiet"
+when
+    $user1: User(loggedInId == id, $likesQuiet: likesQuiet == true)
+    $user2: User(this != $user1, likesQuiet == $likesQuiet)
+then
+    compatibilityLevel += 10;
+end
+
+rule "Users with a pet and animal lovers"
+when
+    $loggedUser: User(loggedInId == id, $interests: interests)
+    exists(String(this == "AnimalLover") from $interests)
+    $user1: User(this != $loggedUser, hasPets == true)
+then
+    compatibilityLevel += 10;
+end
+
+rule "Animal lovers and users with a pet"
+when
+    $loggedUser: User(loggedInId == id, hasPets == true)
+    $user1: User(this != $loggedUser, $interests: interests)
+    exists(String(this == "AnimalLover") from $interests)
+then
+    compatibilityLevel += 10;
+end
+
+rule "Users with the same personality type"
+when
+    $user1: User(loggedInId == id, $personalityType: personalityType)
+    $user2: User(this != $user1, personalityType == $personalityType)
+then
+    compatibilityLevel += 10;
+end
+
+rule "Users with the same job status"
+when
+    $user1: User(loggedInId == id, $jobStatus: jobStatus)
+    $user2: User(this != $user1, jobStatus == $jobStatus)
+then
+    compatibilityLevel += 10;
+end
 
 rule "Final Compatibility Level"
 salience -1
