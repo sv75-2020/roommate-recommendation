@@ -1,5 +1,6 @@
 package com.ftn.sbnz.model.models;
 
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,6 +16,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@DiscriminatorValue("admin")
 public class Admin {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id

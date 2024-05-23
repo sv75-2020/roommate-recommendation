@@ -5,10 +5,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 
 import enums.CleaningHabit;
 import enums.Gender;
@@ -25,6 +29,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@DiscriminatorValue("user")
 public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -66,6 +71,16 @@ public class User {
                 "id=" + id +
                 ", email='" + email + '\'' +
                 ", fullName='" + fullName;
+    }
+
+    private List<Role> roles;
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
     }
 
 }
