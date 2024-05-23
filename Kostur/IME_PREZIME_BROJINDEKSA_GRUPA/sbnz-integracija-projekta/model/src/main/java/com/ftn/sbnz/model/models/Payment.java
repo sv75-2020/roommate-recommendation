@@ -1,11 +1,14 @@
 package com.ftn.sbnz.model.models;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+
+import org.apache.tools.ant.taskdefs.Local;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,7 +24,7 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
-    private Date paymentDue;
+    private LocalDate paymentDue;
     private boolean paidRoommate1;
     private boolean paidRoommate2;
     private Reservation reservation;

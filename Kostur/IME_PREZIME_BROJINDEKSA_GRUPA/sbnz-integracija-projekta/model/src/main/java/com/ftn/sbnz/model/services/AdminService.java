@@ -1,6 +1,9 @@
+package com.ftn.sbnz.model.services;
+
 import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.ftn.sbnz.model.events.NotifyAdminForBill;
 import com.ftn.sbnz.model.models.UserWarning;

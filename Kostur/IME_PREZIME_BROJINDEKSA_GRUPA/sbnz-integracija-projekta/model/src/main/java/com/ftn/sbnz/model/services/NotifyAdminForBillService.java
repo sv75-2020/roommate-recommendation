@@ -1,5 +1,10 @@
-import org.springframework.beans.factory.annotation.Autowired;
+package com.ftn.sbnz.model.services;
+import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.ftn.sbnz.model.events.NotifyAdminForBill;
 import com.ftn.sbnz.model.repository.NotifyAdminForBillRepository;
 
 @Service

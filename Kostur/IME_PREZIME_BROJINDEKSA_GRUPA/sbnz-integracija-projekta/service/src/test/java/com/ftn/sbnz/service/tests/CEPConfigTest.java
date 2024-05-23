@@ -3,22 +3,32 @@ package com.ftn.sbnz.service.tests;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import org.codehaus.plexus.component.annotations.Component;
 import org.drools.core.time.SessionPseudoClock;
 import org.junit.Test;
 import org.kie.api.KieServices;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestComponent;
+import org.springframework.stereotype.Service;
 
+import com.ftn.sbnz.model.events.MonthlyPaymentEvent;
+import com.ftn.sbnz.model.events.NotifyAdminForBill;
 import com.ftn.sbnz.model.models.Accommodation;
 import com.ftn.sbnz.model.models.Location;
+import com.ftn.sbnz.model.models.Payment;
 import com.ftn.sbnz.model.models.Reservation;
 import com.ftn.sbnz.model.models.Roommates;
 import com.ftn.sbnz.model.models.User;
 import com.ftn.sbnz.model.repository.NotifyAdminEvictionRepository;
 import com.ftn.sbnz.model.repository.NotifyAdminForBillRepository;
 import com.ftn.sbnz.model.repository.UserWarningRepository;
+import com.ftn.sbnz.model.services.BillingService;
+import com.ftn.sbnz.model.services.UserService;
 
 import enums.CleaningHabit;
 import enums.Gender;
@@ -26,8 +36,7 @@ import enums.JobStatus;
 import enums.Month;
 import enums.PersonalityType;
 
-
-
+@SpringBootTest
 public class CEPConfigTest {
 
   @Autowired
@@ -39,17 +48,17 @@ public class CEPConfigTest {
   @Autowired
   public UserWarningRepository userWarningRepository;
 
-    @Test
-    public void test() {
-        KieServices ks = KieServices.Factory.get();
-        KieContainer kContainer = ks.getKieClasspathContainer(); 
-        KieSession ksession = kContainer.newKieSession("cepKsession");
-        SessionPseudoClock clock = ksession.getSessionClock();
-        Location l1=new Location(1L,"Grbavica");
-        Location l2=new Location(2L,"Liman");
-        Location l3=new Location(3L,"Banatic");
-        Location l4=new Location(4L,"Telep");
-        User user1 = new User(
+  @Autowired 
+  public BillingService billingService;
+
+  @Autowired 
+  public UserService userService;
+
+  Location l1=new Location(1L,"Grbavica");
+  Location l2=new Location(2L,"Liman");
+  Location l3=new Location(3L,"Banatic");
+  Location l4=new Location(4L,"Telep");
+  User user1 = new User(
           1L,
           "user1@example.com",
           "John Doe",
@@ -146,6 +155,13 @@ User user2 = new User(
   Roommates rm1=new Roommates(1L,user1,user2,true);
   Accommodation a1=new Accommodation(1L,"address1",2,200,true,true,true,true,l1);
   Reservation r1=new Reservation(1L,true,a1,rm1,new ArrayList<>());
+
+    @Test
+    public void test() {
+      KieServices ks = KieServices.Factory.get();
+      KieContainer kContainer = ks.getKieClasspathContainer(); 
+      KieSession ksession = kContainer.newKieSession("cepKsession");
+      SessionPseudoClock clock = ksession.getSessionClock();
       ksession.setGlobal("loggedInId", user1.getId());
       ksession.setGlobal("compatibilityLevel", 0);
       ksession.setGlobal("recommendedRoommates", new ArrayList<User>());
@@ -162,49 +178,51 @@ User user2 = new User(
         ksession.insert(r1);
 
         ksession.fireAllRules();
-
-       
-        //clock.advanceTime(2, TimeUnit.HOURS);
-      /**
-       * Ukoliko je isti kupac kupio bar 3 
-       * nova Samsung telefona u posljednjih 5 
-       * minuta čija je cena veća od 800e, 
-       * kreiraj kupon za 10% popusta
-       * na sledeću kupovinu tableta. Ukoliko kupi tablet, na cenu
-            se primenjuje kupon.
-       */
     }
-    /*@Test
+
+    @Test
     public void test2() {
         KieServices ks = KieServices.Factory.get();
         KieContainer kContainer = ks.getKieClasspathContainer(); 
         KieSession ksession = kContainer.newKieSession("cepKsession");
         SessionPseudoClock clock = ksession.getSessionClock();
-        TransactionEvent t1 = new TransactionEvent(1L, 850.00, "Samsung");
-        TransactionEvent t2 = new TransactionEvent(1L, 880.00, "Samsung");
-        TransactionEvent t3 = new TransactionEvent(1L, 890.00, "Samsung");
-        TransactionEvent t4 = new TransactionEvent(1L, 890.00, "Samsung");
-        t1.setExecutionTime(new Date(clock.getCurrentTime()));
-        t2.setExecutionTime(new Date(clock.getCurrentTime()));
-        t3.setExecutionTime(new Date(clock.getCurrentTime()));
-        ksession.insert(t1);
-        ksession.insert(t2);
-        ksession.insert(t3);
+        System.out.println(billingService);
+        List<MonthlyPaymentEvent> payments=billingService.addBills();
+        
+        ksession.setGlobal("loggedInId", user1.getId());
+        ksession.setGlobal("compatibilityLevel", 0);
+        ksession.setGlobal("recommendedRoommates", new ArrayList<User>());
+        ksession.setGlobal("notifyAdminForBillRepository", notifyAdminForBillRepository);
+        ksession.setGlobal("userWarningRepository", userWarningRepository);
+        ksession.setGlobal("notifyAdminEvictionRepository", notifyAdminEvictionRepository);
+
+         
+        ksession.insert(user1);
+        ksession.insert(user2);
+        ksession.insert(user3);
+        ksession.insert(user4);
+        ksession.insert(payments.get(0));
+        ksession.insert(payments.get(1));
+        ksession.insert(payments.get(2));
+        ksession.insert(rm1);
+        ksession.insert(a1);
+        ksession.insert(r1);
         ksession.fireAllRules();
 
-        clock.advanceTime(10, TimeUnit.MINUTES);
-        t4.setExecutionTime(new Date(clock.getCurrentTime()));
-        t4.setPhone("asdas");
-        ksession.insert(t4);
-        ksession.fireAllRules();
-        //clock.advanceTime(2, TimeUnit.HOURS);
-      *
-       * Ukoliko je isti kupac kupio bar 3 
-       * nova Samsung telefona u posljednjih 5 
-       * minuta čija je cena veća od 800e, 
-       * kreiraj kupon za 10% popusta
-       * na sledeću kupovinu tableta. Ukoliko kupi tablet, na cenu
-            se primenjuje kupon.
+        userService.payBill(0L, user1);
+
+        clock.advanceTime(10, TimeUnit.DAYS);
        
-    }*/
+        ksession.fireAllRules();
+        
+        for(Payment p : billingService.paymentRepository.findAll()){
+          System.out.println("roommate1 "+p.isPaidRoommate1());
+          System.out.println("roommate2 "+p.isPaidRoommate2());
+        }
+        for(NotifyAdminForBill n: notifyAdminForBillRepository.findAll()){
+          System.out.println(n.getUser());
+        }
+     
+    }
 }
+
