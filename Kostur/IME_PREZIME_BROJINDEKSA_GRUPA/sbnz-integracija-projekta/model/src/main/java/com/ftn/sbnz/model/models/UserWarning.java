@@ -1,28 +1,33 @@
 package com.ftn.sbnz.model.models;
 
-import java.util.Date;
+
+import java.time.LocalDate;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import enums.CleaningHabit;
+import enums.Gender;
+import enums.JobStatus;
+import enums.Month;
+import enums.PersonalityType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
 @Setter
-@AllArgsConstructor
+@Getter
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
-public class Payment {
+public class UserWarning {
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
-    private Date paymentDue;
-    private boolean paidRoommate1;
-    private boolean paidRoommate2;
-    private Reservation reservation;
+    private User user;
+    private LocalDate date;
 }

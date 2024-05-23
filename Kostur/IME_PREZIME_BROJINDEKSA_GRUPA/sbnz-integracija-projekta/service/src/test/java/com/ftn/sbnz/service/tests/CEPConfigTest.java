@@ -9,9 +9,16 @@ import org.junit.Test;
 import org.kie.api.KieServices;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import com.ftn.sbnz.model.models.Accommodation;
 import com.ftn.sbnz.model.models.Location;
+import com.ftn.sbnz.model.models.Reservation;
+import com.ftn.sbnz.model.models.Roommates;
 import com.ftn.sbnz.model.models.User;
+import com.ftn.sbnz.model.repository.NotifyAdminEvictionRepository;
+import com.ftn.sbnz.model.repository.NotifyAdminForBillRepository;
+import com.ftn.sbnz.model.repository.UserWarningRepository;
 
 import enums.CleaningHabit;
 import enums.Gender;
@@ -22,6 +29,15 @@ import enums.PersonalityType;
 
 
 public class CEPConfigTest {
+
+  @Autowired
+  public NotifyAdminEvictionRepository notifyAdminEvictionRepository;
+
+  @Autowired
+  public NotifyAdminForBillRepository notifyAdminForBillRepository;
+
+  @Autowired
+  public UserWarningRepository userWarningRepository;
 
     @Test
     public void test() {
@@ -126,14 +142,24 @@ User user2 = new User(
       false,
       false
   );
+
+  Roommates rm1=new Roommates(1L,user1,user2,true);
+  Accommodation a1=new Accommodation(1L,"address1",2,200,true,true,true,true,l1);
+  Reservation r1=new Reservation(1L,true,a1,rm1,new ArrayList<>());
       ksession.setGlobal("loggedInId", user1.getId());
       ksession.setGlobal("compatibilityLevel", 0);
       ksession.setGlobal("recommendedRoommates", new ArrayList<User>());
+      ksession.setGlobal("notifyAdminForBillRepository", notifyAdminForBillRepository);
+      ksession.setGlobal("userWarningRepository", userWarningRepository);
+      ksession.setGlobal("notifyAdminEvictionRepository", notifyAdminEvictionRepository);
    
         ksession.insert(user1);
         ksession.insert(user2);
         ksession.insert(user3);
         ksession.insert(user4);
+        ksession.insert(rm1);
+        ksession.insert(a1);
+        ksession.insert(r1);
 
         ksession.fireAllRules();
 
