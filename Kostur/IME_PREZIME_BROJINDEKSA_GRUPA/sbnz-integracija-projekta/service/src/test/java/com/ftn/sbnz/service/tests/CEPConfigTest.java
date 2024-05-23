@@ -24,10 +24,13 @@ import com.ftn.sbnz.model.models.Payment;
 import com.ftn.sbnz.model.models.Reservation;
 import com.ftn.sbnz.model.models.Roommates;
 import com.ftn.sbnz.model.models.User;
+import com.ftn.sbnz.model.repository.DepositRepository;
 import com.ftn.sbnz.model.repository.NotifyAdminEvictionRepository;
 import com.ftn.sbnz.model.repository.NotifyAdminForBillRepository;
+import com.ftn.sbnz.model.repository.ReservationRepository;
 import com.ftn.sbnz.model.repository.UserWarningRepository;
 import com.ftn.sbnz.model.services.BillingService;
+import com.ftn.sbnz.model.services.ReservationService;
 import com.ftn.sbnz.model.services.UserService;
 
 import enums.CleaningHabit;
@@ -50,6 +53,9 @@ public class CEPConfigTest {
 
   @Autowired 
   public BillingService billingService;
+
+  @Autowired 
+  public ReservationService reservationService;
 
   @Autowired 
   public UserService userService;
@@ -79,6 +85,7 @@ public class CEPConfigTest {
           List.of(l1, l2),
           false,
           false,
+          false,
           false
       );
 User user2 = new User(
@@ -101,6 +108,7 @@ User user2 = new User(
           1500,
           List.of(l1, l3),
           true,
+          false,
           false,
           false
       );        
@@ -126,6 +134,7 @@ User user2 = new User(
         List.of(l1, l4),
         false,
         false,
+        false,
         false
     );
     User user4 = new User(
@@ -149,15 +158,15 @@ User user2 = new User(
       List.of(l1, l4),
       false,
       false,
+      false,
       false
   );
 
   Roommates rm1=new Roommates(1L,user1,user2,true);
   Accommodation a1=new Accommodation(1L,"address1",2,200,true,true,true,true,l1);
-  Reservation r1=new Reservation(1L,true,a1,rm1,new ArrayList<>());
-
     @Test
     public void test() {
+      Reservation r1 = reservationService.newReservation(rm1, a1);
       KieServices ks = KieServices.Factory.get();
       KieContainer kContainer = ks.getKieClasspathContainer(); 
       KieSession ksession = kContainer.newKieSession("cepKsession");
@@ -182,6 +191,7 @@ User user2 = new User(
 
     @Test
     public void test2() {
+      Reservation r1 = reservationService.newReservation(rm1, a1);
         KieServices ks = KieServices.Factory.get();
         KieContainer kContainer = ks.getKieClasspathContainer(); 
         KieSession ksession = kContainer.newKieSession("cepKsession");
@@ -223,6 +233,33 @@ User user2 = new User(
           System.out.println(n.getUser());
         }
      
+    }
+    @Test
+    public void test_deposit_cep() {
+      
+      reservationService = new ReservationService();
+      reservationService.depositRepository = new DepositRepository();
+      reservationService.reservationRepository = new ReservationRepository();
+      Reservation r1 = reservationService.newReservation(rm1, a1);  
+      KieServices ks = KieServices.Factory.get();
+        KieContainer kContainer = ks.getKieClasspathContainer(); 
+        KieSession ksession = kContainer.newKieSession("cepKsession");
+        SessionPseudoClock clock = ksession.getSessionClock();
+        ksession.setGlobal("loggedInId", user1.getId());
+        ksession.setGlobal("compatibilityLevel", 0);
+        ksession.setGlobal("recommendedRoommates", new ArrayList<User>());
+        ksession.setGlobal("notifyAdminForBillRepository", notifyAdminForBillRepository);
+        ksession.setGlobal("userWarningRepository", userWarningRepository);
+        ksession.setGlobal("notifyAdminEvictionRepository", notifyAdminEvictionRepository);
+        ksession.insert(user1);
+        ksession.insert(user2);
+        ksession.insert(user3);
+        ksession.insert(user4);
+        ksession.insert(rm1);
+        ksession.insert(a1);
+        ksession.insert(r1);
+        ksession.fireAllRules();
+
     }
 }
 

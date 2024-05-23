@@ -49,6 +49,7 @@ public class User {
     private boolean doesntWantPets;
     private boolean dislikesSmokingIndoors;
     private boolean hasRoommate;
+    private boolean blocked;
 
     public List<String> getLocationsAddress(){
         List<String> addresses=new ArrayList<>();
