@@ -20,11 +20,16 @@ import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import static javax.persistence.DiscriminatorType.STRING;
+
+@Entity
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
+@Table(name = "users")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "user_type", discriminatorType=STRING)
 @DiscriminatorValue("user")
 public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
