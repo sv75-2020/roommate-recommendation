@@ -87,11 +87,10 @@ public class WebSecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer() {
         // Autentifikacija će biti ignorisana ispod navedenih putanja (kako bismo ubrzali pristup resursima)
         // Zahtevi koji se mečuju za web.ignoring().antMatchers() nemaju pristup SecurityContext-u
-        // Dozvoljena POST metoda na ruti /api/user/login, za svaki drugi tip HTTP metode greska je 401 Unauthorized
+        // Dozvoljena POST metoda na ruti /api/login, za svaki drugi tip HTTP metode greska je 401 Unauthorized
         return (web) -> web.ignoring()
-                .antMatchers(HttpMethod.GET, "/api/login")
+                .antMatchers(HttpMethod.POST, "/api/login")
                 .antMatchers(HttpMethod.POST, "/api/user/register")
-                .antMatchers(HttpMethod.POST, "/api/ingredient")
 
                 // Ovim smo dozvolili pristup statickim resursima aplikacije
                 .antMatchers(HttpMethod.GET, "/", "/webjars/**", "/*.html", "/favicon.ico",

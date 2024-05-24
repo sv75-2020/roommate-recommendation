@@ -1,10 +1,13 @@
 package com.ftn.sbnz.service.services;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.EntityNotFoundException;
 
+import com.ftn.sbnz.model.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.ftn.sbnz.model.events.BillPaidEvent;
@@ -50,5 +53,10 @@ public class UserService {
             throw new EntityNotFoundException("User not found with ID 1");
         }
         
+    }
+
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
+        List<UserDTO> userDTOs = userRepository.findAllUserDTOs();
+        return ResponseEntity.ok(userDTOs);
     }
 }

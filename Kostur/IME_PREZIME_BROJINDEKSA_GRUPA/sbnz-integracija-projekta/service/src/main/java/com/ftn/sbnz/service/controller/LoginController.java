@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class LoginController {
 
-
     @Autowired
     private AuthenticationManager authenticationManager;
 
