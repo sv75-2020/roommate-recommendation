@@ -1,4 +1,4 @@
-package com.ftn.sbnz.model.services;
+package com.ftn.sbnz.service.services;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -37,8 +37,5 @@ public class ReservationService {
       depositRepository.save(depositPayment2);
       reservationRepository.save(reservation);
       return reservation;
-  }
-  public ReservationService() {
-    System.out.println("AA");
   }
 }

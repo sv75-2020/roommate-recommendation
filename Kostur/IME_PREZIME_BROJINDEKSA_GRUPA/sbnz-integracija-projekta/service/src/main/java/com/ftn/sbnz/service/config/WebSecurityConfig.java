@@ -2,8 +2,7 @@ package com.ftn.sbnz.service.config;
 
 import com.ftn.sbnz.service.security.TokenAuthenticationFilter;
 import com.ftn.sbnz.service.security.RestAuthenticationEntryPoint;
-import com.ftn.sbnz.model.services.AdminUserService;
-import com.ftn.sbnz.model.services.UserService;
+import com.ftn.sbnz.service.services.AdminUserService;
 import com.ftn.sbnz.service.utils.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

@@ -3,10 +3,7 @@ package com.ftn.sbnz.model.models;
 
 import java.time.LocalDate;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 import enums.CleaningHabit;
 import enums.Gender;
@@ -28,6 +25,7 @@ public class UserWarning {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
+    @ManyToOne
     private User user;
     private LocalDate date;
 }

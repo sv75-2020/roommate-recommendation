@@ -12,7 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.ftn.sbnz.model.services.AdminUserService;
+import com.ftn.sbnz.service.services.AdminUserService;
 import com.ftn.sbnz.service.utils.TokenUtils;
 
 import io.jsonwebtoken.ExpiredJwtException;

@@ -1,9 +1,6 @@
 package com.ftn.sbnz.model.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,8 +19,10 @@ public class AccommodationReview {
     private Long id;
     private Double rating;
     private String comment;
-    private Integer userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
+    @ManyToOne
     private Accommodation accommodation;
 
 }

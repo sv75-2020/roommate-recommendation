@@ -1,4 +1,4 @@
-package com.ftn.sbnz.model.services;
+package com.ftn.sbnz.service.services;
 
 import com.ftn.sbnz.model.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -10,8 +10,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
-@NoArgsConstructor
-@AllArgsConstructor
 public class AdminUserService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;

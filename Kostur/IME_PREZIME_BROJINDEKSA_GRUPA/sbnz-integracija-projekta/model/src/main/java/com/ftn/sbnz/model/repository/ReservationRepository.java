@@ -4,14 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ftn.sbnz.model.models.Reservation;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public class ReservationRepository extends JpaRepository<Reservation, Long> {
+@Repository
+public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
-    public List<Reservation> findAll() {
-        return new ArrayList<>();
-    }
-
-    public void save(Reservation reservation) {
-    }
     
 }

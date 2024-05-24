@@ -1,4 +1,4 @@
-package com.ftn.sbnz.model.services;
+package com.ftn.sbnz.service.services;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;

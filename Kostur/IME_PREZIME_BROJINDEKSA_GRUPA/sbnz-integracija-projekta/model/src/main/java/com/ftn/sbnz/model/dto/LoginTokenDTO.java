@@ -1,4 +1,4 @@
-package com.example.demo.DTO.login;
+package com.ftn.sbnz.model.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

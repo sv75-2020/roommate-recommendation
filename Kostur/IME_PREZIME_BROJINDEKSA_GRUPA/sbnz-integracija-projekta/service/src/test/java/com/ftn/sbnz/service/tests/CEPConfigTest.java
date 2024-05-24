@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import org.codehaus.plexus.component.annotations.Component;
 import org.drools.core.time.SessionPseudoClock;
 import org.junit.Test;
 import org.kie.api.KieServices;
@@ -13,8 +12,6 @@ import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestComponent;
-import org.springframework.stereotype.Service;
 
 import com.ftn.sbnz.model.events.MonthlyPaymentEvent;
 import com.ftn.sbnz.model.events.NotifyAdminForBill;
@@ -29,9 +26,9 @@ import com.ftn.sbnz.model.repository.NotifyAdminEvictionRepository;
 import com.ftn.sbnz.model.repository.NotifyAdminForBillRepository;
 import com.ftn.sbnz.model.repository.ReservationRepository;
 import com.ftn.sbnz.model.repository.UserWarningRepository;
-import com.ftn.sbnz.model.services.BillingService;
-import com.ftn.sbnz.model.services.ReservationService;
-import com.ftn.sbnz.model.services.UserService;
+import com.ftn.sbnz.service.services.BillingService;
+import com.ftn.sbnz.service.services.ReservationService;
+import com.ftn.sbnz.service.services.UserService;
 
 import enums.CleaningHabit;
 import enums.Gender;
@@ -75,7 +72,7 @@ public class CEPConfigTest {
           false,
           PersonalityType.EXTROVERT,
           JobStatus.EMPLOYED,
-          List.of("Reading", "Traveling", "Cooking"),
+          "Reading, Traveling, Cooking",
           CleaningHabit.OFTEN,
           true,
           true,
@@ -86,7 +83,8 @@ public class CEPConfigTest {
           false,
           false,
           false,
-          false
+          false,
+          new ArrayList<>()
       );
 User user2 = new User(
        2L,
@@ -99,7 +97,7 @@ User user2 = new User(
           false,
           PersonalityType.INTROVERT,
           JobStatus.UNEMPLOYED,
-          List.of("Hiking", "Painting", "Music"),
+          "Hiking, Painting, Music",
           CleaningHabit.ONCE_IN_A_WHILE,
           false,
           false,
@@ -110,7 +108,8 @@ User user2 = new User(
           true,
           false,
           false,
-          false
+          false,
+          new ArrayList<>()
       );        
       
       User user3 = new User(
@@ -124,7 +123,7 @@ User user2 = new User(
         false,
         PersonalityType.INTROVERT,
         JobStatus.EMPLOYED,
-        List.of("Reading", "Traveling", "Cooking"),
+        "Reading, Traveling, Cooking",
         CleaningHabit.OFTEN,
         true,
         true,
@@ -135,7 +134,8 @@ User user2 = new User(
         false,
         false,
         false,
-        false
+        false,
+        new ArrayList<>()
     );
     User user4 = new User(
       4L,
@@ -148,7 +148,7 @@ User user2 = new User(
       false,
       PersonalityType.INTROVERT,
       JobStatus.EMPLOYED,
-      List.of("Reading", "Traveling", "Cooking"),
+      "Reading, Traveling, Cooking",
       CleaningHabit.OFTEN,
       true,
       true,
@@ -159,7 +159,8 @@ User user2 = new User(
       false,
       false,
       false,
-      false
+      false,
+      new ArrayList<>()
   );
 
   Roommates rm1=new Roommates(1L,user1,user2,true);
@@ -236,11 +237,7 @@ User user2 = new User(
     }
     @Test
     public void test_deposit_cep() {
-      
-      reservationService = new ReservationService();
-      reservationService.depositRepository = new DepositRepository();
-      reservationService.reservationRepository = new ReservationRepository();
-      Reservation r1 = reservationService.newReservation(rm1, a1);  
+      Reservation r1 = reservationService.newReservation(rm1, a1);
       KieServices ks = KieServices.Factory.get();
         KieContainer kContainer = ks.getKieClasspathContainer(); 
         KieSession ksession = kContainer.newKieSession("cepKsession");

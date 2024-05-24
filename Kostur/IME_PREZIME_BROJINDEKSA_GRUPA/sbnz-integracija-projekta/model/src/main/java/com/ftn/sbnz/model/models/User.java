@@ -2,18 +2,12 @@ package com.ftn.sbnz.model.models;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Collection;
 import java.util.List;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import enums.CleaningHabit;
 import enums.Gender;
 import enums.JobStatus;
@@ -23,6 +17,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Setter
 @Getter
@@ -30,11 +26,11 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 @DiscriminatorValue("user")
-public class User {
+public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
-    private String email;
+    private String username;
     private String fullName;
     private String password;
     private Gender gender;
@@ -43,13 +39,14 @@ public class User {
     private boolean hasPets;
     private PersonalityType personalityType;
     private JobStatus jobStatus;
-    private List<String> interests;
+    private String interests;
     private CleaningHabit cleaningHabit;
     private boolean worksFromHome;
     private boolean hasCar;
     private Month moveInMonth;
     private boolean likesQuiet;
     private Integer budget;
+    @ManyToMany(fetch = FetchType.LAZY)
     private List<Location> locations;
     private boolean doesntWantPets;
     private boolean dislikesSmokingIndoors;
@@ -69,10 +66,11 @@ public class User {
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", email='" + email + '\'' +
+                ", username='" + username + '\'' +
                 ", fullName='" + fullName;
     }
 
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<Role> roles;
 
     public List<Role> getRoles() {
@@ -82,5 +80,28 @@ public class User {
     public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
+    @JsonIgnore
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
 
+    @JsonIgnore
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @JsonIgnore
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+    @Override
+    public boolean isEnabled() { return true; }
+    @JsonIgnore
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.roles;
+    }
 }

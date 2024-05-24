@@ -6,7 +6,6 @@ import com.ftn.sbnz.model.dto.LoginTokenDTO;
 import com.ftn.sbnz.model.exceptions.BadRequestException;
 import com.ftn.sbnz.model.models.User;
 import com.ftn.sbnz.model.models.Admin;
-import com.ftn.sbnz.model.services.UserService;
 import com.ftn.sbnz.service.utils.TokenUtils;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,9 +39,6 @@ public class LoginController {
         String jwt;
         try {
             User user = (User) authentication.getPrincipal();
-            if (!user.getActive()){
-                throw new BadRequestException("User not active!");
-            }
             jwt = tokenUtils.generateToken(user.getId(),user.getUsername(), user.getRoles());
         } catch (ClassCastException exception) {
             Admin admin = (Admin) authentication.getPrincipal();
