@@ -2,6 +2,8 @@ package com.ftn.sbnz.model.models;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,6 +14,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@JsonIgnoreProperties(value = {"id"})
 public class AccommodationReview {
     // Attributes
     @GeneratedValue(strategy = GenerationType.IDENTITY)

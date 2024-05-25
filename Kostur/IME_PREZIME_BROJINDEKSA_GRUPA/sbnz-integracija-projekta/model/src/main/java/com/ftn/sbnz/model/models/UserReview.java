@@ -20,7 +20,6 @@ public class UserReview {
     private Long id;
     private Double rating;
     private String comment;
-    private Integer userId;
     @ManyToOne
     @JoinColumn(name = "user_gives_rating_id")
     private User user;

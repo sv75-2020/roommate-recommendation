@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -24,8 +25,10 @@ import org.slf4j.LoggerFactory;
 @EnableJpaRepositories("com.ftn.sbnz.model.repository")
 public class ServiceApplication  {
 	
+	
 	private static Logger log = LoggerFactory.getLogger(ServiceApplication.class);
 	public static void main(String[] args) {
+		
 		ApplicationContext ctx = SpringApplication.run(ServiceApplication.class, args);
 
 		/*String[] beanNames = ctx.getBeanDefinitionNames();
