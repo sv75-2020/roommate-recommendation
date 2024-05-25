@@ -59,4 +59,46 @@ public class UserService {
         List<UserDTO> userDTOs = userRepository.findAllUserDTOs();
         return ResponseEntity.ok(userDTOs);
     }
+
+    public ResponseEntity<User> registerUser(User user) {
+        User u= userRepository.save(user);
+        return  ResponseEntity.ok(u);
+    }
+
+    public User updateUser(Long id, User userDetails) {
+        Optional<User> optionalUser = userRepository.findById(id);
+
+        if (!optionalUser.isPresent()) {
+            throw new RuntimeException("User not found");
+        }
+
+        User user = optionalUser.get();
+
+        user.setUsername(userDetails.getUsername());
+        user.setFullName(userDetails.getFullName());
+        user.setPassword(userDetails.getPassword());
+        user.setGender(userDetails.getGender());
+        user.setDateOfBirth(userDetails.getDateOfBirth());
+        user.setSmoker(userDetails.isSmoker());
+        user.setHasPets(userDetails.isHasPets());
+        user.setPersonalityType(userDetails.getPersonalityType());
+        user.setJobStatus(userDetails.getJobStatus());
+        user.setInterests(userDetails.getInterests());
+        user.setCleaningHabit(userDetails.getCleaningHabit());
+        user.setWorksFromHome(userDetails.isWorksFromHome());
+        user.setHasCar(userDetails.isHasCar());
+        user.setMoveInMonth(userDetails.getMoveInMonth());
+        user.setLikesQuiet(userDetails.isLikesQuiet());
+        user.setBudget(userDetails.getBudget());
+        user.setLocations(userDetails.getLocations());
+        user.setDoesntWantPets(userDetails.isDoesntWantPets());
+        user.setDislikesSmokingIndoors(userDetails.isDislikesSmokingIndoors());
+        user.setHasRoommate(userDetails.isHasRoommate());
+        user.setBlocked(userDetails.isBlocked());
+
+        return userRepository.save(user);
+    }
+    
+
+    
 }

@@ -8,6 +8,8 @@ import java.util.List;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import enums.CleaningHabit;
 import enums.Gender;
 import enums.JobStatus;
@@ -31,6 +33,7 @@ import static javax.persistence.DiscriminatorType.STRING;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "user_type", discriminatorType=STRING)
 @DiscriminatorValue("user")
+@JsonIgnoreProperties(value = {"id"})
 public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
