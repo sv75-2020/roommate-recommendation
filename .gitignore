@@ -1,6 +1,8 @@
 # Compiled class file
 *.class
 
+Kostur/.idea/
+
 # Log file
 *.log
 
