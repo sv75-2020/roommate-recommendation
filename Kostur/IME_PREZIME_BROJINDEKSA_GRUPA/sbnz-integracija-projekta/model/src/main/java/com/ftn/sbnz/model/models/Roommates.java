@@ -20,5 +20,4 @@ public class Roommates {
     private User roommate1;
     @ManyToOne
     private User roommate2;
-    private boolean accepted;
 }

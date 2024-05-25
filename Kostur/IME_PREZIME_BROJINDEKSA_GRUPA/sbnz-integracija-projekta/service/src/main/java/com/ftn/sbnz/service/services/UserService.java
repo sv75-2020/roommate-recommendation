@@ -8,6 +8,8 @@ import javax.persistence.EntityNotFoundException;
 import com.ftn.sbnz.model.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.ftn.sbnz.model.events.BillPaidEvent;
@@ -28,21 +30,24 @@ public class UserService {
     @Autowired
     public PaymentRepository paymentRepository;
 
-    public void payBill(Long paymentId,User user){
+    public ResponseEntity<String> payBill(Long paymentId){
+        
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user= (User) userRepository.findByUsername(username);
+
         BillPaidEvent bp=new BillPaidEvent();
         LocalDate currDate = LocalDate.now();
         bp.setPaymentDate(currDate);
-        Optional<User> optionalUser = userRepository.findById(1L);
-        if (optionalUser.isPresent()) {
-            bp.setUser(optionalUser.get());
-        } else {
-            throw new EntityNotFoundException("User not found with ID 1");
-        }
-        billPaidRepository.save(bp);
+        
+        bp.setUser(user);
+       
+        //billPaidRepository.save(bp);
 
-        Optional<Payment> payment = paymentRepository.findById(1L);
+        Optional<Payment> payment = paymentRepository.findById(paymentId);
         if (payment.isPresent()) {
-            if(payment.get().getReservation().getRoommates().getRoommate1().getId()==user.getId()){
+ 
+            if(payment.get().getReservation().getRoommates().getRoommate1().getId()==1){
                 payment.get().setPaidRoommate1(true);
             }
             else{
@@ -52,6 +57,7 @@ public class UserService {
         } else {
             throw new EntityNotFoundException("User not found with ID 1");
         }
+        return ResponseEntity.ok("Bill paid");
         
     }
 

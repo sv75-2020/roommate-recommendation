@@ -1,6 +1,7 @@
 package com.ftn.sbnz.service.controller;
 
 import com.ftn.sbnz.model.dto.UserDTO;
+import com.ftn.sbnz.model.models.Payment;
 import com.ftn.sbnz.model.models.User;
 import com.ftn.sbnz.service.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +32,13 @@ public class UserController {
 
     @PostMapping(consumes = "application/json", value = "/api/registerUser")
     public ResponseEntity<User> registerUser(@RequestBody User user) throws IOException {
-        System.out.println(user.getLocations());
         return userService.registerUser(user);
+
+    }
+
+    @PutMapping(consumes = "application/json", value = "/api/payBill/{id}")
+    public ResponseEntity<String> payBill(@PathVariable Long id) throws IOException {
+        return userService.payBill(id);
 
     }
 

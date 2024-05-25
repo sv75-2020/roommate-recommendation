@@ -163,7 +163,7 @@ User user2 = new User(
       new ArrayList<>()
   );
 
-  Roommates rm1=new Roommates(1L,user1,user2,true);
+  Roommates rm1=new Roommates(1L,user1,user2);
   Accommodation a1=new Accommodation(1L,"address1",2,200,true,true,true,true,l1);
     @Test
     public void test() {
@@ -220,7 +220,7 @@ User user2 = new User(
         ksession.insert(r1);
         ksession.fireAllRules();
 
-        userService.payBill(0L, user1);
+        userService.payBill(0L);
 
         clock.advanceTime(10, TimeUnit.DAYS);
        
