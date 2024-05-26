@@ -17,6 +17,7 @@ import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { ReasonDialogComponent } from './modules/shared/reason-dialog/reason-dialog.component';
 import { OAuthModule, OAuthService } from 'angular-oauth2-oidc';
 
+
 @NgModule({
   declarations: [
     AppComponent,

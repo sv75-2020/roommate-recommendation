@@ -28,7 +28,7 @@ export class AuthService {
     }
   
     login(auth: any): Observable<Token> {
-      return this.http.post<Token>(environment.apiHost + 'api/user/login', auth, {
+      return this.http.post<Token>(environment.apiHost + 'api/login', auth, {
         headers: this.headers,
       });
     }
@@ -82,10 +82,15 @@ export class AuthService {
     });
   }
 
+  getLocations(): Observable<any> {
+    return this.http.get(environment.apiHost + 'api/getAllLocations', {
+      
+    });
+  }
 
-  /*register(user: User): Observable<any> {
-    return this.http.post<any>(environment.apiHost + 'api/user/register', user,  {headers: this.headersReg});
-  }*/
+  registerUser(user: any): Observable<any> {
+    return this.http.post<any>(environment.apiHost + 'api/registerUser', user,  {headers: this.headersReg});
+  }
 
   
 }

@@ -7,6 +7,7 @@ import { OkDialogComponent } from '../../shared/ok-dialog/ok-dialog.component';
 import { AuthService } from '../auth.service';
 import { validateRePassword } from './custom-validator/validator';
 import { environment } from 'src/environments/environment';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-signup',
@@ -18,6 +19,12 @@ export class SignupComponent implements OnInit{
   signupForm !: FormGroup;
   hide = true;
 
+  personalityTypes = ['INTROVERT', 'EXTROVERT', 'NOT SURE']; 
+  jobStatuses = ['EMPLOYED', 'UNEMPLOYED', 'STUDENT']; 
+  cleaningHabits = ['ONCE_IN_A_WHILE', 'OFTEN', 'EVERYDAY']; 
+  months = ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE', 'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'];
+  locations: Location[] = [];
+
   constructor(private formBuilder: FormBuilder,
     public dialog: MatDialog,
     private authService: AuthService){
@@ -25,79 +32,69 @@ export class SignupComponent implements OnInit{
    
 
   ngOnInit(){
-    this.signupForm = this.formBuilder.group({
-      name: [
-        '',
-        [
-        Validators.required,
-        Validators.minLength(3),
-        Validators.maxLength(20),
-        Validators.pattern('[a-zA-Z]+'),
-
-      ],
-      ],
-      surname: [
-        '',
-        [
-        Validators.required,
-        Validators.minLength(3),
-        Validators.maxLength(20),
-        Validators.pattern('[a-zA-Z]+'),
-
-      ],
-      ],
-      phone: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(9),
-          Validators.maxLength(13),
-          Validators.pattern('^[0-9]*$'),
-        ],
-      ],
-
-      email:['',
-      [
-        Validators.required,
-        Validators.minLength(5),
-        Validators.pattern('^[^\\s@]+@[^\\s@]+\\.[^\\s@]{2,}$'),
-      ],
-      ],
-      password:['',
-          [
-            Validators.required,
-            Validators.minLength(8),
-          ],
-      ],
-      confirmpsw:['',
-          [
-            Validators.required,
-            validateRePassword,
-          ],
-      ],
-      captchaResponse: ['', [
-        Validators.required
-      ]]
+    this.authService.getLocations().subscribe({
+      next: (result: any) => {
+       this.locations=result;
+       console.log(result)
 
 
+      },
     });
+    
+    this.signupForm = this.formBuilder.group({
+      username: ['', Validators.required],
+      fullName: ['', Validators.required],
+      password: ['', Validators.required],
+      gender: ['FEMALE', Validators.required],
+      dateOfBirth: ['', Validators.required],
+      smoker: [false],
+      hasPets: [false],
+      personalityType: ['', Validators.required],
+      jobStatus: ['', Validators.required],
+      interests: ['', Validators.required],
+      cleaningHabit: ['', Validators.required],
+      worksFromHome: [false],
+      hasCar: [false],
+      moveInMonth: ['', Validators.required],
+      likesQuiet: [false],
+      budget: ['', Validators.required],
+      locations: [[]],
+      doesntWantPets: [false],
+      dislikesSmokingIndoors: [false],
+      hasRoommate: [false],
+      blocked: [false]
+    });
+    
   }
 
   signup() : void{  
-   /* let user:User = {
-      name : this.signupForm.value.name,
-      surname: this.signupForm.value.surname,
-      mobile: this.signupForm.value.phone,
-      email: this.signupForm.value.email,
-      password:this.signupForm.value.password*/
-    }
-    
-    /*if (this.signupForm.valid){
-      this.authService.robot(this.signupForm.value.captchaResponse).subscribe({
+    let user: User = {
+      username: this.signupForm.value.username,
+      fullName: this.signupForm.value.fullName,
+      password: this.signupForm.value.password,
+      gender: this.signupForm.value.gender,
+      dateOfBirth: this.signupForm.value.dateOfBirth,
+      smoker: this.signupForm.value.smoker,
+      hasPets: this.signupForm.value.hasPets,
+      personalityType: this.signupForm.value.personalityType,
+      jobStatus: this.signupForm.value.jobStatus,
+      interests: this.signupForm.value.interests,
+      cleaningHabit: this.signupForm.value.cleaningHabit,
+      worksFromHome: this.signupForm.value.worksFromHome,
+      hasCar: this.signupForm.value.hasCar,
+      moveInMonth: this.signupForm.value.moveInMonth,
+      likesQuiet: this.signupForm.value.likesQuiet,
+      budget: this.signupForm.value.budget,
+      locations: this.signupForm.value.locations,
+      doesntWantPets: this.signupForm.value.doesntWantPets,
+      dislikesSmokingIndoors: this.signupForm.value.dislikesSmokingIndoors,
+      hasRoommate: this.signupForm.value.hasRoommate,
+      blocked: this.signupForm.value.blocked
+      };
+      console.log(user);
+      this.authService.registerUser(user).subscribe({
         next: (result: any) => {
-          const dialogRef = this.dialog.open(ConfirmIdentityComponent, {
-            data: user
-          });
+         console.log(result);
         },
         error: (error: { status: number; }) => {
           if (error instanceof HttpErrorResponse) {
@@ -107,14 +104,8 @@ export class SignupComponent implements OnInit{
           }
         },
       });
-      
-    }else{
-      alert("Please complete all required fields!");
-    }
-
     
-
-  }*/
+  }
 
  
   openErrorDialog(message: string) {
@@ -132,11 +123,75 @@ export class SignupComponent implements OnInit{
 
 
   
-  
-
-  
 
   
 }
 
+  
+interface Location {
+  id:number,
+  address: string;
+  
+}
 
+interface User {
+  username: string;
+  fullName: string;
+  password: string;
+  gender: Gender;
+  dateOfBirth: String;
+  smoker: boolean;
+  hasPets: boolean;
+  personalityType: PersonalityType;
+  jobStatus: JobStatus;
+  interests: string;
+  cleaningHabit: CleaningHabit;
+  worksFromHome: boolean;
+  hasCar: boolean;
+  moveInMonth: Month;
+  likesQuiet: boolean;
+  budget: number;
+  locations: Location[];
+  doesntWantPets: boolean;
+  dislikesSmokingIndoors: boolean;
+  hasRoommate: boolean;
+  blocked: boolean;
+}
+
+enum Gender {
+  Male = 'MALE',
+  Female = 'FEMALE'
+}
+
+enum PersonalityType {
+  Introvert = 'INTROVERT',
+  Extrovert = 'EXTROVERT',
+  NotSure = 'NOT SURE'
+}
+
+enum JobStatus {
+  Employed = 'EMPLOYED',
+  Unemployed = 'UNEMPLOYED',
+  Student = 'STUDENT'
+}
+
+enum CleaningHabit {
+  OnceInAWhile = 'ONCE IN A WHILE',
+  Everyday = 'EVERYDAY',
+  Often = 'OFTEN'
+}
+
+enum Month {
+  January = 'January',
+  February = 'February',
+  March = 'March',
+  April = 'April',
+  May = 'May',
+  June = 'June',
+  July = 'July',
+  August = 'August',
+  September = 'September',
+  October = 'October',
+  November = 'November',
+  December = 'December'
+}

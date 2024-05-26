@@ -9,77 +9,113 @@
         <form class="form" [formGroup]="signupForm">
             <mat-form-field appearance="fill">
                 <mat-label>Name</mat-label>
-                <input style=" text-indent: 10px;"  formControlName="name" type="text"  matInput>
-                <mat-error *ngIf="signupForm.get('name')?.hasError('required')">
+                <input style=" text-indent: 10px;"  formControlName="fullName" type="text"  matInput>
+                <mat-error *ngIf="signupForm.get('fullName')?.hasError('required')">
                     Name is Required!
                 </mat-error>
-                <mat-error *ngIf="signupForm.get('name')?.hasError('pattern')">
-                    Must contain only letters!
-                  </mat-error>
-                  <mat-error *ngIf="signupForm.get('name')?.hasError('maxlength')">
-                    Max 20 characters!
-                  </mat-error>
-                  <mat-error *ngIf="signupForm.get('name')?.hasError('minlength')">
-                    Min 3 characters!
-                  </mat-error>
             </mat-form-field>
             <mat-form-field appearance="fill">
-                <mat-label>Surname</mat-label>
-                <input style=" text-indent: 10px;" formControlName="surname"  type="text"  matInput>
+                <mat-label>Username</mat-label>
+                <input style=" text-indent: 10px;" formControlName="username"  type="text"  matInput>
                 <mat-error *ngIf="signupForm.get('surname')?.hasError('required')">
-                    Surname is Required!
-                </mat-error>
-                <mat-error *ngIf="signupForm.get('surname')?.hasError('pattern')">
-                    Must contain only letters!
-                  </mat-error>
-                  <mat-error *ngIf="signupForm.get('surname')?.hasError('maxlength')">
-                    Max 20 characters!
-                  </mat-error>
-                  <mat-error *ngIf="signupForm.get('surname')?.hasError('minlength')">
-                    Min 3 characters!
-                  </mat-error>
+                    Username is Required!
+                </mat-error>               
             </mat-form-field>
+
+            
+        <mat-form-field appearance="fill">
+          <mat-label>Budget</mat-label>
+          <input style="text-indent: 10px;" formControlName="budget" type="number" matInput>
+          <mat-error *ngIf="signupForm.get('budget')?.hasError('required')">Budget is Required!</mat-error>
+          <mat-error *ngIf="signupForm.get('budget')?.hasError('min')">Budget must be a positive number!</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Password</mat-label>
+        <input matInput [type]="hide ? 'password' : 'text'" formControlName="password" >
+        <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+          <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+        <mat-error *ngIf="signupForm.get('password')?.hasError('required')">
+            Password is Required!
+        </mat-error>
+    </mat-form-field>
+
             <mat-form-field appearance="fill">
-                <mat-label>Email</mat-label>
-                <input style=" text-indent: 10px;" formControlName="email" type="email" matInput>
-                <mat-error *ngIf="signupForm.get('email')?.hasError('required')">
-                    Email is Required!
-                </mat-error>
-                <mat-error *ngIf="signupForm.get('email')?.hasError('pattern')">
-                    Invalid email!
-                  </mat-error>
-            </mat-form-field>
-            <mat-form-field appearance="fill">
-                <mat-label>Phone number</mat-label>
-                <input style=" text-indent: 10px;"  formControlName="phone" type="number" matInput>
-                <mat-error *ngIf="signupForm.get('phone')?.hasError('required')">
-                    Phone number is Required!
-                </mat-error>
-            </mat-form-field>
-            <mat-form-field appearance="fill">
-                <mat-label>Password</mat-label>
-                <input matInput [type]="hide ? 'password' : 'text'" formControlName="password" >
-                <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
-                  <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-                </button>
-                <mat-error *ngIf="signupForm.get('password')?.hasError('required')">
-                    Password is Required!
-                </mat-error>
-            </mat-form-field>
-            <mat-form-field appearance="fill">
-                <mat-label>Confirm password</mat-label>
-                <input matInput [type]="hide ? 'password' : 'text'" formControlName="confirmpsw" >
-                <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
-                  <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-                </button>
-                <mat-error *ngIf="signupForm.get('confirmpsw')?.hasError('required')">
-                    Confirm is Required!
-                </mat-error>
-                <mat-error *ngIf="signupForm.get('confirmpsw')?.hasError('passDontMatch')">
-                    Passwords do not match!
-                </mat-error>
-            </mat-form-field>
-  
+              <mat-label>Interests</mat-label>
+              <input style=" text-indent: 10px;"  formControlName="interests" type="text"  matInput>
+              <mat-error *ngIf="signupForm.get('interests')?.hasError('required')">
+                  Interests are Required!
+              </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Move-in Month</mat-label>
+            <mat-select formControlName="moveInMonth">
+                <mat-option *ngFor="let month of months" [value]="month">{{month}}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="signupForm.get('moveInMonth')?.hasError('required')">Move-in Month is Required!</mat-error>
+        </mat-form-field>
+       
+
+        <mat-form-field appearance="fill">
+          <mat-label>Locations</mat-label>
+          <mat-select formControlName="locations" multiple>
+              <mat-option *ngFor="let location of locations" [value]="location">{{ location.address }}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="signupForm.get('locations')?.hasError('required')">At least one location is required!</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Personality Type</mat-label>
+        <mat-select formControlName="personalityType">
+            <mat-option *ngFor="let type of personalityTypes" [value]="type">{{type}}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="signupForm.get('personalityType')?.hasError('required')">Personality Type is Required!</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Job Status</mat-label>
+      <mat-select formControlName="jobStatus">
+          <mat-option *ngFor="let status of jobStatuses" [value]="status">{{status}}</mat-option>
+      </mat-select>
+      <mat-error *ngIf="signupForm.get('jobStatus')?.hasError('required')">Job Status is Required!</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Cleaning Habit</mat-label>
+    <mat-select formControlName="cleaningHabit">
+        <mat-option *ngFor="let habit of cleaningHabits" [value]="habit">{{habit}}</mat-option>
+    </mat-select>
+    <mat-error *ngIf="signupForm.get('cleaningHabit')?.hasError('required')">Cleaning Habit is Required!</mat-error>
+</mat-form-field>
+
+<mat-form-field style="margin-left: 0px;" appearance="fill">
+  <mat-label>Date of birth</mat-label>
+  <input style="text-indent: 10px;" formControlName="dateOfBirth" type="text" matInput>
+  <mat-error *ngIf="signupForm.get('dateOfBirth')?.hasError('required')">Date of birth is Required!</mat-error>
+</mat-form-field>
+    
+      <mat-label style="margin-left: 30px;">Gender: </mat-label>
+      <mat-radio-group class="normalText" formControlName="gender">
+        <mat-radio-button  value="MALE">Male</mat-radio-button>
+        <mat-radio-button value="FEMALE">Female</mat-radio-button>
+      </mat-radio-group>
+      <mat-error *ngIf="signupForm.get('gender')?.hasError('required')">Gender is Required!</mat-error>
+    
+              
+    <mat-checkbox style="margin-left: 65px;" class="normalText" formControlName="hasPets">Pets: </mat-checkbox>
+    <mat-checkbox formControlName="smoker">Smoker: </mat-checkbox>
+    <mat-checkbox formControlName="worksFromHome">Work from home</mat-checkbox>
+    <mat-checkbox formControlName="hasCar">Car</mat-checkbox>
+
+    <hr>
+    <h4>Requirements</h4>
+    <mat-checkbox formControlName="likesQuiet">Like quiet</mat-checkbox>
+    <mat-checkbox formControlName="doesntWantPets">Pets</mat-checkbox>
+    <mat-checkbox formControlName="dislikesSmokingIndoors">Smoking</mat-checkbox>
+    <hr>
+           
         </form>
         <button class="button" style="margin-top: 10px;" mat-button (click)="signup()">Confirm</button>
     </div>

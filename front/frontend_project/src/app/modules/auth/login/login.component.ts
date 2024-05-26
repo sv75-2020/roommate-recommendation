@@ -19,7 +19,6 @@ export class LoginComponent {
   loginForm = new FormGroup({
     username: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required]),
-    captchaResponse: new FormControl('', [Validators.required])
   });
   hasError: boolean = false;
   constructor(private authService: AuthService, private router: Router,
@@ -31,7 +30,7 @@ export class LoginComponent {
       password: this.loginForm.value.password,
     };
 
-
+    console.log("aaaaa")
     if (this.loginForm.valid) {
 
       this.authService.login(loginVal).subscribe({
@@ -39,6 +38,7 @@ export class LoginComponent {
           localStorage.setItem('user', JSON.stringify(result));
           this.authService.setUser();
           this.router.navigate(['/' + this.authService.getUrlPath()]);
+          console.log(result)
         },
         error: (error) => {
           if (error instanceof HttpErrorResponse) {

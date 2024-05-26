@@ -1,8 +1,10 @@
 package com.ftn.sbnz.service.controller;
 
 import com.ftn.sbnz.model.dto.UserDTO;
+import com.ftn.sbnz.model.models.Location;
 import com.ftn.sbnz.model.models.Payment;
 import com.ftn.sbnz.model.models.User;
+import com.ftn.sbnz.service.services.LocationService;
 import com.ftn.sbnz.service.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +25,9 @@ import javax.validation.Valid;
 public class UserController {
     @Autowired
     private UserService userService;
+
+    @Autowired
+    public LocationService locationService;
 
     @GetMapping(value = "/api/users")
     public ResponseEntity<List<UserDTO>> getAllUsers() {
@@ -46,6 +51,13 @@ public class UserController {
     public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
         User updatedUser = userService.updateUser(id, user);
         return ResponseEntity.ok(updatedUser);
+    }
+
+    @GetMapping(value = "/api/getAllLocations")
+    public ResponseEntity<List<Location>> getAllLocations() {
+        System.out.println("asaaaa");
+        return locationService.getAllLocations();
+
     }
 
 }
