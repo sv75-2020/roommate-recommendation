@@ -48,6 +48,7 @@ export class AuthService {
       const accessToken: any = localStorage.getItem('user');
       const helper = new JwtHelperService();
       const id = helper.decodeToken(accessToken).id;
+      console.log(id);
       return id;
     }
 

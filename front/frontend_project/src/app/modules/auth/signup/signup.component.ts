@@ -19,7 +19,7 @@ export class SignupComponent implements OnInit{
   signupForm !: FormGroup;
   hide = true;
 
-  personalityTypes = ['INTROVERT', 'EXTROVERT', 'NOT SURE']; 
+  personalityTypes = ['INTROVERT', 'EXTROVERT', 'NOT_SURE']; 
   jobStatuses = ['EMPLOYED', 'UNEMPLOYED', 'STUDENT']; 
   cleaningHabits = ['ONCE_IN_A_WHILE', 'OFTEN', 'EVERYDAY']; 
   months = ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE', 'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'];

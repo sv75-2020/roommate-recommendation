@@ -35,6 +35,13 @@ public class UserController {
 
     }
 
+    @GetMapping(value = "/api/getUser/{id}")
+    public ResponseEntity<User> getUser(@PathVariable Long id) {
+        System.out.println("aaaaa");
+        return userService.getUser(id);
+
+    }
+
     @PostMapping(consumes = "application/json", value = "/api/registerUser")
     public ResponseEntity<User> registerUser(@RequestBody User user) throws IOException {
         return userService.registerUser(user);

@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from '../app/modules/auth/login/login.component';
 import { SignupComponent } from '../app/modules/auth/signup/signup.component';
+import { EditUserComponent } from 'src/app/modules/user/edit-user/edit-user.component';
+import { UserInfoComponent } from 'src/app/modules/user/user-info/user-info.component';
 
 
 const routes: Routes = [
@@ -9,6 +11,9 @@ const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full'},
   { path: 'login', component: LoginComponent},
   { path: 'signup', component: SignupComponent},
+  { path: 'editUser', component: EditUserComponent},
+  { path: 'user', component: UserInfoComponent},
+
 ];
 
 @NgModule({

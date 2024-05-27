@@ -1,0 +1,107 @@
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+</head>
+<body>
+    <div class="center">
+        <h1>Edit user</h1>
+        <hr color="gray">
+        <form class="form" [formGroup]="signupForm">
+            <mat-form-field appearance="fill">
+                <mat-label>Name</mat-label>
+                <input style=" text-indent: 10px;" formControlName="fullName" type="text" [(ngModel)]="user.fullName" matInput>
+                <mat-error *ngIf="signupForm.get('fullName')?.hasError('required')">
+                    Name is Required!
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Username</mat-label>
+                <input style=" text-indent: 10px;" formControlName="username" type="text" [(ngModel)]="user.username" matInput>
+                <mat-error *ngIf="signupForm.get('username')?.hasError('required')">
+                    Username is Required!
+                </mat-error>               
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+                <mat-label>Budget</mat-label>
+                <input style="text-indent: 10px;" formControlName="budget" type="number" [(ngModel)]=" user.budget" matInput>
+                <mat-error *ngIf="signupForm.get('budget')?.hasError('required')">Budget is Required!</mat-error>
+                <mat-error *ngIf="signupForm.get('budget')?.hasError('min')">Budget must be a positive number!</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+                <mat-label>Interests</mat-label>
+                <input style=" text-indent: 10px;" formControlName="interests" type="text" [(ngModel)]="user.interests" matInput>
+                <mat-error *ngIf="signupForm.get('interests')?.hasError('required')">
+                    Interests are Required!
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+                <mat-label>Move-in Month</mat-label>
+                <mat-select formControlName="moveInMonth" [(ngModel)]="user.moveInMonth">
+                    <mat-option *ngFor="let month of months" [value]="month">{{month}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="signupForm.get('moveInMonth')?.hasError('required')">Move-in Month is Required!</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+                <mat-label>Locations</mat-label>
+                <mat-select formControlName="locations" [(ngModel)]="user.locations" multiple>
+                    <mat-option *ngFor="let location of locations" [value]="location"  selected="user.locations.includes(location)">{{ location.address }}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="signupForm.get('locations')?.hasError('required')">At least one location is required!</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+                <mat-label>Personality Type</mat-label>
+                <mat-select formControlName="personalityType" [(ngModel)]="user.personalityType">
+                    <mat-option *ngFor="let type of personalityTypes" [value]="type">{{type}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="signupForm.get('personalityType')?.hasError('required')">Personality Type is Required!</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+                <mat-label>Job Status</mat-label>
+                <mat-select formControlName="jobStatus" [(ngModel)]="user.jobStatus">
+                    <mat-option *ngFor="let status of jobStatuses" [value]="status">{{status}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="signupForm.get('jobStatus')?.hasError('required')">Job Status is Required!</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+                <mat-label>Cleaning Habit</mat-label>
+                <mat-select formControlName="cleaningHabit" [(ngModel)]="user.cleaningHabit">
+                    <mat-option *ngFor="let habit of cleaningHabits" [value]="habit">{{habit}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="signupForm.get('cleaningHabit')?.hasError('required')">Cleaning Habit is Required!</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+                <mat-label>Date of birth</mat-label>
+                <input style="text-indent: 10px;" formControlName="dateOfBirth" [(ngModel)]="user.dateOfBirth" type="text" matInput>
+                <mat-error *ngIf="signupForm.get('dateOfBirth')?.hasError('required')">Date of birth is Required!</mat-error>
+            </mat-form-field>
+            
+            <mat-label style="margin-left: 30px;">Gender: </mat-label>
+            <mat-radio-group class="normalText" formControlName="gender" [(ngModel)]="user.gender">
+                <mat-radio-button value="MALE">Male</mat-radio-button>
+                <mat-radio-button value="FEMALE">Female</mat-radio-button>
+            </mat-radio-group>
+            <mat-error *ngIf="signupForm.get('gender')?.hasError('required')">Gender is Required!</mat-error>
+            
+            <mat-checkbox style="margin-left: 65px;" class="normalText" formControlName="hasPets" [(ngModel)]="user.hasPets">Pets: </mat-checkbox>
+            <mat-checkbox formControlName="smoker" [(ngModel)]="user.smoker">Smoker: </mat-checkbox>
+            <mat-checkbox formControlName="worksFromHome" [(ngModel)]="user.worksFromHome">Work from home</mat-checkbox>
+            <mat-checkbox formControlName="hasCar">Car</mat-checkbox>
+
+            <hr>
+            <h4>Requirements</h4>
+            <mat-checkbox formControlName="likesQuiet" [(ngModel)]="user.likesQuiet">Like quiet</mat-checkbox>
+            <mat-checkbox formControlName="doesntWantPets" [(ngModel)]="user.doesntWantPets">Pets</mat-checkbox>
+            <mat-checkbox formControlName="dislikesSmokingIndoors" [(ngModel)]="user.dislikesSmokingIndoors">Smoking</mat-checkbox>
+            <hr>
+        </form>
+        <button class="button" style="margin-top: 10px;" mat-button (click)="editUser()">Confirm</button>
+    </div>
+</body>

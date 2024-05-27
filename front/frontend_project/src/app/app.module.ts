@@ -16,11 +16,15 @@ import { SharedModule } from './modules/shared/shared.module';
 import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { ReasonDialogComponent } from './modules/shared/reason-dialog/reason-dialog.component';
 import { OAuthModule, OAuthService } from 'angular-oauth2-oidc';
+import { EditUserComponent } from './modules/user/edit-user/edit-user.component';
+import { UserInfoComponent } from './modules/user/user-info/user-info.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
+    EditUserComponent,
+    UserInfoComponent,
   ],
   imports: [
     CommonModule,

@@ -32,7 +32,7 @@ export class LoginComponent {
 
     console.log("aaaaa")
     if (this.loginForm.valid) {
-
+      console.log(loginVal)
       this.authService.login(loginVal).subscribe({
         next: (result) => {
           localStorage.setItem('user', JSON.stringify(result));

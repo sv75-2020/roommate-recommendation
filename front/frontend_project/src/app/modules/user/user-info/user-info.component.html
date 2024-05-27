@@ -1,0 +1,102 @@
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+</head>
+<body>
+    <div class="center" id="container">
+
+        <div class="leftDiv">
+            <img class="user_img" [src]="fileProfile" >
+                <h4 class="centerContent">{{user.fullName}}</h4>
+                <a mat-button  [routerLink]="['/editUser']">Edit profile</a><br/> 
+        </div>
+        <div class="rightDiv" >
+            <h4 class="f-s-16 f-w-600">Information</h4>            
+            <hr color="gray">
+            <div class="row">
+                <div class="col-sm-6">
+                    <p>Name</p>
+                    <h4 class="text-muted f-w-400">{{user.fullName}}</h4>
+                </div>
+                <div class="col-sm-6">
+                    <p>Username</p>
+                    <h4 class="text-muted f-w-400">{{user.username}}</h4>
+                </div>
+                <div class="col-sm-6">
+                    <p>Gender</p>
+                    <h4 class="text-muted f-w-400">{{user.gender}}</h4>
+                </div>
+
+                <div class="col-sm-6">
+                    <p>Budget</p>
+                    <h4 class="text-muted f-w-400">{{user.budget}}</h4>
+                </div>
+                <div class="col-sm-6">
+                    <p>Interests</p>
+                    <h4 class="text-muted f-w-400">{{user.interests}}</h4>
+                </div>
+                <div class="col-sm-6">
+                    <p>Move-in month</p>
+                    <h4 class="text-muted f-w-400">{{user.moveInMonth}}</h4>
+                </div>
+                <div class="col-sm-6">
+                    <p>Locations</p>
+                    <h4 class="text-muted f-w-400">{{addresses}}</h4>
+                </div>
+                <div class="col-sm-6">
+                    <p>Personality type</p>
+                    <h4 class="text-muted f-w-400">{{user.personalityType}}</h4>
+                </div>
+                <div class="col-sm-6">
+                    <p>Job status</p>
+                    <h4 class="text-muted f-w-400">{{user.jobStatus}}</h4>
+                </div>
+                <div class="col-sm-6">
+                    <p>Cleaning habit</p>
+                    <h4 class="text-muted f-w-400">{{user.cleaningHabit}}</h4>
+                </div>
+                <div class="col-sm-6">
+                    <p>Date of birth</p>
+                    <h4 class="text-muted f-w-400">{{user.dateOfBirth[0]+"-"+user.dateOfBirth[1]+"-"+user.dateOfBirth[2]}}</h4>
+                </div>
+                <div class="col-sm-6">
+                    <p>Smoker</p>
+                    <h4 class="text-muted f-w-400">{{ user.smoker ? 'Yes' : 'No' }}</h4>
+                </div>
+                <div class="col-sm-6">
+                    <p>Work from home</p>
+                    <h4 class="text-muted f-w-400">{{user.worksFromHome ? 'Yes' : 'No' }}</h4>
+                </div>
+                <div class="col-sm-6">
+                    <p>Car</p>
+                    <h4 class="text-muted f-w-400">{{user.hasCar ? 'Yes' : 'No' }}</h4>
+                </div>
+                <div class="col-sm-6">
+                    <p>Pet</p>
+                    <h4 class="text-muted f-w-400">{{user.hasPets ? 'Yes' : 'No' }}</h4>
+                </div>
+
+               
+            </div>
+            <h4 class="f-s-16 f-w-600">Requirements</h4>            
+            <hr color="gray">
+            <div class="row">
+            <div class="col-sm-6">
+                <p>Smoking inside</p>
+                <h4 class="text-muted f-w-400">{{user.dislikesSmokingIndoors ? 'Yes' : 'No' }}</h4>
+            </div>
+            <div class="col-sm-6">
+                <p>No pets</p>
+                <h4 class="text-muted f-w-400">{{user.doesntWantPets ? 'Yes' : 'No' }}</h4>
+            </div>
+            <div class="col-sm-6">
+                <p>Quiet</p>
+                <h4 class="text-muted f-w-400">{{user.likesQuiet ? 'Yes' : 'No' }}</h4>
+            </div>
+           </div>
+
+        </div>
+    </div>
+
+</body>
+

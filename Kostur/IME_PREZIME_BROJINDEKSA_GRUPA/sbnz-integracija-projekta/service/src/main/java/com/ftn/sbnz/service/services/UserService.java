@@ -1,4 +1,5 @@
 package com.ftn.sbnz.service.services;
+import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.ftn.sbnz.model.events.BillPaidEvent;
@@ -67,6 +69,9 @@ public class UserService {
     }
 
     public ResponseEntity<User> registerUser(User user) {
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(6,new SecureRandom());
+        String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
         User u= userRepository.save(user);
         return  ResponseEntity.ok(u);
     }
@@ -103,6 +108,10 @@ public class UserService {
         user.setBlocked(userDetails.isBlocked());
 
         return userRepository.save(user);
+    }
+
+    public ResponseEntity<User> getUser(Long id) {
+        return ResponseEntity.ok(userRepository.findById(id).get());
     }
     
 
