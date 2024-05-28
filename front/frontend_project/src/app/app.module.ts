@@ -18,6 +18,7 @@ import { ReasonDialogComponent } from './modules/shared/reason-dialog/reason-dia
 import { OAuthModule, OAuthService } from 'angular-oauth2-oidc';
 import { EditUserComponent } from './modules/user/edit-user/edit-user.component';
 import { UserInfoComponent } from './modules/user/user-info/user-info.component';
+import { AccommodationPageComponent } from './modules/accomodation/accommodation-page/accommodation-page.component';
 
 
 @NgModule({
@@ -25,6 +26,7 @@ import { UserInfoComponent } from './modules/user/user-info/user-info.component'
     AppComponent,
     EditUserComponent,
     UserInfoComponent,
+    AccommodationPageComponent,
   ],
   imports: [
     CommonModule,
