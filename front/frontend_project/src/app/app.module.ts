@@ -19,6 +19,7 @@ import { OAuthModule, OAuthService } from 'angular-oauth2-oidc';
 import { EditUserComponent } from './modules/user/edit-user/edit-user.component';
 import { UserInfoComponent } from './modules/user/user-info/user-info.component';
 import { AccommodationPageComponent } from './modules/accomodation/accommodation-page/accommodation-page.component';
+import { AccommodationDetailsComponent } from './modules/accomodation/accommodation-details/accommodation-details.component';
 
 
 @NgModule({
@@ -27,6 +28,7 @@ import { AccommodationPageComponent } from './modules/accomodation/accommodation
     EditUserComponent,
     UserInfoComponent,
     AccommodationPageComponent,
+    AccommodationDetailsComponent
   ],
   imports: [
     CommonModule,

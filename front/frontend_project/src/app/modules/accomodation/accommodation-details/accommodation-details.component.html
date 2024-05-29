@@ -1,0 +1,74 @@
+<div class="space-between">
+    <div class="infoDiv">
+        <h1 class="title">Info</h1>
+        <h1>Aparthotel Stare Miasto</h1>
+        <p>
+            <span class="location-icon">📍</span> 
+            Gołębia 2, Old Town, 31-007 Kraków, Poland
+        </p>
+        <mat-divider style="width:15%;"></mat-divider>
+        <div style="font-size: 16pt; margin-top: 40px;">
+            <mat-divider style="width:90%"></mat-divider>
+            <div class="space-between" style="width: 90%;">
+                <p><b>Address: </b></p>
+                <p>{{ accommodation.address }}</p>
+            </div>
+            <div class="space-between" style="margin-top: 20px; width: 90%;">
+                <p><b>Location: </b></p>
+                <p>{{accommodation.location.address}}</p>
+            </div>
+            <div class="space-between" style="width: 90%;">
+                <p><b>Number of Rooms: </b></p>
+                <p>{{ accommodation.numOfRooms }}</p>
+            </div>
+            <div class="space-between" style="width: 90%;">
+                <p><b>Price: </b></p>
+                <p>{{ accommodation.price }}</p>
+            </div>
+            <div class="space-between" style="width: 90%;">
+                <p><b>Pets Allowed: </b></p>
+                <p>{{ accommodation.petsAllowed ? 'Yes' : 'No' }}</p>
+            </div>
+            <div class="space-between" style="width: 90%;">
+                <p><b>Smoking Allowed: </b></p>
+                <p>{{ accommodation.smokingAllowed ? 'Yes' : 'No' }}</p>
+            </div>
+            <div class="space-between" style="width: 90%;">
+                <p><b>Parking: </b></p>
+                <p>{{ accommodation.parking ? 'Yes' : 'No' }}</p>
+            </div>
+            <div class="space-between" style="width: 90%;">
+                <p><b>Fast Internet: </b></p>
+                <p>{{ accommodation.fastInternet ? 'Yes' : 'No' }}</p>
+            </div>
+        </div>
+        
+        
+    </div>
+    <div class="pictureDiv">
+        <img src="assets/property1.jpg" class="picture">
+    </div>
+</div>
+
+
+<div class="reviews">
+    <h3>See what guests loved the most:</h3>
+    <div class="review">
+        <p><strong>Kate</strong>, United Kingdom</p>
+        <blockquote>“Fantastic hotel all round. Excellent location, clean and very comfortable rooms, really friendly staff. Transfers from the airport booked through the hotel were extremely efficient and again a lovely driver. We would highly recommend this hotel.”</blockquote>
+        <a href="#">Read more</a>
+    </div>
+    <div class="review">
+        <p><strong>Holly</strong>, United Kingdom</p>
+        <blockquote>“Great place to stay in central location. Rooms were very spacious and comfortable.”</blockquote>
+        <a href="#">Read more</a>
+    </div>
+    <div class="review">
+        <p><strong>Ashley</strong>, United Kingdom</p>
+        <blockquote>“Fantastic location, really lovely rooms and very clean”</blockquote>
+        <a href="#">Read more</a>
+    </div>
+</div>
+
+
+

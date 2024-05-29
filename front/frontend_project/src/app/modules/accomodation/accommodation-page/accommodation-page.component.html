@@ -14,7 +14,7 @@
         <div class="property-list">
             <a *ngFor="let property of properties" 
                class="property-card" 
-               [routerLink]="['/accommodation-details', property.id]">
+               [routerLink]="['/accommodation-page', property.id]">
                 <img src="assets/property1.jpg" alt="Property Image" class="property-image">
                 <div class="property-details">
                     <h2>{{ property.address }}</h2>

@@ -22,7 +22,9 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatRadioModule} from '@angular/material/radio';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import { NgxCaptchaModule } from 'ngx-captcha';
+import { MatDividerModule } from '@angular/material/divider';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+
 
 
 @NgModule({
@@ -52,7 +54,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     FormsModule, 
     MatButtonToggleModule,
     NgxCaptchaModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatDividerModule
   ],
   exports:[
     CommonModule,
@@ -80,7 +83,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     FormsModule,
     MatButtonToggleModule,
     NgxCaptchaModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatDividerModule
     
   ]
 
