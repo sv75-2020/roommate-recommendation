@@ -1,1 +1,18 @@
-<p>roommates-page works!</p>
+<div class="user-list">
+    <div *ngFor="let user of users" class="user-card">
+      <div class="profile-photo">
+        <img src="assets/property1.jpg" alt="Profile Photo">
+      </div>
+      <div class="user-details">
+        <h3>{{ user.fullName }}</h3>
+        <p><strong>Username:</strong> {{ user.username }}</p>
+        <p><strong>Gender:</strong> {{ user.gender }}</p>
+        <p><strong>Date of Birth:</strong> {{ user.dateOfBirth }}</p>
+        <p><strong>Smoker:</strong> {{ user.smoker ? 'Yes' : 'No' }}</p>
+        <p><strong>Has Pets:</strong> {{ user.hasPets ? 'Yes' : 'No' }}</p>
+        <p><strong>Job Status:</strong> {{ user.jobStatus }}</p>
+        <p><strong>Budget:</strong> {{ user.budget }}</p>
+      </div>
+    </div>
+  </div>
+  

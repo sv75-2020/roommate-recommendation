@@ -20,6 +20,7 @@ import { EditUserComponent } from './modules/user/edit-user/edit-user.component'
 import { UserInfoComponent } from './modules/user/user-info/user-info.component';
 import { AccommodationPageComponent } from './modules/accomodation/accommodation-page/accommodation-page.component';
 import { AccommodationDetailsComponent } from './modules/accomodation/accommodation-details/accommodation-details.component';
+import { RoommatesPageComponent } from './modules/user/roommates-page/roommates-page.component';
 
 
 @NgModule({
@@ -28,7 +29,8 @@ import { AccommodationDetailsComponent } from './modules/accomodation/accommodat
     EditUserComponent,
     UserInfoComponent,
     AccommodationPageComponent,
-    AccommodationDetailsComponent
+    AccommodationDetailsComponent,
+    RoommatesPageComponent
   ],
   imports: [
     CommonModule,

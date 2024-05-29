@@ -6,6 +6,7 @@ import { EditUserComponent } from 'src/app/modules/user/edit-user/edit-user.comp
 import { UserInfoComponent } from 'src/app/modules/user/user-info/user-info.component';
 import { AccommodationPageComponent } from 'src/app/modules/accomodation/accommodation-page/accommodation-page.component';
 import { AccommodationDetailsComponent } from 'src/app/modules/accomodation/accommodation-details/accommodation-details.component';
+import { RoommatesPageComponent } from 'src/app/modules/user/roommates-page/roommates-page.component';
 
 
 const routes: Routes = [
@@ -17,6 +18,7 @@ const routes: Routes = [
   { path: 'user', component: UserInfoComponent},
   { path: 'accomodation-page', component: AccommodationPageComponent},
   { path: 'accommodation-page/:id', component: AccommodationDetailsComponent},
+  { path: 'roommates-page', component: RoommatesPageComponent},
 
 ];
 

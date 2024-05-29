@@ -13,7 +13,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     UserDetails findByUsername(String username);
     User findByUsernameAndPassword(String username, String password);
 
-    @Query("SELECT new com.ftn.sbnz.model.dto.UserDTO(u.fullName, u.username) FROM User u")
+    @Query("SELECT new com.ftn.sbnz.model.dto.UserDTO(u) FROM User u")
     List<UserDTO> findAllUserDTOs();
 
 
