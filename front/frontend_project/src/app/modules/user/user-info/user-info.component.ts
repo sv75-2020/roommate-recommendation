@@ -43,7 +43,8 @@ export class UserInfoComponent {
     doesntWantPets: false,
     dislikesSmokingIndoors: false,
     hasRoommate: false,
-    blocked: false
+    blocked: false,
+    photo:''
   };
 
   ngOnInit(): void {
@@ -54,14 +55,14 @@ export class UserInfoComponent {
         this.addresses += location.address + ", ";
       }
       this.addresses = this.addresses.slice(0, -2);
-      /*if (this.user.profilePicture != ''){
-        this.passengerService.getPicture(this.user.profilePicture).then((data: Blob | MediaSource)=> {
+      if (this.user.photo != ''){
+        this.userService.getPicture(this.user.photo).then((data: Blob | MediaSource)=> {
 
           const temp = URL.createObjectURL(data);
 
           this.fileProfile = this.sanitizer.bypassSecurityTrustUrl(temp);
         });
-      }*/
+      }
      });
   }
 
@@ -99,4 +100,5 @@ interface User {
   dislikesSmokingIndoors: boolean;
   hasRoommate: boolean;
   blocked: boolean;
+  photo:String;
 }

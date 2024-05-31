@@ -60,6 +60,7 @@ public class User implements UserDetails {
     private boolean dislikesSmokingIndoors;
     private boolean hasRoommate;
     private boolean blocked;
+    private String photo;
 
     public List<String> getLocationsAddress(){
         List<String> addresses=new ArrayList<>();

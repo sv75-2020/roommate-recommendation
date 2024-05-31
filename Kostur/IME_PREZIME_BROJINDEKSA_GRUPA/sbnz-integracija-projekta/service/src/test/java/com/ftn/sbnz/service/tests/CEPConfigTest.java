@@ -84,6 +84,7 @@ public class CEPConfigTest {
           false,
           false,
           false,
+          "",
           new ArrayList<>()
       );
 User user2 = new User(
@@ -109,6 +110,7 @@ User user2 = new User(
           false,
           false,
           false,
+          "",
           new ArrayList<>()
       );        
       
@@ -135,6 +137,7 @@ User user2 = new User(
         false,
         false,
         false,
+        "",
         new ArrayList<>()
     );
     User user4 = new User(
@@ -160,6 +163,7 @@ User user2 = new User(
       false,
       false,
       false,
+      "",
       new ArrayList<>()
   );
 

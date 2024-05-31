@@ -18,6 +18,8 @@ export class SignupComponent implements OnInit{
 
   signupForm !: FormGroup;
   hide = true;
+  file_profile: File | null | undefined;
+
 
   personalityTypes = ['INTROVERT', 'EXTROVERT', 'NOT_SURE']; 
   jobStatuses = ['EMPLOYED', 'UNEMPLOYED', 'STUDENT']; 
@@ -62,7 +64,8 @@ export class SignupComponent implements OnInit{
       doesntWantPets: [false],
       dislikesSmokingIndoors: [false],
       hasRoommate: [false],
-      blocked: [false]
+      blocked: [false],
+      photo:['', Validators.required],
     });
     
   }
@@ -89,12 +92,25 @@ export class SignupComponent implements OnInit{
       doesntWantPets: this.signupForm.value.doesntWantPets,
       dislikesSmokingIndoors: this.signupForm.value.dislikesSmokingIndoors,
       hasRoommate: this.signupForm.value.hasRoommate,
-      blocked: this.signupForm.value.blocked
+      blocked: this.signupForm.value.blocked,
+      photo: this.signupForm.value.photo
       };
       console.log(user);
       this.authService.registerUser(user).subscribe({
         next: (result: any) => {
          console.log(result);
+         this.authService.downloadPicture(this.file_profile).subscribe({
+          next: (result) =>{
+            console.log(result);
+    
+          },
+          error: (error) => {
+            if (error instanceof HttpErrorResponse){
+              
+            }
+          }, 
+  
+        })
         },
         error: (error: { status: number; }) => {
           if (error instanceof HttpErrorResponse) {
@@ -121,7 +137,17 @@ export class SignupComponent implements OnInit{
     });
   }
 
-
+  handleFileInputChangePicture(l: FileList): void {
+    this.file_profile = l.item(0);
+    if (l.length) {
+      const f = l[0];
+      const count = l.length > 1 ? `(+${l.length - 1} files)` : "";
+      this.signupForm.patchValue({photo: `${f.name}${count}`});
+      
+    } else {
+      this.signupForm.patchValue({photo: ``});
+    }
+  }
   
 
   
@@ -156,6 +182,7 @@ interface User {
   dislikesSmokingIndoors: boolean;
   hasRoommate: boolean;
   blocked: boolean;
+  photo:String;
 }
 
 enum Gender {

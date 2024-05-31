@@ -32,5 +32,12 @@ export class UserService {
     return this.http.get<any>(environment.apiHost + 'api/users');
   }
 
+  getPicture(filename: String): Promise<any>{
+    return new Promise<any>(resolve => {
+      this.http.get(environment.apiHost  + 'api/' + filename + '/file', {observe:'response', responseType: 'blob'}).subscribe(resp => {
+        resolve(resp.body);
+      });
+    });
+  }
   
 }

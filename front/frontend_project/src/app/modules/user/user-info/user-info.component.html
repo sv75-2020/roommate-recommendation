@@ -6,9 +6,10 @@
     <div class="center" id="container">
 
         <div class="leftDiv">
-            <img class="user_img" [src]="fileProfile" >
+            <img class="user_img" [src]="fileProfile" alt="" >
                 <h4 class="centerContent">{{user.fullName}}</h4>
                 <a mat-button  [routerLink]="['/editUser']">Edit profile</a><br/> 
+            
         </div>
         <div class="rightDiv" >
             <h4 class="f-s-16 f-w-600">Information</h4>            

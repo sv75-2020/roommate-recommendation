@@ -1,4 +1,7 @@
 package com.ftn.sbnz.service.services;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
 import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.util.List;
@@ -8,11 +11,13 @@ import javax.persistence.EntityNotFoundException;
 
 import com.ftn.sbnz.model.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.ftn.sbnz.model.events.BillPaidEvent;
 import com.ftn.sbnz.model.models.Payment;
@@ -20,6 +25,9 @@ import com.ftn.sbnz.model.models.User;
 import com.ftn.sbnz.model.repository.BillPaidRepository;
 import com.ftn.sbnz.model.repository.PaymentRepository;
 import com.ftn.sbnz.model.repository.UserRepository;
+import com.ftn.sbnz.service.utils.FileUtil;
+
+import java.nio.file.Files;
 
 @Service
 public class UserService {
@@ -77,6 +85,7 @@ public class UserService {
     }
 
     public User updateUser(Long id, User userDetails) {
+        
         Optional<User> optionalUser = userRepository.findById(id);
 
         if (!optionalUser.isPresent()) {
@@ -114,6 +123,30 @@ public class UserService {
         return ResponseEntity.ok(userRepository.findById(id).get());
     }
     
+    
+    private void createDirIfNotExist() {
+        //create directory to save the files
+        File directory = new File(FileUtil.folderPath);
+        if (!directory.exists()) {
+            directory.mkdir();
+        }
+    }
 
+    public ResponseEntity<String> savePhoto(MultipartFile file) throws IOException {
+        try {
+            createDirIfNotExist();
+
+            byte[] bytes = new byte[0];
+            bytes = file.getBytes();
+            System.out.println( " Folder path " + FileUtil.folderPath);
+            Files.write(Paths.get(FileUtil.folderPath + file.getOriginalFilename()), bytes);
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body("Files uploaded successfully: " + file.getOriginalFilename());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED)
+                    .body("Exception occurred for: " + file.getOriginalFilename() + "!");
+        }
+
+    }
     
 }

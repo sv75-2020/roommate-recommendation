@@ -93,6 +93,12 @@ export class AuthService {
     return this.http.post<any>(environment.apiHost + 'api/registerUser', user,  {headers: this.headersReg});
   }
 
+  downloadPicture(image: any): Observable<any> {
+    const userForm = new FormData();
+    userForm.append('image', image,image.name);
+    return this.http.post<any>(environment.apiHost + 'api/uploadPhoto', userForm);
+  }
+
   
 }
 
