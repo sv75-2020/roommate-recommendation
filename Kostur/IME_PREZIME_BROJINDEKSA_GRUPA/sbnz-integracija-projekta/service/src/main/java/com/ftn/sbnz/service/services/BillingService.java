@@ -46,6 +46,7 @@ public class BillingService {
             MonthlyPayment mp1=new MonthlyPayment();
             mp1.setPaymentDate(LocalDate.now());
             mp1.setUser(r.getRoommates().getRoommate1());
+            mp1.setPaymentId(p.getId());
             monthlyPaymentRepository.save(mp1);
             payments.add(mp1);
 
@@ -56,6 +57,7 @@ public class BillingService {
             MonthlyPayment mp2=new MonthlyPayment();
             mp2.setPaymentDate(LocalDate.now());
             mp2.setUser(r.getRoommates().getRoommate1());
+            mp2.setPaymentId(p.getId());
             monthlyPaymentRepository.save(mp2);
             payments.add(mp2);
 

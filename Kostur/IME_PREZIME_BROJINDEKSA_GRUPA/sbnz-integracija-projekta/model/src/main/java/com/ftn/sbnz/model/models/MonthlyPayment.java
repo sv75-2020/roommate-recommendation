@@ -26,5 +26,6 @@ public class MonthlyPayment {
     private LocalDate paymentDate;
     @ManyToOne
     private User user;
+    private Long paymentId;
 
 }

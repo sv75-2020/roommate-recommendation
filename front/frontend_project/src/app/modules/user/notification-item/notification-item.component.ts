@@ -39,6 +39,14 @@ export class NotificationItemComponent {
     }
   }
 
+  payBill(notification:any) {
+    
+    this.userService.payBill(notification.requestId).subscribe((result: any) =>{
+      console.log(result)
+      });
+
+  }
+
   getDisplayText(type: string): string {
     switch (type) {
       case 'bill':

@@ -61,5 +61,8 @@ export class UserService {
     return this.http.put<any>(environment.apiHost + 'api/denyReservationRequest/'+id,  {headers: this.headers});
   }
 
+  payBill(id:any): Observable<any> {
+    return this.http.put<any>(environment.apiHost + 'api/payBill/'+id,  {headers: this.headers});
+  }
   
 }

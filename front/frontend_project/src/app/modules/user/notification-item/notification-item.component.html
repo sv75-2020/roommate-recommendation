@@ -5,7 +5,7 @@
     <h4>{{ getDisplayText(notification.type) }}</h4>
     <p>{{ notification.message }}</p>
     <div class="buttons-container">
-      <button *ngIf="notification.type === 'bill'" class="action-button">Pay</button>
+      <button *ngIf="notification.type === 'bill'" class="action-button" (click)="payBill(notification)" >Pay</button>
       <div *ngIf="notification.type === 'reservationRequest' || notification.type === 'roommateRequest'">
         <button class="accept-button" (click)="onAccept(notification)">Accept</button>
         <button class="decline-button" (click)="onDeny(notification)">Decline</button>

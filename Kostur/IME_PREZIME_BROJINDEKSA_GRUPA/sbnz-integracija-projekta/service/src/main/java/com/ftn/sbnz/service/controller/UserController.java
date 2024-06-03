@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -68,7 +69,7 @@ public class UserController {
     }
 
     @PutMapping(consumes = "application/json", value = "/api/payBill/{id}")
-    public ResponseEntity<String> payBill(@PathVariable Long id) throws IOException {
+    public ResponseEntity<Map<String,String>> payBill(@PathVariable Long id) throws IOException {
         return userService.payBill(id);
 
     }

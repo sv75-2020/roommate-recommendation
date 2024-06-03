@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.security.SecureRandom;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.persistence.EntityNotFoundException;
@@ -41,7 +43,7 @@ public class UserService {
     @Autowired
     public PaymentRepository paymentRepository;
 
-    public ResponseEntity<String> payBill(Long paymentId){
+    public ResponseEntity<Map<String,String>> payBill(Long paymentId){
         
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
@@ -62,7 +64,7 @@ public class UserService {
         Optional<Payment> payment = paymentRepository.findById(paymentId);
         if (payment.isPresent()) {
  
-            if(payment.get().getReservation().getRoommates().getRoommate1().getId()==1){
+            if(payment.get().getReservation().getRoommates().getRoommate1().getId()==user.getId()){
                 payment.get().setPaidRoommate1(true);
             }
             else{
@@ -72,7 +74,10 @@ public class UserService {
         } else {
             throw new EntityNotFoundException("User not found with ID 1");
         }
-        return ResponseEntity.ok("Bill paid");
+
+         Map<String, String> response = new HashMap<>();
+        response.put("message", "Success");
+        return ResponseEntity.ok(response);
         
     }
 

@@ -46,7 +46,7 @@ public class NotificationService {
         LocalDate now = LocalDate.now();
         for(MonthlyPayment mp: monthlyPaymentRepository.findAll()){
             if(mp.getUser().getId()==id && now.getMonth().equals(mp.getPaymentDate().getMonth()) && now.getYear()==mp.getPaymentDate().getYear())
-                notifications.add(new Notification("Pay bill for month: "+mp.getPaymentDate().getMonth(), "bill",0L));
+                notifications.add(new Notification("Pay bill for month: "+mp.getPaymentDate().getMonth(), "bill",mp.getPaymentId()));
         }
         for(RoommateRequest request: roommateRequestRepository.findAll()){
             if(request.getRequestedUser().getId()==id && request.getStatus()==RequestStatus.PENDING)
