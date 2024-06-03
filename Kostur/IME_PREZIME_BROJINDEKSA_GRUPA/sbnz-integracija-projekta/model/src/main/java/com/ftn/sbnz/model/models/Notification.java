@@ -22,11 +22,13 @@ public class Notification {
     private Long id;
     private String message;
     private String type;
+    private Long requestId;
 
 
-    public Notification(String message,String type){
+    public Notification(String message,String type, Long requestId){
         this.message=message;
         this.type=type;
+        this.requestId=requestId;
     }
 
 }

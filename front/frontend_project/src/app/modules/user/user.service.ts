@@ -45,5 +45,21 @@ export class UserService {
     return this.http.get<any>(environment.apiHost + 'api/getUserNotifications/'+id);
   }
 
+  acceptRoommate(id:any): Observable<any> {
+    return this.http.put<any>(environment.apiHost + 'api/acceptRoommateRequest/'+id,  {headers: this.headers});
+  }
+
+  denyRoommate(id:any): Observable<any> {
+    return this.http.put<any>(environment.apiHost + 'api/denyRoommateRequest/'+id,  {headers: this.headers});
+  }
+
+  acceptReservation(id:any): Observable<any> {
+    return this.http.put<any>(environment.apiHost + 'api/acceptReservationRequest/'+id,  {headers: this.headers});
+  }
+
+  denyReservation(id:any): Observable<any> {
+    return this.http.put<any>(environment.apiHost + 'api/denyReservationRequest/'+id,  {headers: this.headers});
+  }
+
   
 }

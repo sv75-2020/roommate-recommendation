@@ -12,14 +12,31 @@ export class NotificationItemComponent {
 
   constructor(private userService: UserService) {}
 
-  onAccept() {
-    // handle accept action
-    //this.userService.removeNotification(this.notification.id);
+  onAccept(notification:any) {
+    if(notification.type=="reservationRequest"){
+      this.userService.acceptReservation(notification.requestId).subscribe((result: any) =>{
+        console.log(result)
+       });
+    }
+    else{
+      this.userService.acceptRoommate(notification.requestId).subscribe((result: any) =>{
+        console.log(result)
+       });
+    }
+   
   }
 
-  onDeny() {
-    // handle deny action
-    //this.notificationService.removeNotification(this.notification.id);
+  onDeny(notification:any) {
+    if(notification.type=="reservationRequest"){
+      this.userService.denyReservation(notification.requestId).subscribe((result: any) =>{
+        console.log(result)
+       });
+    }
+    else{
+      this.userService.denyRoommate(notification.requestId).subscribe((result: any) =>{
+        console.log(result)
+       });
+    }
   }
 
   getDisplayText(type: string): string {
@@ -30,6 +47,8 @@ export class NotificationItemComponent {
         return 'Roommate Request';
       case 'reservationRequest':
         return 'Reservation Request';
+        case 'warning':
+          return 'Warning';
       default:
         return type;
     }

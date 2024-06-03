@@ -46,19 +46,19 @@ public class NotificationService {
         LocalDate now = LocalDate.now();
         for(MonthlyPayment mp: monthlyPaymentRepository.findAll()){
             if(mp.getUser().getId()==id && now.getMonth().equals(mp.getPaymentDate().getMonth()) && now.getYear()==mp.getPaymentDate().getYear())
-                notifications.add(new Notification("Pay bill for month: "+mp.getPaymentDate().getMonth(), "bill"));
+                notifications.add(new Notification("Pay bill for month: "+mp.getPaymentDate().getMonth(), "bill",0L));
         }
         for(RoommateRequest request: roommateRequestRepository.findAll()){
             if(request.getRequestedUser().getId()==id && request.getStatus()==RequestStatus.PENDING)
-                notifications.add(new Notification("Roommate request from user  "+request.getUser().getFullName(), "roommateRequest"));
+                notifications.add(new Notification("Roommate request from user  "+request.getUser().getFullName(), "roommateRequest", request.getId()));
         }
         for(Reservation reservation: reservationRepository.findAll()){
             if((reservation.getRoommates().getRoommate1().getId()==id || reservation.getRoommates().getRoommate2().getId()==id ) && reservation.getStatus()==ReservationStatus.PENDING)
-                notifications.add(new Notification("Reservation request", "reservationRequest"));
+                notifications.add(new Notification("Reservation request", "reservationRequest", reservation.getId()));
         }
         for(UserWarning warning: userWarningRepository.findAll()){
             if(warning.getUser().getId()==id)
-                notifications.add(new Notification("Warning! You havent paid rent", "warning"));
+                notifications.add(new Notification("Warning! You havent paid rent", "warning", 0L));
         }
         return ResponseEntity.ok(notifications);
     }

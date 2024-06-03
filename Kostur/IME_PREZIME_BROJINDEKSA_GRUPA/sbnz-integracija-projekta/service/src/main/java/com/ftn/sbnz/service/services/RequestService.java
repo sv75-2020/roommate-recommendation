@@ -1,19 +1,25 @@
 package com.ftn.sbnz.service.services;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.ftn.sbnz.model.dto.RoommateRequestDTO;
+import com.ftn.sbnz.model.models.Reservation;
 import com.ftn.sbnz.model.models.RoommateRequest;
 import com.ftn.sbnz.model.models.Roommates;
 import com.ftn.sbnz.model.models.User;
 import com.ftn.sbnz.model.repository.AccommodationRepository;
+import com.ftn.sbnz.model.repository.ReservationRepository;
 import com.ftn.sbnz.model.repository.RoommateRequestRepository;
 import com.ftn.sbnz.model.repository.RoommatesRepository;
 import com.ftn.sbnz.model.repository.UserRepository;
 
 import enums.RequestStatus;
+import enums.ReservationStatus;
 
 @Service
 public class RequestService {
@@ -29,6 +35,9 @@ public class RequestService {
 
     @Autowired
     public RoommatesRepository roommatesRepository;
+
+    @Autowired
+    public ReservationRepository reservationRepository;
 
 
     public ResponseEntity<RoommateRequest> sendRoommateRequest(RoommateRequestDTO requestDTO) {
@@ -71,6 +80,34 @@ public class RequestService {
         roommateRequest.setStatus(RequestStatus.DENIED);
 
         return ResponseEntity.ok(roommateRequestRepository.save(roommateRequest));
+    }
+
+    public ResponseEntity<Map<String,String>> acceptReservationRequest(Long id) {
+        Reservation reservation = reservationRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("Reservation request not found"));
+
+        reservation.setStatus(ReservationStatus.ACTIVE);
+
+        reservationRepository.save(reservation);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Success");
+
+        return ResponseEntity.ok(response);
+    }
+
+    public ResponseEntity<Map<String,String>> denyReservationRequest(Long id) {
+        Reservation reservation = reservationRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("Reservation request not found"));
+
+        reservation.setStatus(ReservationStatus.DENIED);
+
+        reservationRepository.save(reservation);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Success");
+
+        return ResponseEntity.ok(response);
     }
 
 

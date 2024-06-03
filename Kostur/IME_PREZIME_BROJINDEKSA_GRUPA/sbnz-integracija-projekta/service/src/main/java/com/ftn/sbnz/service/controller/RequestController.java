@@ -1,6 +1,7 @@
 package com.ftn.sbnz.service.controller;
 
 import java.io.IOException;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ftn.sbnz.model.dto.RoommateRequestDTO;
+import com.ftn.sbnz.model.models.Reservation;
 import com.ftn.sbnz.model.models.RoommateRequest;
 import com.ftn.sbnz.model.models.Roommates;
 import com.ftn.sbnz.service.services.RequestService;
@@ -36,6 +38,17 @@ public class RequestController {
     @PutMapping("/api/denyRoommateRequest/{id}")
     public ResponseEntity<RoommateRequest> denyRoommateRequest(@PathVariable Long id) {
         return requestService.denyRoommateRequest(id);
+    }
+
+    
+    @PutMapping("/api/acceptReservationRequest/{id}")
+    public ResponseEntity<Map<String,String>> acceptReservationRequest(@PathVariable Long id) {
+        return requestService.acceptReservationRequest(id);
+    }
+
+    @PutMapping("/api/denyReservationRequest/{id}")
+    public ResponseEntity<Map<String,String>> denyReservationRequest(@PathVariable Long id) {
+        return requestService.denyReservationRequest(id);
     }
 
 
