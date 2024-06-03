@@ -1,0 +1,15 @@
+
+<div class="notification-item">
+  <img src="assets/notificationImage.jpg" alt="Notification Image" class="notification-image">
+  <div class="notification-content">
+    <h4>{{ getDisplayText(notification.type) }}</h4>
+    <p>{{ notification.message }}</p>
+    <div class="buttons-container">
+      <button *ngIf="notification.type === 'bill'" class="action-button">Pay</button>
+      <div *ngIf="notification.type === 'accommodationRequest' || notification.type === 'roommateRequest'">
+        <button class="accept-button" (click)="onAccept()">Accept</button>
+        <button class="decline-button" (click)="onDeny()">Decline</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -11,12 +11,14 @@ import java.sql.Date;
 rule "Check reservation confirmation for roommate1"
     when
         $reservation : Reservation(paidDeposit == false, $user : roommates.getRoommate1(), $createdTime : created)
-        not(DepositPaidEvent(this after[0d, 1d] $createdTime, user==$user))
+        not(DepositPaid(this after[0d, 1d] $createdTime, user==$user))
     then
         System.out.println("deposit not paid by roommate 1");
         Date currentDate = Date.valueOf(LocalDate.now());
         DepositNotPaidEvent depositNotPaidEvent = new DepositNotPaidEvent(1L, currentDate, $user);
+        DepositNotPaid depositNotPaid = new DepositNotPaid(1L, currentDate, $user);
         insert(depositNotPaidEvent);
+        insert(depositNotPaid);
         modify($reservation) {
             setStatus(ReservationStatus.DENIED);
         }
@@ -25,12 +27,14 @@ end
 rule "Check reservation confirmation for roommate2"
     when
         $reservation : Reservation(paidDeposit == false, $user : roommates.getRoommate2(), $createdTime : created)
-        not(DepositPaidEvent(this after[0d, 1d] $createdTime, user==$user))
+        not(DepositPaid(this after[0d, 1d] $createdTime, user==$user))
     then
         System.out.println("deposit not paid by roommate 2");
         Date currentDate = Date.valueOf(LocalDate.now());
         DepositNotPaidEvent depositNotPaidEvent = new DepositNotPaidEvent(2L, currentDate, $user);
+        DepositNotPaid depositNotPaid = new DepositNotPaid(2L, currentDate, $user);
         insert(depositNotPaidEvent);
+        insert(depositNotPaid);
         modify($reservation) {
             setStatus(ReservationStatus.DENIED);
         }
@@ -40,7 +44,7 @@ rule "Block user if they have two or more DepositNotPaidEvent in last 30 days"
     when
         $user : User($userId : id)
         accumulate(
-            $event : DepositNotPaidEvent(user == $user)
+            $event : DepositNotPaid(user == $user)
             over window:time(30d);
             $count : count($event)
         )

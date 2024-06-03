@@ -21,6 +21,8 @@ import { UserInfoComponent } from './modules/user/user-info/user-info.component'
 import { AccommodationPageComponent } from './modules/accomodation/accommodation-page/accommodation-page.component';
 import { AccommodationDetailsComponent } from './modules/accomodation/accommodation-details/accommodation-details.component';
 import { RoommatesPageComponent } from './modules/user/roommates-page/roommates-page.component';
+import { NotificationsComponent } from './modules/user/notifications/notifications.component';
+import { NotificationItemComponent } from './modules/user/notification-item/notification-item.component';
 
 
 @NgModule({
@@ -30,7 +32,9 @@ import { RoommatesPageComponent } from './modules/user/roommates-page/roommates-
     UserInfoComponent,
     AccommodationPageComponent,
     AccommodationDetailsComponent,
-    RoommatesPageComponent
+    RoommatesPageComponent,
+    NotificationsComponent,
+    NotificationItemComponent
   ],
   imports: [
     CommonModule,

@@ -13,10 +13,10 @@ import org.kie.api.runtime.KieSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.ftn.sbnz.model.events.MonthlyPaymentEvent;
-import com.ftn.sbnz.model.events.NotifyAdminForBill;
 import com.ftn.sbnz.model.models.Accommodation;
 import com.ftn.sbnz.model.models.Location;
+import com.ftn.sbnz.model.models.MonthlyPayment;
+import com.ftn.sbnz.model.models.NotifyAdminForBill;
 import com.ftn.sbnz.model.models.Payment;
 import com.ftn.sbnz.model.models.Reservation;
 import com.ftn.sbnz.model.models.Roommates;
@@ -202,7 +202,7 @@ User user2 = new User(
         KieSession ksession = kContainer.newKieSession("cepKsession");
         SessionPseudoClock clock = ksession.getSessionClock();
         System.out.println(billingService);
-        List<MonthlyPaymentEvent> payments=billingService.addBills();
+        List<MonthlyPayment> payments=billingService.addBills();
         
         ksession.setGlobal("loggedInId", user1.getId());
         ksession.setGlobal("compatibilityLevel", 0);

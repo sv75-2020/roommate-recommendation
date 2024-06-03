@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ftn.sbnz.model.events.BillPaidEvent;
+import com.ftn.sbnz.model.models.BillPaid;
 import com.ftn.sbnz.model.models.Payment;
 import com.ftn.sbnz.model.models.User;
 import com.ftn.sbnz.model.repository.BillPaidRepository;
@@ -46,13 +47,17 @@ public class UserService {
         String username = authentication.getName();
         User user= (User) userRepository.findByUsername(username);
 
-        BillPaidEvent bp=new BillPaidEvent();
+        BillPaidEvent bpe=new BillPaidEvent();
+        BillPaid bp=new BillPaid();
         LocalDate currDate = LocalDate.now();
         bp.setPaymentDate(currDate);
-        
         bp.setUser(user);
+
+        bpe.setPaymentDate(currDate);
+        bpe.setUser(user);
+
        
-        //billPaidRepository.save(bp);
+        billPaidRepository.save(bp);
 
         Optional<Payment> payment = paymentRepository.findById(paymentId);
         if (payment.isPresent()) {

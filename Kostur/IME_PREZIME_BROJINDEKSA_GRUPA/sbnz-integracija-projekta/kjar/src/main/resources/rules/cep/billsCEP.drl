@@ -27,8 +27,10 @@ rule "Notify Admin for Unpaid Bills"
         not(BillPaidEvent(this after[0d, 7d] $monthyPayment, user==$user))
     then
         NotifyAdminForBill notify=new NotifyAdminForBill($user,LocalDate.now());
+        NotifyAdminForBillEvent notifyEvent=new NotifyAdminForBillEvent($user,LocalDate.now());
         notifyAdminForBillRepository.save(notify);
         insert(notify);
+        insert(notifyEvent);
 end
 
 rule "User warning paid"
@@ -38,7 +40,7 @@ rule "User warning paid"
             $user:user
         )
          eval($paymentDate.getMonth()== LocalDate.now().getMonth() &&  $paymentDate.getYear() == LocalDate.now().getYear())
-        $payment:BillPaidEvent(user==$user, this after[0d, 3d] $paymentDate)
+        $payment:BillPaid(user==$user, this after[0d, 3d] $paymentDate)
     then
         delete($warning);
         userWarningRepository.delete($warning);
@@ -54,9 +56,11 @@ rule "User warning not paid"
         )
         eval($paymentDate.getMonth()== LocalDate.now().getMonth() &&  $paymentDate.getYear() == LocalDate.now().getYear())
 
-        not($payment:BillPaidEvent(user==$user, this after[0d, 3d] $paymentDate))
+        not($payment:BillPaid(user==$user, this after[0d, 3d] $paymentDate))
     then
         NotifyAdminEviction notify=new NotifyAdminEviction($user,LocalDate.now());
+        NotifyAdminEvictionEvent notifyEvent=new NotifyAdminEvictionEvent($user,LocalDate.now());
         notifyAdminEvictionRepository.save(notify);
         insert(notify);
+        insert(notifyEvent);
 end

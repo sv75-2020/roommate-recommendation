@@ -1,0 +1,7 @@
+.notification-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0 auto; /* Center the list horizontally */
+  width: 60%; /* Set the width to 60% */
+}

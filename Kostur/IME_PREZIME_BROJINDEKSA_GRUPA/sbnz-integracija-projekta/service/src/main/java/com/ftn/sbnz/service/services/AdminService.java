@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ftn.sbnz.model.events.NotifyAdminForBill;
+import com.ftn.sbnz.model.models.NotifyAdminForBill;
 import com.ftn.sbnz.model.models.UserWarning;
 import com.ftn.sbnz.model.repository.AdminRepository;
 import com.ftn.sbnz.model.repository.UserWarningRepository;

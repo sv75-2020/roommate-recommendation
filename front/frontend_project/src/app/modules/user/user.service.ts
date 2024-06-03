@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { Notification } from './notifications/notifications.component';
 
 @Injectable({
   providedIn: 'root'
@@ -39,5 +40,10 @@ export class UserService {
       });
     });
   }
+
+  getUserNotifications(id:any): Observable<any> {
+    return this.http.get<any>(environment.apiHost + 'api/getUserNotifications/'+id);
+  }
+
   
 }

@@ -3,9 +3,11 @@ package com.ftn.sbnz.service.controller;
 import com.ftn.sbnz.model.dto.UserDTO;
 import com.ftn.sbnz.model.exceptions.BadRequestException;
 import com.ftn.sbnz.model.models.Location;
+import com.ftn.sbnz.model.models.Notification;
 import com.ftn.sbnz.model.models.Payment;
 import com.ftn.sbnz.model.models.User;
 import com.ftn.sbnz.service.services.LocationService;
+import com.ftn.sbnz.service.services.NotificationService;
 import com.ftn.sbnz.service.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,6 +38,9 @@ public class UserController {
     @Autowired
     public LocationService locationService;
 
+    @Autowired
+    public NotificationService notificationService;
+
     @GetMapping(value = "/api/users")
     public ResponseEntity<List<UserDTO>> getAllUsers() {
         return userService.getAllUsers();
@@ -46,6 +51,13 @@ public class UserController {
     public ResponseEntity<User> getUser(@PathVariable Long id) {
         System.out.println("aaaaa");
         return userService.getUser(id);
+
+    }
+
+    @GetMapping(value = "/api/getUserNotifications/{id}")
+    public ResponseEntity<List<Notification>> getUserNotifications(@PathVariable Long id) {
+        
+        return notificationService.getNotifications(id);
 
     }
 

@@ -7,6 +7,7 @@ import { UserInfoComponent } from 'src/app/modules/user/user-info/user-info.comp
 import { AccommodationPageComponent } from 'src/app/modules/accomodation/accommodation-page/accommodation-page.component';
 import { AccommodationDetailsComponent } from 'src/app/modules/accomodation/accommodation-details/accommodation-details.component';
 import { RoommatesPageComponent } from 'src/app/modules/user/roommates-page/roommates-page.component';
+import { NotificationsComponent } from 'src/app/modules/user/notifications/notifications.component';
 
 
 const routes: Routes = [
@@ -19,6 +20,8 @@ const routes: Routes = [
   { path: 'accomodation-page', component: AccommodationPageComponent},
   { path: 'accommodation-page/:id', component: AccommodationDetailsComponent},
   { path: 'roommates-page', component: RoommatesPageComponent},
+  { path: 'notifications', component: NotificationsComponent},
+
 
 ];
 

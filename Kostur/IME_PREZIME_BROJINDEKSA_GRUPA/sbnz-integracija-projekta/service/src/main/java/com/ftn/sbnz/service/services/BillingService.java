@@ -8,6 +8,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.ftn.sbnz.model.events.MonthlyPaymentEvent;
+import com.ftn.sbnz.model.models.MonthlyPayment;
 import com.ftn.sbnz.model.models.Payment;
 import com.ftn.sbnz.model.models.Reservation;
 import com.ftn.sbnz.model.repository.MonthlyPaymentRepository;
@@ -26,8 +27,8 @@ public class BillingService {
     @Autowired
     public MonthlyPaymentRepository monthlyPaymentRepository;
 
-    public List<MonthlyPaymentEvent> addBills(){
-        List<MonthlyPaymentEvent> payments=new ArrayList<MonthlyPaymentEvent>();
+    public List<MonthlyPayment> addBills(){
+        List<MonthlyPayment> payments=new ArrayList<MonthlyPayment>();
         List<Reservation> reservations = reservationRepository.findAll();
         for(Reservation r : reservations){
             Payment p=new Payment();
@@ -38,15 +39,23 @@ public class BillingService {
             p.setReservation(r);
             paymentRepository.save(p);
 
-            MonthlyPaymentEvent mp1=new MonthlyPaymentEvent();
+            MonthlyPaymentEvent mpe1=new MonthlyPaymentEvent();
+            mpe1.setPaymentDate(LocalDate.now());
+            mpe1.setUser(r.getRoommates().getRoommate1());
+
+            MonthlyPayment mp1=new MonthlyPayment();
             mp1.setPaymentDate(LocalDate.now());
             mp1.setUser(r.getRoommates().getRoommate1());
             monthlyPaymentRepository.save(mp1);
             payments.add(mp1);
 
-            MonthlyPaymentEvent mp2=new MonthlyPaymentEvent();
+            MonthlyPaymentEvent mpe2=new MonthlyPaymentEvent();
+            mpe2.setPaymentDate(LocalDate.now());
+            mpe2.setUser(r.getRoommates().getRoommate2());
+
+            MonthlyPayment mp2=new MonthlyPayment();
             mp2.setPaymentDate(LocalDate.now());
-            mp2.setUser(r.getRoommates().getRoommate2());
+            mp2.setUser(r.getRoommates().getRoommate1());
             monthlyPaymentRepository.save(mp2);
             payments.add(mp2);
 

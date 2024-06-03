@@ -24,7 +24,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class NotifyAdminEviction {
+public class NotifyAdminEvictionEvent {
 
      @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -32,7 +32,7 @@ public class NotifyAdminEviction {
     private User user;
     private LocalDate executionTime;
   
-    public NotifyAdminEviction(User user,LocalDate date){
+    public NotifyAdminEvictionEvent(User user,LocalDate date){
         this.user=user;
         this.executionTime=date;
     }
