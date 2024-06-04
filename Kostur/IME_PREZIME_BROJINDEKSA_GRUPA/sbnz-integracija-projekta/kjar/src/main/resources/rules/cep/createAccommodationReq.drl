@@ -53,3 +53,13 @@ agenda-group "accommodation-requirements"
         double averageBudget = ($budget1 + $budget2) / 2.0;
 		modify($accommodationRequirements){ setCombinedBudget(averageBudget) };
 end;
+
+rule "Smoking preference"
+agenda-group "accommodation-requirements"
+	when
+        $roommates: Roommates($roommate1: roommate1, $roommate2: roommate2,
+                    ($roommate1.smoker == true || $roommate2.smoker == true))
+        $accommodationRequirements: AccommodationRequirements(roommates.getId() == $roommates.getId());
+	then
+		modify($accommodationRequirements){ setSmokingAllowed(true) };
+end;
