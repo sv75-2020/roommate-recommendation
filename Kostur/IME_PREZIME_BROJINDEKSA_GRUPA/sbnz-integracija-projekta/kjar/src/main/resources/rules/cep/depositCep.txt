@@ -4,14 +4,17 @@ import com.ftn.sbnz.model.models.Reservation;
 import enums.ReservationStatus;
 import com.ftn.sbnz.model.events.DepositPaidEvent;
 import com.ftn.sbnz.model.events.DepositNotPaidEvent;
+import com.ftn.sbnz.model.models.DepositPaid;
+import com.ftn.sbnz.model.models.DepositNotPaid;
 import com.ftn.sbnz.model.events.UserBlockedEvent;
 import java.time.LocalDate;
 import java.sql.Date;
 
 rule "Check reservation confirmation for roommate1"
+agenda-group "deposit-cep"
     when
         $reservation : Reservation(paidDeposit == false, $user : roommates.getRoommate1(), $createdTime : created)
-        not(DepositPaid(this after[0d, 1d] $createdTime, user==$user))
+        not(DepositPaidEvent(this after[0d, 1d] $createdTime, user==$user))
     then
         System.out.println("deposit not paid by roommate 1");
         Date currentDate = Date.valueOf(LocalDate.now());
@@ -25,9 +28,10 @@ rule "Check reservation confirmation for roommate1"
 end
 
 rule "Check reservation confirmation for roommate2"
+agenda-group "deposit-cep"
     when
         $reservation : Reservation(paidDeposit == false, $user : roommates.getRoommate2(), $createdTime : created)
-        not(DepositPaid(this after[0d, 1d] $createdTime, user==$user))
+        not(DepositPaidEvent(this after[0d, 1d] $createdTime, user==$user))
     then
         System.out.println("deposit not paid by roommate 2");
         Date currentDate = Date.valueOf(LocalDate.now());
@@ -41,6 +45,7 @@ rule "Check reservation confirmation for roommate2"
 end
 
 rule "Block user if they have two or more DepositNotPaidEvent in last 30 days"
+agenda-group "deposit-cep"
     when
         $user : User($userId : id)
         accumulate(

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import com.ftn.sbnz.model.models.*;
 import org.drools.core.time.SessionPseudoClock;
 import org.junit.Test;
 import org.kie.api.KieServices;
@@ -13,14 +14,6 @@ import org.kie.api.runtime.KieSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.ftn.sbnz.model.models.Accommodation;
-import com.ftn.sbnz.model.models.Location;
-import com.ftn.sbnz.model.models.MonthlyPayment;
-import com.ftn.sbnz.model.models.NotifyAdminForBill;
-import com.ftn.sbnz.model.models.Payment;
-import com.ftn.sbnz.model.models.Reservation;
-import com.ftn.sbnz.model.models.Roommates;
-import com.ftn.sbnz.model.models.User;
 import com.ftn.sbnz.model.repository.DepositRepository;
 import com.ftn.sbnz.model.repository.NotifyAdminEvictionRepository;
 import com.ftn.sbnz.model.repository.NotifyAdminForBillRepository;
@@ -168,10 +161,11 @@ User user2 = new User(
   );
 
   Roommates rm1=new Roommates(1L,user1,user2);
+  AccommodationRequirements accr1 = new AccommodationRequirements(1L, rm1, 0, false, false, false, new ArrayList<Location>());
   Accommodation a1=new Accommodation(1L,"address1",2,200,true,true,true,true,l1);
     @Test
     public void test() {
-      Reservation r1 = reservationService.newReservation(rm1, a1);
+      //Reservation r1 = reservationService.newReservation(rm1, a1);
       KieServices ks = KieServices.Factory.get();
       KieContainer kContainer = ks.getKieClasspathContainer(); 
       KieSession ksession = kContainer.newKieSession("cepKsession");
@@ -189,7 +183,7 @@ User user2 = new User(
         ksession.insert(user4);
         ksession.insert(rm1);
         ksession.insert(a1);
-        ksession.insert(r1);
+        //ksession.insert(r1);
 
         ksession.fireAllRules();
     }
@@ -241,7 +235,7 @@ User user2 = new User(
     }
     @Test
     public void test_deposit_cep() {
-      Reservation r1 = reservationService.newReservation(rm1, a1);
+      //Reservation r1 = reservationService.newReservation(rm1, a1);
       KieServices ks = KieServices.Factory.get();
         KieContainer kContainer = ks.getKieClasspathContainer(); 
         KieSession ksession = kContainer.newKieSession("cepKsession");
@@ -252,15 +246,19 @@ User user2 = new User(
         ksession.setGlobal("notifyAdminForBillRepository", notifyAdminForBillRepository);
         ksession.setGlobal("userWarningRepository", userWarningRepository);
         ksession.setGlobal("notifyAdminEvictionRepository", notifyAdminEvictionRepository);
+
         ksession.insert(user1);
         ksession.insert(user2);
         ksession.insert(user3);
         ksession.insert(user4);
         ksession.insert(rm1);
         ksession.insert(a1);
-        ksession.insert(r1);
+        //ksession.insert(r1);
+        ksession.insert(accr1);
+        ksession.getAgenda().getAgendaGroup("accommodation-requirements").setFocus();
         ksession.fireAllRules();
 
     }
+
 }
 

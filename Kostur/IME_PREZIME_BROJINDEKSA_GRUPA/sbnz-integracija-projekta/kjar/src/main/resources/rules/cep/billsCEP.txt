@@ -1,9 +1,12 @@
 package cep;
 
 import com.ftn.sbnz.model.events.BillPaidEvent;
+import com.ftn.sbnz.model.models.BillPaid;
 import com.ftn.sbnz.model.events.MonthlyPaymentEvent;
-import com.ftn.sbnz.model.events.NotifyAdminEviction;
-import com.ftn.sbnz.model.events.NotifyAdminForBill;
+import com.ftn.sbnz.model.events.NotifyAdminEvictionEvent;
+import com.ftn.sbnz.model.events.NotifyAdminForBillEvent;
+import com.ftn.sbnz.model.models.NotifyAdminForBill;
+import com.ftn.sbnz.model.models.NotifyAdminEviction;
 import com.ftn.sbnz.model.models.UserWarning;
 import com.ftn.sbnz.model.models.User;
 import com.ftn.sbnz.model.repository.NotifyAdminEvictionRepository;
@@ -17,6 +20,7 @@ global com.ftn.sbnz.model.repository.NotifyAdminForBillRepository notifyAdminFor
 
 
 rule "Notify Admin for Unpaid Bills"
+agenda-group "bills-cep"
     when
         $monthyPayment:MonthlyPaymentEvent(
             $paymentDate:paymentDate,
@@ -34,6 +38,7 @@ rule "Notify Admin for Unpaid Bills"
 end
 
 rule "User warning paid"
+agenda-group "bills-cep"
     when
         $warning:UserWarning(
             $paymentDate:date,
@@ -49,6 +54,7 @@ end
 
 
 rule "User warning not paid"
+agenda-group "bills-cep"
     when
         $warning:UserWarning(
             $paymentDate:date,

@@ -1,0 +1,22 @@
+package cep;
+import com.ftn.sbnz.model.models.User;
+import com.ftn.sbnz.model.models.Roommates;
+import com.ftn.sbnz.model.models.AccommodationRequirements;
+import java.util.Set
+import com.ftn.sbnz.model.models.Location
+import java.util.ArrayList
+import java.util.List;
+
+
+rule "Location requirements from both users"
+agenda-group "accommodation-requirements"
+	when
+		$roommates: Roommates()
+		$user1: User(id == $roommates.getRoommate1().getId())
+		$user2: User(id == $roommates.getRoommate2().getId())
+    	$accommodationRequirements: AccommodationRequirements(roommates.getId() == $roommates.getId());
+	then
+		List<Location> commonLocations = new ArrayList<Location>($user1.getLocations());
+        commonLocations.retainAll($user2.getLocations());
+		modify($accommodationRequirements){ setCombinedLocation(commonLocations) };
+end;

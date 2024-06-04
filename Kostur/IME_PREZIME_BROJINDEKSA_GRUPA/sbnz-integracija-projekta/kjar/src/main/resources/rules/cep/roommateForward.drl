@@ -13,6 +13,7 @@ global java.lang.Integer compatibilityLevel;
 
 
 rule "Gender Matching"
+agenda-group "roommate-forward"
 when
     $loggedInUser: User(loggedInId == id, $gender: gender)
     $otherUser: User(gender == $gender, this != $loggedInUser)
@@ -34,6 +35,7 @@ then
 end
 
 rule "Budget and Location Matching with Small Difference"
+agenda-group "roommate-forward"
 when
     $loggedInUser: User(loggedInId == id, $budget1: budget, $locations1: locations)
     $otherUser: User($budget2 : budget, $locations2: locations, this != $loggedInUser)
@@ -47,6 +49,7 @@ then
 end
 
 rule "Remove Users with Large Budget Difference or No Common Locations"
+agenda-group "roommate-forward"
 when
     $loggedInUser: User(loggedInId == id, $budget1: budget, $locations1: locations)
     $otherUser: User($budget2 : budget, $locations2: locations, this != $loggedInUser)
@@ -62,6 +65,7 @@ end
 
 
 rule "No Matching for Users who dislike pets"
+agenda-group "roommate-forward"
 when
     $user1: User(loggedInId==id, doesntWantPets == true)
     $user2: User(hasPets == true, this!=$user1)
@@ -71,6 +75,7 @@ then
 end
 
 rule "No Matching for Users who have pets"
+agenda-group "roommate-forward"
 when
     $user1: User(loggedInId==id, hasPets == true)
     $user2: User(doesntWantPets == true, this!=$user1)
@@ -80,6 +85,7 @@ then
 end
 
 rule "No Matching for Users who Dislike Smoking"
+agenda-group "roommate-forward"
 when
     $user1: User(loggedInId==id, dislikesSmokingIndoors == true)
     $user2: User(smoker == true, this!=$user1)
@@ -89,6 +95,7 @@ then
 end
 
 rule "No Matching for Users who smoke"
+agenda-group "roommate-forward"
 when
     $user1: User(loggedInId==id, smoker == true)
     $user2: User(dislikesSmokingIndoors == true, this!=$user1)
@@ -98,6 +105,7 @@ then
 end
 
 rule "No Matching for Users with Different Accommodation Times"
+agenda-group "roommate-forward"
 when
     $user1: User(loggedInId==id, $time1: moveInMonth)
     $user2: User(moveInMonth != $time1, this != $user1)
@@ -107,6 +115,7 @@ then
 end
 
 rule "Similar Hobbies and Interests"
+agenda-group "roommate-forward"
 when
     $user1: User($interests1: interests)
     $user2: User($interests2: interests, this != $user1)
@@ -119,6 +128,7 @@ then
 end
 
 rule "Small age difference"
+agenda-group "roommate-forward"
 when
     $loggedInUser: User(loggedInId == id, $dateOfBirth1: dateOfBirth.getYear())
     $otherUser: User($dateOfBirth2: dateOfBirth.getYear(), this != $loggedInUser)
@@ -128,6 +138,7 @@ then
 end
 
 rule "Medium age difference"
+agenda-group "roommate-forward"
 when
     $loggedInUser: User(loggedInId == id, $dateOfBirth1: dateOfBirth.getYear())
     $otherUser: User($dateOfBirth2: dateOfBirth.getYear(), this != $loggedInUser)
@@ -137,6 +148,7 @@ then
 end
 
 rule "Big age difference"
+agenda-group "roommate-forward"
 when
     $loggedInUser: User(loggedInId == id, $dateOfBirth1: dateOfBirth.getYear())
     $otherUser: User($dateOfBirth2: dateOfBirth.getYear(), this != $loggedInUser)
@@ -146,6 +158,7 @@ then
 end
 
 rule "Same Cleaning habits"
+agenda-group "roommate-forward"
 when
     $loggedInUser: User(loggedInId == id, $cleaningHabit1: cleaningHabit)
     $otherUser: User($cleaningHabit2: cleaningHabit, this != $loggedInUser)
@@ -155,6 +168,7 @@ then
 end
 
 rule "Similar Cleaning habits"
+agenda-group "roommate-forward"
 when
     $loggedInUser: User(loggedInId == id, $cleaningHabit1: cleaningHabit)
     $otherUser: User($cleaningHabit2: cleaningHabit, this != $loggedInUser)
@@ -164,6 +178,7 @@ then
 end
 
 rule "Different Cleaning habits"
+agenda-group "roommate-forward"
 when
     $loggedInUser: User(loggedInId == id, $cleaningHabit1: cleaningHabit)
     $otherUser: User($cleaningHabit2: cleaningHabit, this != $loggedInUser)
@@ -173,6 +188,7 @@ then
 end
 
 rule "Same preference for peace and quiet"
+agenda-group "roommate-forward"
 when
     $user1: User(loggedInId == id, $likesQuiet: likesQuiet == true)
     $user2: User(this != $user1, likesQuiet == $likesQuiet)
@@ -181,6 +197,7 @@ then
 end
 
 rule "Users with a pet and animal lovers"
+agenda-group "roommate-forward"
 when
     $loggedUser: User(loggedInId == id, $interests: interests)
     exists(String(this == "AnimalLover") from $interests)
@@ -190,6 +207,7 @@ then
 end
 
 rule "Animal lovers and users with a pet"
+agenda-group "roommate-forward"
 when
     $loggedUser: User(loggedInId == id, hasPets == true)
     $user1: User(this != $loggedUser, $interests: interests)
@@ -199,6 +217,7 @@ then
 end
 
 rule "Users with the same personality type"
+agenda-group "roommate-forward"
 when
     $user1: User(loggedInId == id, $personalityType: personalityType)
     $user2: User(this != $user1, personalityType == $personalityType)
@@ -207,6 +226,7 @@ then
 end
 
 rule "Users with the same job status"
+agenda-group "roommate-forward"
 when
     $user1: User(loggedInId == id, $jobStatus: jobStatus)
     $user2: User(this != $user1, jobStatus == $jobStatus)
@@ -215,6 +235,7 @@ then
 end
 
 rule "Final Compatibility Level"
+agenda-group "roommate-forward"
 salience -1
 when
     $user1: User(loggedInId==id)
