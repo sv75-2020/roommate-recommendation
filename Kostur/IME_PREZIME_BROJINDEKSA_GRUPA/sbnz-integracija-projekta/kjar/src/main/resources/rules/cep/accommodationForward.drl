@@ -12,15 +12,12 @@ import enums.ReservationStatus
 
 global List<com.ftn.sbnz.model.models.User> recommendedRoommates;
 global java.lang.Long loggedInId;
-global java.lang.Integer points;
+global java.util.Map<Long, Integer> accommodationCompatibility;
 
 rule "Remove Occupied Accommodations"
 agenda-group "accommodation-forward"
 when
-    #$roommates:Roommates($roommate1Id:roommate1.id)
-    #$user: User($roommate1Id == id, $moveInMonth: moveInMonth)
     $reservation: Reservation($accommodation:accommodation, status==ReservationStatus.ACTIVE)
-    $accommodation: Accommodation($accommodation.id==id)
 then
     retract($accommodation);
 end
@@ -37,8 +34,8 @@ end
 rule "Doesnt have fast wifi"
 agenda-group "accommodation-forward"
 when
-    $accommodationRequirements: AccommodationRequirements(fastInterent:fastInternet)
-    $accommodation: Accommodation($accommodation.fastInternet!=fastInternet)
+    $accommodationRequirements: AccommodationRequirements($fastInterentNeeded:fastInternet)
+    $accommodation: Accommodation($accommodation.isFastInternet()!=$fastInterentNeeded)
 then
     retract($accommodation);
 end
@@ -54,26 +51,6 @@ then
 end
 
 
-rule "Accommodations with matching price"
-agenda-group "accommodation-forward"
-when
-    $accommodationRequirements: AccommodationRequirements($budget:combinedBudget)
-    $accommodation: Accommodation($price:price)
-    eval($price==2*$budget)
-then
-    points+=50;
-end
-
-rule "Accommodations with almost matching price"
-agenda-group "accommodation-forward"
-when
-    $accommodationRequirements: AccommodationRequirements($budget:combinedBudget)
-    $accommodation: Accommodation($price:price)
-    eval(2*$budget-$price>50)
-then
-    points+=100;
-end
-
 rule "Accommodations with not matching price"
 agenda-group "accommodation-forward"
 when
@@ -83,6 +60,32 @@ when
 then
     retract($accommodation)
 end
+
+rule "Accommodations with matching price"
+agenda-group "accommodation-forward"
+when
+    $accommodationRequirements: AccommodationRequirements($budget:combinedBudget)
+    $accommodation: Accommodation($price:price)
+    eval($price==2*$budget)
+then
+    Integer compatibility = (Integer) accommodationCompatibility.get($accommodation.getId());
+    compatibility += 50;
+    accommodationCompatibility.put($accommodation.getId(), compatibility);
+
+end
+
+rule "Accommodations with almost matching price"
+agenda-group "accommodation-forward"
+when
+    $accommodationRequirements: AccommodationRequirements($budget:combinedBudget)
+    $accommodation: Accommodation($price:price)
+    eval(2*$budget-$price>50)
+then
+    Integer compatibility = (Integer) accommodationCompatibility.get($accommodation.getId());
+    compatibility += 100;
+    accommodationCompatibility.put($accommodation.getId(), compatibility);
+end
+
 
 
 

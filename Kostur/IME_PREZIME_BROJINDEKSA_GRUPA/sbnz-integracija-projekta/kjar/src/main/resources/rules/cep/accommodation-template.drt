@@ -1,7 +1,3 @@
-package cep;
-import com.ftn.sbnz.model.models.Accommodation;
-import com.ftn.sbnz.model.models.AccommodationPreference;
-
 template header
     preference
     feature
@@ -9,6 +5,13 @@ template header
     salience
     number
 
+package cep;
+import com.ftn.sbnz.model.models.Accommodation;
+import com.ftn.sbnz.model.models.AccommodationPreferences;
+import java.util.Map;
+
+
+global Map<Long, Integer> accommodationCompatibility;
 template "accommodation-template"
 
 rule "Rate accommodation by @{feature}"
@@ -16,10 +19,13 @@ salience @{salience}
 when
     $accommodation:Accommodation($feature:@{feature})
     $count : Number(intValue == @{number}) from accumulate(
-            $preference : AccommodationPreference( @{preference} == $feature ),
-            $count:count($preference)
+            $preference : AccommodationPreferences( @{preference} == $feature ),
+            count($preference)
         )
 then
-    points+=@{points}*$count
+    System.out.println("AA");
+    Integer compatibility = (Integer) accommodationCompatibility.get($accommodation.getId());
+    compatibility+=@{points}*$count.intValue();
+    accommodationCompatibility.put($accommodation.getId(), compatibility);
 end
 end template
