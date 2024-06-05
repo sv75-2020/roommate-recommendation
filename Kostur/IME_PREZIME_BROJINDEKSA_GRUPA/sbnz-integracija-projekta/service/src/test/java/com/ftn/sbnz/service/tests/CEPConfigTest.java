@@ -255,7 +255,7 @@ User user2 = new User(
         ksession.insert(a1);
         //ksession.insert(r1);
         ksession.insert(accr1);
-        ksession.getAgenda().getAgendaGroup("accommodation-requirements").setFocus();
+        ksession.getAgenda().getAgendaGroup("accommodation-forward").setFocus();
         ksession.fireAllRules();
 
     }

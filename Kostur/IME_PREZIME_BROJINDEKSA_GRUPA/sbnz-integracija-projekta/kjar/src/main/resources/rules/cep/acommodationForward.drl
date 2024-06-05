@@ -1,0 +1,88 @@
+package cep;
+
+import java.util.HashMap;
+import java.util.List;
+import com.ftn.sbnz.model.models.User
+import com.ftn.sbnz.model.models.Location
+import com.ftn.sbnz.model.models.Accommodation
+import com.ftn.sbnz.model.models.AccommodationRequirements
+import com.ftn.sbnz.model.models.Reservation
+import com.ftn.sbnz.model.models.Roommates
+import enums.ReservationStatus
+
+global List<com.ftn.sbnz.model.models.User> recommendedRoommates;
+global java.lang.Long loggedInId;
+global java.lang.Integer points;
+
+rule "Remove Occupied Accommodations"
+agenda-group "accommodation-forward"
+when
+    #$roommates:Roommates($roommate1Id:roommate1.id)
+    #$user: User($roommate1Id == id, $moveInMonth: moveInMonth)
+    $reservation: Reservation($accommodation:accommodation, status==ReservationStatus.ACTIVE)
+    $accommodation: Accommodation($accommodation.id==id)
+then
+    retract($accommodation);
+end
+
+rule "Doesnt allow pets"
+agenda-group "accommodation-forward"
+when
+    $accommodationRequirements: AccommodationRequirements($petsAllowed:petsAllowed)
+    $accommodation: Accommodation($accommodation.petsAllowed!=$petsAllowed)
+then
+    retract($accommodation);
+end
+
+rule "Doesnt have fast wifi"
+agenda-group "accommodation-forward"
+when
+    $accommodationRequirements: AccommodationRequirements(fastInterent:fastInternet)
+    $accommodation: Accommodation($accommodation.fastInternet!=fastInternet)
+then
+    retract($accommodation);
+end
+
+rule "Doesnt match locations"
+agenda-group "accommodation-forward"
+when
+    $accommodationRequirements: AccommodationRequirements($locations:combinedLocation)
+    $accommodation: Accommodation($accommodationLocation:location)
+    eval(!$locations.contains($accommodationLocation))
+then
+    retract($accommodation);
+end
+
+
+rule "Accommodations with matching price"
+agenda-group "accommodation-forward"
+when
+    $accommodationRequirements: AccommodationRequirements($budget:combinedBudget)
+    $accommodation: Accommodation($price:price)
+    eval($price==2*$budget)
+then
+    points+=50;
+end
+
+rule "Accommodations with almost matching price"
+agenda-group "accommodation-forward"
+when
+    $accommodationRequirements: AccommodationRequirements($budget:combinedBudget)
+    $accommodation: Accommodation($price:price)
+    eval(2*$budget-$price>50)
+then
+    points+=100;
+end
+
+rule "Accommodations with not matching price"
+agenda-group "accommodation-forward"
+when
+    $accommodationRequirements: AccommodationRequirements($budget:combinedBudget)
+    $accommodation: Accommodation($price:price)
+    eval(2*$budget-$price<0)
+then
+    retract($accommodation)
+end
+
+
+

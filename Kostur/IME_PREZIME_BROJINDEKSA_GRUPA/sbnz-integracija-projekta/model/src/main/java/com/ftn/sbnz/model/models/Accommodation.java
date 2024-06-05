@@ -24,6 +24,12 @@ public class Accommodation {
     private boolean smokingAllowed;
     private boolean parking;
     private boolean fastInternet;
+    private boolean isCloseToCenter;
+    private boolean isCloseToUni;
+    private boolean isGroundFloor;
+    private boolean isTopFloor;
+    private boolean hasElevator;
+    private boolean hasAc;
     @ManyToOne
     private Location location;
 }

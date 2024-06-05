@@ -1,0 +1,25 @@
+package cep;
+import com.ftn.sbnz.model.models.Accommodation;
+import com.ftn.sbnz.model.models.AccommodationPreference;
+
+template header
+    preference
+    feature
+    points
+    salience
+    number
+
+template "accommodation-template"
+
+rule "Rate accommodation by @{feature}"
+salience @{salience}
+when
+    $accommodation:Accommodation($feature:@{feature})
+    $count : Number(intValue == @{number}) from accumulate(
+            $preference : AccommodationPreference( @{preference} == $feature ),
+            $count:count($preference)
+        )
+then
+    points+=@{points}*$count
+end
+end template
