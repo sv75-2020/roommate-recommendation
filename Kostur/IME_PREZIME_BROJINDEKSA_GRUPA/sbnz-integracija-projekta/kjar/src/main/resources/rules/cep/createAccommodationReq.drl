@@ -20,3 +20,46 @@ agenda-group "accommodation-requirements"
         commonLocations.retainAll($user2.getLocations());
 		modify($accommodationRequirements){ setCombinedLocation(commonLocations) };
 end;
+
+rule "Fast internet requirements"
+agenda-group "accommodation-requirements"
+	when
+        $roommates: Roommates($roommate1: roommate1, $roommate2: roommate2,
+                    ($roommate1.isWorksFromHome() == true || $roommate2.isWorksFromHome() == true))
+        $accommodationRequirements: AccommodationRequirements(roommates.getId() == $roommates.getId());
+	then
+		modify($accommodationRequirements){ setFastInternet(true) };
+end;
+
+
+rule "Pet requirements"
+agenda-group "accommodation-requirements"
+	when
+        $roommates: Roommates($roommate1: roommate1, $roommate2: roommate2,
+                    ($roommate1.hasPets() == true || $roommate2.hasPets() == true))
+        $accommodationRequirements: AccommodationRequirements(roommates.getId() == $roommates.getId());
+	then
+		modify($accommodationRequirements){ setPetsAllowed(true) };
+end;
+
+rule "Budget requirements"
+agenda-group "accommodation-requirements"
+	when
+		$roommates: Roommates()
+		$user1: User(id == $roommates.getRoommate1().getId(), $budget1: budget)
+        $user2: User(id == $roommates.getRoommate2().getId(), $budget2: budget)
+        $accommodationRequirements: AccommodationRequirements(roommates.getId() == $roommates.getId());
+    then
+        double averageBudget = ($budget1 + $budget2) / 2.0;
+		modify($accommodationRequirements){ setCombinedBudget(averageBudget) };
+end;
+
+rule "Smoking preference"
+agenda-group "accommodation-requirements"
+	when
+        $roommates: Roommates($roommate1: roommate1, $roommate2: roommate2,
+                    ($roommate1.smoker == true || $roommate2.smoker == true))
+        $accommodationRequirements: AccommodationRequirements(roommates.getId() == $roommates.getId());
+	then
+		modify($accommodationRequirements){ setSmokingAllowed(true) };
+end;
