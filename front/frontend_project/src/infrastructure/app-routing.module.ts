@@ -9,6 +9,7 @@ import { AccommodationDetailsComponent } from 'src/app/modules/accomodation/acco
 import { RoommatesPageComponent } from 'src/app/modules/user/roommates-page/roommates-page.component';
 import { NotificationsComponent } from 'src/app/modules/user/notifications/notifications.component';
 import { HomeComponent } from 'src/app/modules/home/home.component';
+import { AccommodationPreferencesComponent } from 'src/app/modules/accomodation/accommodation-preferences/accommodation-preferences.component';
 
 
 const routes: Routes = [
@@ -22,6 +23,7 @@ const routes: Routes = [
   { path: 'accommodation-page/:id', component: AccommodationDetailsComponent},
   { path: 'roommates-page', component: RoommatesPageComponent},
   { path: 'notifications', component: NotificationsComponent},
+  { path: 'accommodationPreferences', component: AccommodationPreferencesComponent},
 
 
 ];
