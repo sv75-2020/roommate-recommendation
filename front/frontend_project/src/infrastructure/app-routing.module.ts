@@ -8,10 +8,11 @@ import { AccommodationPageComponent } from 'src/app/modules/accomodation/accommo
 import { AccommodationDetailsComponent } from 'src/app/modules/accomodation/accommodation-details/accommodation-details.component';
 import { RoommatesPageComponent } from 'src/app/modules/user/roommates-page/roommates-page.component';
 import { NotificationsComponent } from 'src/app/modules/user/notifications/notifications.component';
+import { HomeComponent } from 'src/app/modules/home/home.component';
 
 
 const routes: Routes = [
-    {path: 'home', component: LoginComponent},
+    {path: 'home', component: HomeComponent},
   { path: '', redirectTo: 'home', pathMatch: 'full'},
   { path: 'login', component: LoginComponent},
   { path: 'signup', component: SignupComponent},

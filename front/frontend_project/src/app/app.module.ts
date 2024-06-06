@@ -23,6 +23,7 @@ import { AccommodationDetailsComponent } from './modules/accomodation/accommodat
 import { RoommatesPageComponent } from './modules/user/roommates-page/roommates-page.component';
 import { NotificationsComponent } from './modules/user/notifications/notifications.component';
 import { NotificationItemComponent } from './modules/user/notification-item/notification-item.component';
+import { HomeComponent } from './modules/home/home.component';
 
 
 @NgModule({
@@ -34,7 +35,8 @@ import { NotificationItemComponent } from './modules/user/notification-item/noti
     AccommodationDetailsComponent,
     RoommatesPageComponent,
     NotificationsComponent,
-    NotificationItemComponent
+    NotificationItemComponent,
+    HomeComponent
   ],
   imports: [
     CommonModule,
