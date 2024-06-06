@@ -78,47 +78,6 @@ then
     retract($otherUser);
 end
 
-
-rule "No Matching for Users who dislike pets"
-agenda-group "roommate-forward"
-when
-    $user1: User(loggedInId==id, doesntWantPets == true)
-    $user2: User(hasPets == true, this!=$user1)
-then
-    userCompatibility.remove($user2.getId());
-    retract($user2);
-end
-
-rule "No Matching for Users who have pets"
-agenda-group "roommate-forward"
-when
-    $user1: User(loggedInId==id, hasPets == true)
-    $user2: User(doesntWantPets == true, this!=$user1)
-then
-    userCompatibility.remove($user2.getId());
-    retract($user2);
-end
-
-rule "No Matching for Users who Dislike Smoking"
-agenda-group "roommate-forward"
-when
-    $user1: User(loggedInId==id, dislikesSmokingIndoors == true)
-    $user2: User(smoker == true, this!=$user1)
-then
-    userCompatibility.remove($user2.getId());
-    retract($user2);
-end
-
-rule "No Matching for Users who smoke"
-agenda-group "roommate-forward"
-when
-    $user1: User(loggedInId==id, smoker == true)
-    $user2: User(dislikesSmokingIndoors == true, this!=$user1)
-then
-    userCompatibility.remove($user2.getId());
-    retract($user2);
-end
-
 rule "No Matching for Users with Different Accommodation Times"
 agenda-group "roommate-forward"
 when
@@ -214,17 +173,6 @@ then
     Integer compatibility = (Integer) userCompatibility.get($otherUser.getId());
     compatibility -= 10;
     userCompatibility.put($otherUser.getId(), compatibility);
-end
-
-rule "Same preference for peace and quiet"
-agenda-group "roommate-forward"
-when
-    $user1: User(loggedInId == id, $likesQuiet: likesQuiet == true)
-    $user2: User(this != $user1, likesQuiet == $likesQuiet)
-then
-    Integer compatibility = (Integer) userCompatibility.get($user2.getId());
-    compatibility += 10;
-    userCompatibility.put($user2.getId(), compatibility);
 end
 
 rule "Users with a pet and animal lovers"

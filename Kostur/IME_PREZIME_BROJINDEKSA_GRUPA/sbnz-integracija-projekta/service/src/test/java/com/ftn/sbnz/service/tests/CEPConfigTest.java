@@ -24,10 +24,8 @@ import org.kie.internal.utils.KieHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.ftn.sbnz.model.repository.DepositRepository;
 import com.ftn.sbnz.model.repository.NotifyAdminEvictionRepository;
 import com.ftn.sbnz.model.repository.NotifyAdminForBillRepository;
-import com.ftn.sbnz.model.repository.ReservationRepository;
 import com.ftn.sbnz.model.repository.UserWarningRepository;
 import com.ftn.sbnz.service.services.BillingService;
 import com.ftn.sbnz.service.services.ReservationService;
@@ -191,11 +189,24 @@ User user2 = new User(
       });
 
       DataProviderCompiler converter = new DataProviderCompiler();
-      String drl = converter.compile(dataProvider, template);
+      String drl1 = converter.compile(dataProvider, template);
       Map<Long, Integer> accommodationMap = new HashMap<>();
       accommodationMap.put(a1.getId(), 0);
 
-      KieSession ksession = createKieSessionFromDRL(drl);
+      InputStream template2 = CEPConfigTest.class.getResourceAsStream("/rules/cep/no-matching-rule-template.drt");
+      DataProvider dataProvider2 = new ArrayDataProvider(new String[][]{
+              new String[]{"doesntWantPets", "true", "hasPets", "true", "80"},
+              new String[]{"hasPets", "true", "doesntWantPets", "true", "79"},
+              new String[]{"dislikesSmokingIndoors", "true", "smoker", "true", "78"},
+              new String[]{"smoker", "true", "dislikesSmokingIndoors", "true", "77"},
+              new String[]{"likesQuiet", "true", "likesQuiet", "false", "76"},
+              new String[]{"likesQuiet ", "false", "likesQuiet", "true", "75"},
+      });
+
+      DataProviderCompiler converter2 = new DataProviderCompiler();
+      String drl2 = converter2.compile(dataProvider2, template2);
+
+      KieSession ksession = createKieSessionFromDRL(drl1, drl2);
       ksession.setGlobal("loggedInId", user1.getId());
       //ksession.setGlobal("userCompatibility", new HashMap<Long, Integer>());
       ksession.setGlobal("accommodationCompatibility", accommodationMap);
@@ -287,9 +298,10 @@ User user2 = new User(
 
     }
 
-  private KieSession createKieSessionFromDRL(String drl){
+  private KieSession createKieSessionFromDRL(String drl, String drl2){
     KieHelper kieHelper = new KieHelper();
     kieHelper.addContent(drl, ResourceType.DRL);
+    kieHelper.addContent(drl2, ResourceType.DRL);
 
     Results results = kieHelper.verify();
     KieServices kieServices = KieServices.Factory.get();
