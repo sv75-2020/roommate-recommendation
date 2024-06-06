@@ -23,6 +23,9 @@ import { AccommodationDetailsComponent } from './modules/accomodation/accommodat
 import { RoommatesPageComponent } from './modules/user/roommates-page/roommates-page.component';
 import { NotificationsComponent } from './modules/user/notifications/notifications.component';
 import { NotificationItemComponent } from './modules/user/notification-item/notification-item.component';
+import { AccommodationHistoryComponent } from './modules/review/accommodation-history/accommodation-history.component';
+import { RateModuleComponent } from './modules/review/rate-module/rate-module.component';
+import { RateDialogComponent } from './modules/review/rate-dialog/rate-dialog.component';
 
 
 @NgModule({
@@ -34,7 +37,10 @@ import { NotificationItemComponent } from './modules/user/notification-item/noti
     AccommodationDetailsComponent,
     RoommatesPageComponent,
     NotificationsComponent,
-    NotificationItemComponent
+    NotificationItemComponent,
+    AccommodationHistoryComponent,
+    RateModuleComponent,
+    RateDialogComponent
   ],
   imports: [
     CommonModule,

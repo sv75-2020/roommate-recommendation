@@ -2,7 +2,9 @@ package com.ftn.sbnz.service.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.ftn.sbnz.model.dto.AccommodationReviewDTO;
 import com.ftn.sbnz.model.dto.UserReviewDTO;
@@ -30,10 +32,9 @@ public class ReviewService {
     @Autowired
     public AccommodationRepository accommodationRepository;
 
-    public ResponseEntity<AccommodationReview> rateAccommodation(AccommodationReviewDTO reviewDTO) {
-
-        User user = userRepository.findById(reviewDTO.getUserId())
-                                    .orElseThrow(() -> new RuntimeException("User not found"));
+    public ResponseEntity<AccommodationReviewDTO> rateAccommodation(AccommodationReviewDTO reviewDTO) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
 
         Accommodation accommodation = accommodationRepository.findById(reviewDTO.getAccommodationId())
                                                                 .orElseThrow(() -> new RuntimeException("Accommodation not found"));
@@ -46,7 +47,7 @@ public class ReviewService {
 
         accommodationReviewRepository.save(review);
     
-        return ResponseEntity.ok(review);
+        return ResponseEntity.ok(reviewDTO);
     }
 
     public ResponseEntity<UserReview> rateUser(UserReviewDTO reviewDTO) {
@@ -68,4 +69,12 @@ public class ReviewService {
         return ResponseEntity.ok(review);
     }
 
+    public AccommodationReview getReviewForAccommodation(Long accommodationId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+        System.out.println(accommodationReviewRepository.findByUserIdAndAccommodationId(user.getId(), accommodationId));
+        return accommodationReviewRepository.findByUserIdAndAccommodationId(user.getId(), accommodationId)
+                .orElse(null);
+
+    }
 }

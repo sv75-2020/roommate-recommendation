@@ -18,13 +18,17 @@ public class AccommodationController {
     private AccommodationService accommodationService;
 
     @GetMapping(value = "/api/accommodations")
-    public ResponseEntity<List<AccommodationDTO>> getAllAccomodations() {
+    public ResponseEntity<List<AccommodationDTO>> getAllAccommodations() {
         return accommodationService.getAllAccommodations();
 
     }
-
     @GetMapping(value = "/api/accommodations/{id}")
     public ResponseEntity<Accommodation> getAccommodationById(@PathVariable Long id) {
         return accommodationService.getAccommodationById(id);
+    }
+
+    @GetMapping(value = "/api/accommodations/history")
+    public ResponseEntity<List<AccommodationDTO>> getAccommodationsHistory() {
+        return accommodationService.getHistoryAccommodations();
     }
 }
