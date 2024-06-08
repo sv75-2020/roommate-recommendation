@@ -72,11 +72,11 @@ export class AuthService {
 
   getUrlPath(): string {
     if (this.getRole() =="USER") {
-        return "accomodation-page";
+        return "home";
     }else if (this.getRole() == "ADMIN") {
-      return "admin";
+      return "home";
     }
-    return "accomodation-page";
+    return "";
   }
   logout(): Observable<string> {
     return this.http.get(environment.apiHost + 'api/logout', {

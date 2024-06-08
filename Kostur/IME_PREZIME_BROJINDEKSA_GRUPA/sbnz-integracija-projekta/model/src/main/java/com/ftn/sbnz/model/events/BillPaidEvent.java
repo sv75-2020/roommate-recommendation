@@ -24,7 +24,6 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
 public class BillPaidEvent {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)

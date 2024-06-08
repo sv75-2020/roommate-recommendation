@@ -24,7 +24,6 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
 public class UserBlockedEvent {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id

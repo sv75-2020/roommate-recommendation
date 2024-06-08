@@ -62,6 +62,13 @@ public class UserController {
 
     }
 
+    @GetMapping(value = "/api/getAdminNotifications")
+    public ResponseEntity<List<Notification>> getUserNotifications() {
+
+        return notificationService.getAdminNotifications();
+
+    }
+
     @PostMapping(consumes = "application/json", value = "/api/registerUser")
     public ResponseEntity<User> registerUser(@RequestBody User user) throws IOException {
         return userService.registerUser(user);

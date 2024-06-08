@@ -25,7 +25,6 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
 public class MonthlyPaymentEvent {
 
      @GeneratedValue(strategy = GenerationType.IDENTITY)

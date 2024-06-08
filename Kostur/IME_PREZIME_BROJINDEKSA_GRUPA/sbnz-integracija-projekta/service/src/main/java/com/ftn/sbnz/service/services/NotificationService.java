@@ -4,21 +4,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ftn.sbnz.model.models.*;
+import com.ftn.sbnz.model.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import com.ftn.sbnz.model.models.MonthlyPayment;
-import com.ftn.sbnz.model.models.Notification;
-import com.ftn.sbnz.model.models.Reservation;
-import com.ftn.sbnz.model.models.RoommateRequest;
-import com.ftn.sbnz.model.models.UserWarning;
-import com.ftn.sbnz.model.repository.MonthlyPaymentRepository;
-import com.ftn.sbnz.model.repository.NotificationRepository;
-import com.ftn.sbnz.model.repository.ReservationRepository;
-import com.ftn.sbnz.model.repository.RoommateRequestRepository;
-import com.ftn.sbnz.model.repository.UserRepository;
-import com.ftn.sbnz.model.repository.UserWarningRepository;
 
 import enums.RequestStatus;
 import enums.ReservationStatus;
@@ -41,6 +31,12 @@ public class NotificationService {
     @Autowired
     public UserWarningRepository userWarningRepository;
 
+    @Autowired
+    public NotifyAdminForBillRepository notifyAdminForBillRepository;
+
+    @Autowired
+    public NotifyAdminEvictionRepository notifyAdminEvictionRepository;
+
     public ResponseEntity<List<Notification>> getNotifications(Long id) {
         List<Notification> notifications=new ArrayList<>(); 
         LocalDate now = LocalDate.now();
@@ -59,6 +55,17 @@ public class NotificationService {
         for(UserWarning warning: userWarningRepository.findAll()){
             if(warning.getUser().getId()==id)
                 notifications.add(new Notification("Warning! You havent paid rent", "warning", 0L));
+        }
+        return ResponseEntity.ok(notifications);
+    }
+
+    public ResponseEntity<List<Notification>> getAdminNotifications(){
+        List<Notification> notifications=new ArrayList<>();
+        for(NotifyAdminForBill notify: notifyAdminForBillRepository.findAll()){
+                notifications.add(new Notification("User "+notify.getUser().getFullName()+" didn't pay the bill!", "billNotPaid",0L));
+        }
+        for(NotifyAdminEviction notify: notifyAdminEvictionRepository.findAll()){
+            notifications.add(new Notification("User "+notify.getUser().getFullName()+" blocked because they didn't pay the bill!", "eviction",0L));
         }
         return ResponseEntity.ok(notifications);
     }

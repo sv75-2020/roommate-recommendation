@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../auth/auth.service';
 import { AccommodationService } from '../accommodation.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-accommodation-preferences',
@@ -11,7 +12,8 @@ import { AccommodationService } from '../accommodation.service';
 export class AccommodationPreferencesComponent implements OnInit{
 
   constructor(private formBuilder: FormBuilder,
-    private accommodationService: AccommodationService){
+    private accommodationService: AccommodationService,
+     private router: Router){
     }
 
   preferencesForm !: FormGroup;
@@ -47,6 +49,7 @@ export class AccommodationPreferencesComponent implements OnInit{
       this.accommodationService.addAccommodationPreferences(preferences).subscribe({
         next: (result: any) => {
          console.log(result)
+         this.router.navigate(['/login']);
   
         },
       });

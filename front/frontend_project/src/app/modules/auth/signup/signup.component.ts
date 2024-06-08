@@ -113,7 +113,7 @@ export class SignupComponent implements OnInit{
           }, 
   
         })
-        this.router.navigate(['/addAccommodationPreferences']);
+        this.router.navigate(['/accommodationPreferences']);
         },
         error: (error: { status: number; }) => {
           if (error instanceof HttpErrorResponse) {
