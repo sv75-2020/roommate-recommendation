@@ -25,6 +25,7 @@ import { NotificationsComponent } from './modules/user/notifications/notificatio
 import { NotificationItemComponent } from './modules/user/notification-item/notification-item.component';
 import { HomeComponent } from './modules/home/home.component';
 import { AccommodationPreferencesComponent } from './modules/accomodation/accommodation-preferences/accommodation-preferences.component';
+import { ReportsComponent } from './modules/report/reports/reports.component';
 
 
 @NgModule({
@@ -38,7 +39,8 @@ import { AccommodationPreferencesComponent } from './modules/accomodation/accomm
     NotificationsComponent,
     NotificationItemComponent,
     HomeComponent,
-    AccommodationPreferencesComponent
+    AccommodationPreferencesComponent,
+    ReportsComponent
   ],
   imports: [
     CommonModule,

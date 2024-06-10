@@ -115,4 +115,14 @@ public class UserController {
                 .body(response);
     }
 
+    @GetMapping(value = "/api/findRoommate")
+    public ResponseEntity<byte[]> findRoommate(@PathVariable String filename) throws IOException{
+
+        File  file = new File( "C:\\Users\\zoric\\Documents\\GitHub\\roommate-recommendation\\Kostur\\IME_PREZIME_BROJINDEKSA_GRUPA\\sbnz-integracija-projekta\\service\\src\\main\\resources\\images\\" + filename);
+        byte [] response =  Files.readAllBytes(file.toPath());
+        return ResponseEntity.ok()
+                .contentType(MediaType.valueOf(Files.probeContentType(file.toPath())))
+                .body(response);
+    }
+
 }

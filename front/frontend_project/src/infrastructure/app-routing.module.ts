@@ -10,6 +10,7 @@ import { RoommatesPageComponent } from 'src/app/modules/user/roommates-page/room
 import { NotificationsComponent } from 'src/app/modules/user/notifications/notifications.component';
 import { HomeComponent } from 'src/app/modules/home/home.component';
 import { AccommodationPreferencesComponent } from 'src/app/modules/accomodation/accommodation-preferences/accommodation-preferences.component';
+import { ReportsComponent } from 'src/app/modules/report/reports/reports.component';
 
 
 const routes: Routes = [
@@ -24,7 +25,7 @@ const routes: Routes = [
   { path: 'roommates-page', component: RoommatesPageComponent},
   { path: 'notifications', component: NotificationsComponent},
   { path: 'accommodationPreferences', component: AccommodationPreferencesComponent},
-
+  { path: 'reports', component: ReportsComponent},
 
 ];
 
