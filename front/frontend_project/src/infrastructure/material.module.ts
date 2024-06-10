@@ -24,6 +24,7 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import { NgxCaptchaModule } from 'ngx-captcha';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 
 
@@ -84,7 +85,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     MatButtonToggleModule,
     NgxCaptchaModule,
     MatCheckboxModule,
-    MatDividerModule
+    MatDividerModule,
+    FlexLayoutModule
     
   ]
 

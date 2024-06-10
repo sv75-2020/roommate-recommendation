@@ -42,4 +42,16 @@ public class ReviewController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("/api/average/{accommodationId}/accommodation")
+    public ResponseEntity<String> getAverageRatingAccommodation(@PathVariable Long accommodationId) {
+        Double rating = reviewService.getAverageRatingForAccommodation(accommodationId);
+        return ResponseEntity.ok(rating.toString());
+    }
+
+    @GetMapping("/api/average/{userId}/user")
+    public ResponseEntity<String> getAverageRatingUser(@PathVariable Long userId) {
+        Double rating = reviewService.getAverageRatingForUser(userId);
+        return ResponseEntity.ok(rating.toString());
+    }
 }

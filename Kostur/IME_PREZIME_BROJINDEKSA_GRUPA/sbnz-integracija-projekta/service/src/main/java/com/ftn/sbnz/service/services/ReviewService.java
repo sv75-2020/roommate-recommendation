@@ -77,4 +77,12 @@ public class ReviewService {
                 .orElse(null);
 
     }
+
+    public Double getAverageRatingForAccommodation(Long accommodationId) {
+        return accommodationReviewRepository.findAverageRatingByAccommodationId(accommodationId);
+    }
+
+    public Double getAverageRatingForUser(Long userId) {
+        return userReviewRepository.findAverageRatingByUserId(userId);
+    }
 }

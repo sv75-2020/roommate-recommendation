@@ -36,7 +36,7 @@ rule "Pet requirements"
 agenda-group "accommodation-requirements"
 	when
         $roommates: Roommates($roommate1: roommate1, $roommate2: roommate2,
-                    ($roommate1.hasPets() == true || $roommate2.hasPets() == true))
+                    ($roommate1.isHasPets() == true || $roommate2.isHasPets() == true))
         $accommodationRequirements: AccommodationRequirements(roommates.getId() == $roommates.getId());
 	then
 		modify($accommodationRequirements){ setPetsAllowed(true) };
@@ -50,7 +50,7 @@ agenda-group "accommodation-requirements"
         $user2: User(id == $roommates.getRoommate2().getId(), $budget2: budget)
         $accommodationRequirements: AccommodationRequirements(roommates.getId() == $roommates.getId());
     then
-        double averageBudget = ($budget1 + $budget2) / 2.0;
+        Integer averageBudget = ($budget1 + $budget2) / 2;
 		modify($accommodationRequirements){ setCombinedBudget(averageBudget) };
 end;
 
