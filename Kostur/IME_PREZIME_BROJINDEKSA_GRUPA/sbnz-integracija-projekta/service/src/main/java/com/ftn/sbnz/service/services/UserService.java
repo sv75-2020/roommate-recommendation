@@ -1,6 +1,7 @@
 package com.ftn.sbnz.service.services;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Paths;
 import java.security.SecureRandom;
 import java.time.LocalDate;
@@ -9,8 +10,18 @@ import java.util.*;
 import javax.persistence.EntityNotFoundException;
 
 import com.ftn.sbnz.model.dto.UserDTO;
-import com.ftn.sbnz.model.models.Role;
-import com.ftn.sbnz.model.repository.RoleRepository;
+import com.ftn.sbnz.model.models.*;
+import com.ftn.sbnz.model.repository.*;
+import org.drools.template.DataProvider;
+import org.drools.template.DataProviderCompiler;
+import org.drools.template.objects.ArrayDataProvider;
+import org.kie.api.KieServices;
+import org.kie.api.builder.Message;
+import org.kie.api.builder.Results;
+import org.kie.api.io.ResourceType;
+import org.kie.api.runtime.KieContainer;
+import org.kie.api.runtime.KieSession;
+import org.kie.internal.utils.KieHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,12 +32,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ftn.sbnz.model.events.BillPaidEvent;
-import com.ftn.sbnz.model.models.BillPaid;
-import com.ftn.sbnz.model.models.Payment;
-import com.ftn.sbnz.model.models.User;
-import com.ftn.sbnz.model.repository.BillPaidRepository;
-import com.ftn.sbnz.model.repository.PaymentRepository;
-import com.ftn.sbnz.model.repository.UserRepository;
 import com.ftn.sbnz.service.utils.FileUtil;
 
 import java.nio.file.Files;
@@ -44,6 +49,9 @@ public class UserService {
 
     @Autowired
     public RoleRepository roleRepository;
+
+    @Autowired
+    public LocationRepository locationRepository;
 
     public ResponseEntity<Map<String,String>> payBill(Long paymentId){
         
@@ -163,5 +171,76 @@ public class UserService {
         }
 
     }
-    
+
+    public ResponseEntity<User> findRecommendedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user= (User) userRepository.findByUsername(username);
+
+        KieServices ks = KieServices.Factory.get();
+        KieContainer kContainer = ks.getKieClasspathContainer();
+        //SessionPseudoClock clock = ksession.getSessionClock();
+        InputStream template = UserService.class.getResourceAsStream("/rules/cep/no-matching-rule-template.drt");
+        DataProvider dataProvider = new ArrayDataProvider(new String[][]{
+                new String[]{"doesntWantPets", "true", "hasPets", "true", "70"},
+                new String[]{"hasPets", "true", "doesntWantPets", "true", "69"},
+                new String[]{"dislikesSmokingIndoors", "true", "smoker", "true", "68"},
+                new String[]{"smoker", "true", "dislikesSmokingIndoors", "true", "67"},
+                new String[]{"likesQuiet", "true", "likesQuiet", "false", "66"},
+                new String[]{"likesQuiet ", "false", "likesQuiet", "true", "65"},
+        });
+
+
+        DataProviderCompiler converter = new DataProviderCompiler();
+        String drl1 = converter.compile(dataProvider, template);
+
+        List<Long> recommendedRoommate=new ArrayList<>();
+
+        KieSession ksession = createKieSessionFromDRL(drl1);
+        ksession.setGlobal("loggedInId", user.getId());
+        ksession.setGlobal("recommendedRoommate", recommendedRoommate);
+        ksession.setGlobal("userCompatibility", new HashMap<Long, Integer>());
+        ksession.setGlobal("recommendedRoommates", new ArrayList<User>());
+
+        for(User u : userRepository.findAll()){
+            ksession.insert(u);
+        }
+        for(Location location : locationRepository.findAll()){
+            ksession.insert(location);
+        }
+
+        ksession.getAgenda().getAgendaGroup("roommate-forward").setFocus();
+
+        ksession.fireAllRules();
+
+        List<Long> recommendedUser= (List<Long>) ksession.getGlobal("recommendedRoommate");
+
+        System.out.println(recommendedUser.get(0));
+        User recommended=userRepository.findById(recommendedUser.get(0)).get();
+
+        ksession.dispose();
+
+        return ResponseEntity.ok(recommended);
+
+    }
+
+
+    private KieSession createKieSessionFromDRL(String drl){
+        KieHelper kieHelper = new KieHelper();
+        kieHelper.addContent(drl, ResourceType.DRL);
+
+        Results results = kieHelper.verify();
+        KieServices kieServices = KieServices.Factory.get();
+        kieHelper.addResource(kieServices.getResources().newClassPathResource("rules/cep/roommateForward.drl"), ResourceType.DRL);
+        if (results.hasMessages(Message.Level.WARNING, Message.Level.ERROR)){
+            List<Message> messages = results.getMessages(Message.Level.WARNING, Message.Level.ERROR);
+            for (Message message : messages) {
+                System.out.println("Error: "+message.getText());
+            }
+
+            throw new IllegalStateException("Compilation errors were found. Check the logs.");
+        }
+
+        return kieHelper.build().newKieSession();
+    }
 }

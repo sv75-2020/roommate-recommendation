@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import com.ftn.sbnz.model.models.*;
+import com.ftn.sbnz.model.repository.*;
 import org.drools.core.time.SessionPseudoClock;
 import org.drools.template.DataProvider;
 import org.drools.template.DataProviderCompiler;
@@ -24,9 +25,6 @@ import org.kie.internal.utils.KieHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.ftn.sbnz.model.repository.NotifyAdminEvictionRepository;
-import com.ftn.sbnz.model.repository.NotifyAdminForBillRepository;
-import com.ftn.sbnz.model.repository.UserWarningRepository;
 import com.ftn.sbnz.service.services.BillingService;
 import com.ftn.sbnz.service.services.ReservationService;
 import com.ftn.sbnz.service.services.UserService;
@@ -36,6 +34,9 @@ import enums.Gender;
 import enums.JobStatus;
 import enums.Month;
 import enums.PersonalityType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 @SpringBootTest
 public class CEPConfigTest {
@@ -52,11 +53,17 @@ public class CEPConfigTest {
   @Autowired 
   public BillingService billingService;
 
+  @Autowired
+  public UserRepository userRepository;
+
   @Autowired 
   public ReservationService reservationService;
 
   @Autowired 
   public UserService userService;
+
+  @Autowired
+          public LocationRepository locationRepository;
 
   Location l1=new Location(1L,"Grbavica");
   Location l2=new Location(2L,"Liman");
@@ -297,6 +304,74 @@ User user2 = new User(
         ksession.fireAllRules();
 
     }
+
+    @Test
+    public void findRecommendedUser() {
+    User user= (User) userRepository.findById(13L).get();
+
+    KieServices ks = KieServices.Factory.get();
+    KieContainer kContainer = ks.getKieClasspathContainer();
+    //SessionPseudoClock clock = ksession.getSessionClock();
+    InputStream template = UserService.class.getResourceAsStream("/rules/cep/no-matching-rule-template.drt");
+    DataProvider dataProvider = new ArrayDataProvider(new String[][]{
+            new String[]{"doesntWantPets", "true", "hasPets", "true", "80"},
+            new String[]{"hasPets", "true", "doesntWantPets", "true", "79"},
+            new String[]{"dislikesSmokingIndoors", "true", "smoker", "true", "78"},
+            new String[]{"smoker", "true", "dislikesSmokingIndoors", "true", "77"},
+            new String[]{"likesQuiet", "true", "likesQuiet", "false", "76"},
+            new String[]{"likesQuiet ", "false", "likesQuiet", "true", "75"},
+    });
+
+
+    DataProviderCompiler converter = new DataProviderCompiler();
+    String drl1 = converter.compile(dataProvider, template);
+
+
+    KieSession ksession = createKieSessionFromDRL1(drl1);
+    ksession.setGlobal("loggedInId", user.getId());
+    ksession.setGlobal("recommendedRoommate", 0L);
+    ksession.setGlobal("userCompatibility", new HashMap<Long, Integer>());
+    ksession.setGlobal("recommendedRoommates", new ArrayList<User>());
+
+    for(User u : userRepository.findAll()){
+      ksession.insert(u);
+    }
+    for(Location location : locationRepository.findAll()){
+      ksession.insert(location);
+    }
+
+    //ksession.getAgenda().getAgendaGroup("roommate-forward").setFocus();
+
+    ksession.fireAllRules();
+
+    Long recommendedUser=(Long) ksession.getGlobal("recommendedRoommate");
+
+    System.out.println(recommendedUser);
+    User recommended=userRepository.findById(recommendedUser).get();
+
+    ksession.dispose();
+
+  }
+
+  private KieSession createKieSessionFromDRL1(String drl){
+    KieHelper kieHelper = new KieHelper();
+    kieHelper.addContent(drl, ResourceType.DRL);
+
+    Results results = kieHelper.verify();
+    KieServices kieServices = KieServices.Factory.get();
+    kieHelper.addResource(kieServices.getResources().newClassPathResource("rules/cep/roommateForward.drl"), ResourceType.DRL);
+    if (results.hasMessages(Message.Level.WARNING, Message.Level.ERROR)){
+      List<Message> messages = results.getMessages(Message.Level.WARNING, Message.Level.ERROR);
+      for (Message message : messages) {
+        System.out.println("Error: "+message.getText());
+      }
+
+      throw new IllegalStateException("Compilation errors were found. Check the logs.");
+    }
+
+    return kieHelper.build().newKieSession();
+  }
+
 
   private KieSession createKieSessionFromDRL(String drl, String drl2){
     KieHelper kieHelper = new KieHelper();

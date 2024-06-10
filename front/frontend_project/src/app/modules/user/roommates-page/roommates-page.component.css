@@ -11,6 +11,21 @@
   .user-card:hover {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   }
+
+  
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 0;
+}
+
+.sort-button {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  padding: 10px 20px;
+  cursor: pointer;
+}
   
   .profile-photo {
     width: 100px;

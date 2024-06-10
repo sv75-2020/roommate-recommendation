@@ -1,4 +1,7 @@
 <div class="user-list">
+    <div class="header">
+      <button class="sort-button" (click)="findRoommate()">Find Roommate</button>
+  </div>
     <div *ngFor="let user of users" class="user-card">
       <div class="profile-photo">
         <img src="assets/property1.jpg" alt="Profile Photo">
