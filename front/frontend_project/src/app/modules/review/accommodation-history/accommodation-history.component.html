@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Property Listings</title>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button class="sort-button">Sortiraj</button>
+            <h1>{{ propertiesLength }} smeštaja</h1>
+        </div>
+        <div class="property-list">
+            <a *ngFor="let property of properties" 
+               class="property-card">
+                <img src="assets/property1.jpg" alt="Property Image" class="property-image">
+                <div class="property-details">
+                    <h2>{{ property.address }}</h2>
+                    <p>{{ property.location.address }}</p>
+                    <p class="property-info">velicina • {{ property.numOfRooms }} soba</p>
+                    <p class="agency">Agencija</p>
+                </div>
+                <div *ngIf="property.rated==true">
+                    <div class="price-tag" style="display: inline-flex; margin-top: 0px;">
+                        <p [innerHTML]="property.rating" style="font-size: 18px ; margin-top: 5px;"></p>
+                        <mat-icon style="color: orange; margin-top: 2px;">star</mat-icon>
+                    </div>
+                </div>
+                <br/>
+                <div *ngIf="property.rated==false">
+                    <app-button (click)="openDialog(property)" class="rate" text="Rate"></app-button>   
+                </div>
+                
+            </a>
+        </div>
+    </div>
+</body>
+</html>

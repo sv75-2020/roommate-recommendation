@@ -1,0 +1,52 @@
+.center {
+    margin: auto auto;
+    width: 30%;
+    height: fit-content;
+    text-align: center;
+    background-color: rgba(230, 230, 230, 0.811);
+    border: 1px solid rgb(177, 175, 175);
+    
+}
+
+mat-simple-snackbar span {
+    margin: auto;
+    text-align: center;
+  }
+
+mat-icon-button {
+    color: orange;
+}
+
+
+snack-bar{
+    width: fit-content;
+}
+
+.container-left{
+    display:inline-block;
+    vertical-align: top;
+    height: 50px;
+    width: 150px;
+    text-align: left;
+}
+.example-full-width{
+    width: 90%;
+    margin-top: 20px;
+}
+
+#cencelBtn{
+    background-color: rgb(192, 190, 188);
+    margin: 10px;
+    width: 100px;
+}
+
+h3{
+    color: gray;
+    font-weight: 400;
+}
+
+#confirmBtn{
+    background-color: orange;
+    margin:10px;
+    width: 100px;
+}

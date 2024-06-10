@@ -38,4 +38,8 @@ public class ReservationService {
       reservationRepository.save(reservation);
       return reservation;
   }
+
+    public List<Reservation> getNotActive(Long userId) {
+        return reservationRepository.findNotActiveReservationsByUserId(userId);
+    }
 }

@@ -24,6 +24,21 @@ export class AccommodationService {
     return this.http.get<Accommodation>(environment.apiHost + 'api/accommodations/'+id);
   }
 
+  getHistoryAccommodations(): Observable<AccommodationItemDTO[]> {
+    return this.http.get<AccommodationItemDTO[]>(environment.apiHost + 'api/accommodations/history');
+  }
+
+  rateAccommodation(review: any): Observable<any>  {
+    return this.http.post<any>(environment.apiHost + 'api/rateAccommodation', review);
+  }
+
+  getAverageAccommodationRating(id:any): Observable<number> {
+    return this.http.get<number>(environment.apiHost + 'api/accommodations/'+id+'/average');
+  }
+
+  getReviewForAccommodation(accommodationId: number): Observable<AccommodationReviewDTO> {
+    return this.http.get<AccommodationReviewDTO>(environment.apiHost +`api/review/${accommodationId}/accommodation`);
+  }
   addAccommodationPreferences(preferences: any): Observable<any> {
     return this.http.post<any>(environment.apiHost + 'api/addAccommodationPreferences', preferences,  {headers: this.headers});
   }
@@ -40,6 +55,8 @@ export interface AccommodationPage {
 
 
 export interface AccommodationItemDTO {
+rating: any;
+rated: any;
   id: number;
   address: string;
   numOfRooms: number;
@@ -62,4 +79,10 @@ export interface Accommodation {
 export interface LocationDTO {
   id: number;
   address: string;
+}
+
+export interface AccommodationReviewDTO {
+  comment: string;
+  accommodationId: number;
+  rating: number;
 }
