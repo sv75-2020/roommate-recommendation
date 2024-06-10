@@ -45,8 +45,8 @@ public class NotificationService {
                 notifications.add(new Notification("Pay bill for month: "+mp.getPaymentDate().getMonth(), "bill",mp.getPaymentId()));
         }
         for(RoommateRequest request: roommateRequestRepository.findAll()){
-            if(request.getRequestedUser().getId()==id && request.getStatus()==RequestStatus.PENDING)
-                notifications.add(new Notification("Roommate request from user  "+request.getUser().getFullName(), "roommateRequest", request.getId()));
+            if(request.getRequestedUserId()==id && request.getStatus()==RequestStatus.PENDING)
+                notifications.add(new Notification("Roommate request from user  "+request.getUserId(), "roommateRequest", request.getId()));
         }
         for(Reservation reservation: reservationRepository.findAll()){
             if((reservation.getRoommates().getRoommate1().getId()==id || reservation.getRoommates().getRoommate2().getId()==id ) && reservation.getStatus()==ReservationStatus.PENDING)

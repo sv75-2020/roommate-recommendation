@@ -1,22 +1,19 @@
 package com.ftn.sbnz.service.services;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import com.ftn.sbnz.model.models.*;
+import com.ftn.sbnz.model.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.ftn.sbnz.model.dto.RoommateRequestDTO;
-import com.ftn.sbnz.model.models.Reservation;
-import com.ftn.sbnz.model.models.RoommateRequest;
-import com.ftn.sbnz.model.models.Roommates;
-import com.ftn.sbnz.model.models.User;
-import com.ftn.sbnz.model.repository.AccommodationRepository;
-import com.ftn.sbnz.model.repository.ReservationRepository;
-import com.ftn.sbnz.model.repository.RoommateRequestRepository;
-import com.ftn.sbnz.model.repository.RoommatesRepository;
-import com.ftn.sbnz.model.repository.UserRepository;
 
 import enums.RequestStatus;
 import enums.ReservationStatus;
@@ -37,24 +34,20 @@ public class RequestService {
     public RoommatesRepository roommatesRepository;
 
     @Autowired
+    public RoleRepository roleRepository;
+
+    @Autowired
     public ReservationRepository reservationRepository;
 
 
     public ResponseEntity<RoommateRequest> sendRoommateRequest(RoommateRequestDTO requestDTO) {
 
-        User user = userRepository.findById(requestDTO.getUserId())
-                                    .orElseThrow(() -> new RuntimeException("User not found"));
-
-        User requestedUser = userRepository.findById(requestDTO.getRequestedUserId())
-                                                                .orElseThrow(() -> new RuntimeException("Requested user not found"));
-
         RoommateRequest request = new RoommateRequest();
         request.setStatus(requestDTO.getStatus());
-        request.setUser(user);
-        request.setRequestedUser(requestedUser);
-
+        request.setUserId(request.getUserId());
+        request.setRequestedUserId(request.getRequestedUserId());
         roommateRequestRepository.save(request);
-    
+
         return ResponseEntity.ok(request);
     }
 
@@ -65,8 +58,15 @@ public class RequestService {
         roommateRequest.setStatus(RequestStatus.ACCEPTED);
 
         Roommates roommates=new Roommates();
-        roommates.setRoommate1(roommateRequest.getUser());
-        roommates.setRoommate2(roommateRequest.getRequestedUser());
+        User user = userRepository.findById(roommateRequest.getUserId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        User requestedUser = userRepository.findById(roommateRequest.getRequestedUserId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+
+        roommates.setRoommate1(user);
+        roommates.setRoommate2(requestedUser);
 
         roommateRequestRepository.save(roommateRequest);
 

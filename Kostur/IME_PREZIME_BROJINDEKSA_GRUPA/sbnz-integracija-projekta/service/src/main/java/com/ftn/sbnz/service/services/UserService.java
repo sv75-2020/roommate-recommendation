@@ -9,9 +9,11 @@ import java.util.*;
 
 import javax.persistence.EntityNotFoundException;
 
+import com.ftn.sbnz.model.dto.RoommateRequestDTO;
 import com.ftn.sbnz.model.dto.UserDTO;
 import com.ftn.sbnz.model.models.*;
 import com.ftn.sbnz.model.repository.*;
+import enums.RequestStatus;
 import org.drools.template.DataProvider;
 import org.drools.template.DataProviderCompiler;
 import org.drools.template.objects.ArrayDataProvider;
@@ -52,6 +54,7 @@ public class UserService {
 
     @Autowired
     public LocationRepository locationRepository;
+
 
     public ResponseEntity<Map<String,String>> payBill(Long paymentId){
         
@@ -100,9 +103,13 @@ public class UserService {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(6,new SecureRandom());
         String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
-        List<Role> roles=new ArrayList<>();
-        roles.add(roleRepository.findById(1L).get());
+
+        Role role = new Role("USER");
+        role=roleRepository.save(role);
+        List<Role> roles = new ArrayList<>();
+        roles.add(role);
         user.setRoles(roles);
+
         User u= userRepository.save(user);
         return  ResponseEntity.ok(u);
     }
@@ -172,7 +179,7 @@ public class UserService {
 
     }
 
-    public ResponseEntity<User> findRecommendedUser() {
+    public User findRecommendedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         User user= (User) userRepository.findByUsername(username);
@@ -216,11 +223,12 @@ public class UserService {
         List<Long> recommendedUser= (List<Long>) ksession.getGlobal("recommendedRoommate");
 
         System.out.println(recommendedUser.get(0));
+
         User recommended=userRepository.findById(recommendedUser.get(0)).get();
 
         ksession.dispose();
 
-        return ResponseEntity.ok(recommended);
+        return recommended;
 
     }
 

@@ -26,9 +26,7 @@ public class RoommateRequest {
     @Id
     private Long id;
     private RequestStatus status;
-    @ManyToOne
-    private User user;
-    @ManyToOne
-    private User requestedUser;
+    private Long userId;
+    private Long requestedUserId;
 
 }

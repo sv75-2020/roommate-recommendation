@@ -4,6 +4,9 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
 <body>
+  <div class="header">
+    <button class="sort-button" (click)="findRoommate()">Find Roommate</button>
+</div>
 <div class="centeredDiv" style="margin-top: -80px;">
 <div fxLayout="row wrap" fxLayoutGap="15px grid" style="width:80%; ">
   <div fxFlex="25%" *ngFor="let user of users">
