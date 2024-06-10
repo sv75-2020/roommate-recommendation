@@ -1,0 +1,50 @@
+package cep;
+import com.ftn.sbnz.model.models.Location;
+import com.ftn.sbnz.model.models.AccommodationReview;
+import com.ftn.sbnz.model.models.Reservation;
+import com.ftn.sbnz.model.models.Accommodation;
+import java.util.List;
+
+
+query "getMostPopularLocationsForMonth"(int month, int year)
+	$location : Location($locationName:address, $locationId: id)
+	$count : Long() from accumulate (
+            $reservation : Reservation(
+                accommodation.getLocation().getId() == $locationId,
+                created.getMonthValue() == month,
+                created.getYear() == year
+            ),
+            count($reservation))
+end;
+
+query "findAverageAccommodationRatingByLocation"
+	$location : Location($locationName:address, $locationId: id)
+    $reviews : List() from collect(
+        AccommodationReview(accommodation.getLocation().getId() == $locationId)
+        )
+    $averageRating : Double() from accumulate(
+            AccommodationReview($rating: rating) from $reviews,
+            init(Double sum = 0.0; int count = 0;),
+            action(sum += $rating; count++;),
+            reverse(sum -= $rating; count--;),
+            result(count == 0 ? null : sum / count)
+        )
+end;
+
+query "findReviewsByLocation"(Long locationId)
+    $review : AccommodationReview(accommodation.getLocation().getId() == locationId)
+end
+
+rule "calculateAverageRating"
+agenda-group "average-rating-accommodation-by-location"
+when
+    $location : Location($locationName:address, $locationId: id)
+    $results : java.util.List() from collect( AccommodationReview() from findReviewsByLocation($locationId) )
+then
+    double totalRatings = 0.0;
+    for (Object review : $results) {
+        totalRatings += ((AccommodationReview) review).getRating();
+    }
+    double averageRating = $results.size() > 0 ? totalRatings / $results.size() : 0.0;
+    System.out.println("Average rating for location " + $locationId + " is " + averageRating);
+end

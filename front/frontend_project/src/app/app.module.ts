@@ -23,6 +23,9 @@ import { AccommodationDetailsComponent } from './modules/accomodation/accommodat
 import { RoommatesPageComponent } from './modules/user/roommates-page/roommates-page.component';
 import { NotificationsComponent } from './modules/user/notifications/notifications.component';
 import { NotificationItemComponent } from './modules/user/notification-item/notification-item.component';
+import { AccommodationHistoryComponent } from './modules/review/accommodation-history/accommodation-history.component';
+import { RateModuleComponent } from './modules/review/rate-module/rate-module.component';
+import { RateDialogComponent } from './modules/review/rate-dialog/rate-dialog.component';
 import { HomeComponent } from './modules/home/home.component';
 import { AccommodationPreferencesComponent } from './modules/accomodation/accommodation-preferences/accommodation-preferences.component';
 import { ReportsComponent } from './modules/report/reports/reports.component';
@@ -38,6 +41,9 @@ import { ReportsComponent } from './modules/report/reports/reports.component';
     RoommatesPageComponent,
     NotificationsComponent,
     NotificationItemComponent,
+    AccommodationHistoryComponent,
+    RateModuleComponent,
+    RateDialogComponent
     HomeComponent,
     AccommodationPreferencesComponent,
     ReportsComponent

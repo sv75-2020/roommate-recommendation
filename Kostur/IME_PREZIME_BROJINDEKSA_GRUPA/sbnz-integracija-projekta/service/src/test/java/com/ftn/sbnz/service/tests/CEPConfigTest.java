@@ -3,11 +3,15 @@ package com.ftn.sbnz.service.tests;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
+import com.ftn.sbnz.model.dto.PopularLocationsDTO;
 import com.ftn.sbnz.model.models.*;
 import org.drools.core.time.SessionPseudoClock;
 import org.drools.template.DataProvider;
@@ -20,6 +24,8 @@ import org.kie.api.builder.Results;
 import org.kie.api.io.ResourceType;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
+import org.kie.api.runtime.rule.QueryResults;
+import org.kie.api.runtime.rule.QueryResultsRow;
 import org.kie.internal.utils.KieHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -295,6 +301,65 @@ User user2 = new User(
         ksession.insert(accr1);
         ksession.getAgenda().getAgendaGroup("accommodation-forward").setFocus();
         ksession.fireAllRules();
+
+    }
+
+    @Test
+    public void top3Locations() {
+      KieServices ks = KieServices.Factory.get();
+      KieContainer kContainer = ks.getKieClasspathContainer();
+      KieSession kSession = kContainer.newKieSession("cepKsession");
+      kSession.insert(l1);
+      kSession.insert(l2);
+      kSession.insert(l3);
+      kSession.insert(l4);
+      Reservation reservation = new Reservation();
+      reservation.setCreated(LocalDate.now());
+      reservation.setAccommodation(a1);
+      kSession.insert(reservation);
+      reservation = new Reservation();
+      reservation.setCreated(LocalDate.now());
+      reservation.setAccommodation(a1);
+      kSession.insert(reservation);
+      reservation = new Reservation();
+      reservation.setCreated(LocalDate.now());
+      reservation.setAccommodation(a1);
+      kSession.insert(reservation);
+      AccommodationReview review1 = new AccommodationReview();
+      review1.setAccommodation(a1);
+      review1.setRating(5.0);
+      kSession.insert(review1);
+      review1 = new AccommodationReview();
+      review1.setAccommodation(a1);
+      review1.setRating(5.0);
+      kSession.insert(review1);
+      review1 = new AccommodationReview();
+      review1.setAccommodation(a1);
+      review1.setRating(2.0);
+      kSession.insert(review1);
+
+      List<PopularLocationsDTO> popularLocations = new ArrayList<>();
+
+      QueryResults results = kSession.getQueryResults("getMostPopularLocationsForMonth", 6, 2024);
+
+      for (QueryResultsRow row : results) {
+        String locationName = (String) row.get("$locationName");
+        Long count = (Long) row.get("$count");
+
+        popularLocations.add(new PopularLocationsDTO(locationName, count));
+      }
+
+      List<PopularLocationsDTO> top3PopularLocations = popularLocations.stream()
+              .sorted(Comparator.comparingLong(PopularLocationsDTO::getCount).reversed()) // Sort by count in descending order
+              .limit(3) // Limit to top 3
+              .collect(Collectors.toList()); // Collect the result back into a list
+      System.out.println(top3PopularLocations.size());
+
+      kSession.getAgenda().getAgendaGroup("average-rating-accommodation-by-location").setFocus();
+      kSession.fireAllRules();
+
+
+
 
     }
 

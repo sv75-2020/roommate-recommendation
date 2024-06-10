@@ -13,8 +13,7 @@
         </div>
         <div class="property-list">
             <a *ngFor="let property of properties" 
-               class="property-card" 
-               [routerLink]="['/accommodation-page', property.id]">
+               class="property-card">
                 <img src="assets/property1.jpg" alt="Property Image" class="property-image">
                 <div class="property-details">
                     <h2>{{ property.address }}</h2>
@@ -22,9 +21,17 @@
                     <p class="property-info">velicina • {{ property.numOfRooms }} soba</p>
                     <p class="agency">Agencija</p>
                 </div>
-                <div class="price-tag">
-                    <p class="price">{{ property.price }} €</p>
+                <div *ngIf="property.rated==true">
+                    <div class="price-tag" style="display: inline-flex; margin-top: 0px;">
+                        <p [innerHTML]="property.rating" style="font-size: 18px ; margin-top: 5px;"></p>
+                        <mat-icon style="color: orange; margin-top: 2px;">star</mat-icon>
+                    </div>
                 </div>
+                <br/>
+                <div *ngIf="property.rated==false">
+                    <app-button (click)="openDialog(property)" class="rate" text="Rate"></app-button>   
+                </div>
+                
             </a>
         </div>
     </div>

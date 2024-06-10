@@ -18,10 +18,8 @@ public class UserDTO {
     private String username;
     private String gender;
     private LocalDate dateOfBirth;
-    private boolean smoker;
-    private boolean hasPets;
     private String jobStatus;
-    private Integer budget;
+    private String photo;
 
     public UserDTO(User user) {
         this.id = user.getId();
@@ -29,10 +27,8 @@ public class UserDTO {
         this.username = user.getUsername();
         this.gender = String.valueOf(user.getGender());
         this.dateOfBirth = user.getDateOfBirth();
-        this.smoker = user.isSmoker();
-        this.hasPets = user.isHasPets();
         this.jobStatus = String.valueOf(user.getJobStatus());
-        this.budget = user.getBudget();
+        this.photo = user.getPhoto();
     }
 
     // Getters and setters for all attributes
