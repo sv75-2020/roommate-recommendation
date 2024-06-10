@@ -7,6 +7,10 @@ import java.util.stream.Collectors;
 import com.ftn.sbnz.model.models.Accommodation;
 import com.ftn.sbnz.model.models.Reservation;
 import com.ftn.sbnz.model.models.User;
+import com.ftn.sbnz.model.models.AccommodationPreferences;
+import com.ftn.sbnz.model.models.User;
+import com.ftn.sbnz.model.repository.AccommodationPreferencesRepository;
+import com.ftn.sbnz.model.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +30,11 @@ public class AccommodationService {
 
     @Autowired
     public ReservationService reservationService;
+    @Autowired
+    public AccommodationPreferencesRepository accommodationPreferencesRepository;
+
+    @Autowired
+    public UserRepository userRepository;
 
     public ResponseEntity<List<AccommodationDTO>> getAllAccommodations() {
         List<AccommodationDTO> accommodationDTOs = accommodationRepository.findAllAccommodationDTOs();
@@ -52,5 +61,15 @@ public class AccommodationService {
 
         // Return the list of AccommodationDTOs within a ResponseEntity
         return ResponseEntity.ok(accommodationDTOs);
+    }
+
+      public ResponseEntity<AccommodationPreferences> saveAccommodationPreferences(AccommodationPreferences accommodationPreferences) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user= (User) userRepository.findByUsername(username);
+
+        accommodationPreferences.setUser(user);
+
+        return ResponseEntity.ok(accommodationPreferencesRepository.save(accommodationPreferences));
     }
 }

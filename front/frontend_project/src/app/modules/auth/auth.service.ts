@@ -38,7 +38,8 @@ export class AuthService {
       if (this.isLoggedIn()) {
         const accessToken: string = localStorage.getItem('user') || '';
         const helper = new JwtHelperService();
-        const role = helper.decodeToken(accessToken).role;
+        const role = helper.decodeToken(accessToken).role[0].name;
+        console.log(role)
         return role;
       }
       return null;
@@ -71,9 +72,9 @@ export class AuthService {
 
   getUrlPath(): string {
     if (this.getRole() =="USER") {
-        return "certificates";
+        return "home";
     }else if (this.getRole() == "ADMIN") {
-      return "certificates";
+      return "home";
     }
     return "";
   }

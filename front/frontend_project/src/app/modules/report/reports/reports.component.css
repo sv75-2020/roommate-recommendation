@@ -1,0 +1,41 @@
+/* src/app/reports/reports.component.css */
+.container {
+    width: 80%;
+    margin: 0 auto;
+  }
+  
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .report {
+    margin-bottom: 30px;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  
+  table, th, td {
+    border: 1px solid #ddd;
+  }
+  
+  th, td {
+    padding: 8px;
+    text-align: left;
+  }
+
+  .button{
+    background-color: lightblue;
+    margin-left: 30px;
+    margin-bottom: 5px;
+  }
+
+  .title{
+    font-size: 23pt;
+    margin-top: 30px;
+  }
+  

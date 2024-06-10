@@ -55,8 +55,12 @@ export class NotificationItemComponent {
         return 'Roommate Request';
       case 'reservationRequest':
         return 'Reservation Request';
-        case 'warning':
-          return 'Warning';
+      case 'warning':
+        return 'Warning';
+      case 'billNotPaid':
+        return 'Bill not paid';
+      case 'eviction':
+        return 'Eviction';
       default:
         return type;
     }

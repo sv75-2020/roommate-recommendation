@@ -13,6 +13,7 @@ export class UserToolbarComponent  implements OnInit{
   color!: string;
 
   ngOnInit(): void {
+    console.log("aaaaaaa")
   }
 
 

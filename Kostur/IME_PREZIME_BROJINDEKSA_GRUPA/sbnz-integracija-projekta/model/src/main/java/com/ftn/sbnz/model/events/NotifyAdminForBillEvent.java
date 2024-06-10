@@ -23,7 +23,6 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
 public class NotifyAdminForBillEvent {
 
      @GeneratedValue(strategy = GenerationType.IDENTITY)

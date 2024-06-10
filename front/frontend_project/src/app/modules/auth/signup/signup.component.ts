@@ -8,6 +8,7 @@ import { AuthService } from '../auth.service';
 import { validateRePassword } from './custom-validator/validator';
 import { environment } from 'src/environments/environment';
 import { ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-signup',
@@ -29,7 +30,8 @@ export class SignupComponent implements OnInit{
 
   constructor(private formBuilder: FormBuilder,
     public dialog: MatDialog,
-    private authService: AuthService){
+    private authService: AuthService,
+    private router: Router){
     }
    
 
@@ -111,6 +113,7 @@ export class SignupComponent implements OnInit{
           }, 
   
         })
+        this.router.navigate(['/accommodationPreferences']);
         },
         error: (error: { status: number; }) => {
           if (error instanceof HttpErrorResponse) {

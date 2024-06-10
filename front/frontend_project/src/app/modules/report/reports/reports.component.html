@@ -1,0 +1,52 @@
+<div class="container">
+    <h1 class="title">Reports</h1>
+  
+    <div class="report">
+      <h2>Monthly Earnings</h2>
+      <mat-form-field appearance="fill">
+        <mat-label>Select Month</mat-label>
+        <mat-select [(value)]="selectedMonth">
+          <mat-option *ngFor="let month of months" [value]="month">{{ month }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button class="button" style="margin-top: 10px;" mat-button>Confirm</button>
+      <p *ngIf="monthlyEarnings">Total Earnings for {{ selectedMonth }}: {{ monthlyEarnings }} USD</p>
+    </div>
+  
+    <div class="report">
+      <h2>Average Accommodation Rating per Location</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Location</th>
+            <th>Average Rating</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let rating of averageRatings">
+            <td>{{ rating.neighborhood }}</td>
+            <td>{{ rating.averageRating }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  
+    <div class="report">
+      <h2>Most Popular Locations per Month</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Month</th>
+            <th>Location</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let location of popularLocations">
+            <td>{{ location.month }}</td>
+            <td>{{ location.location }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  

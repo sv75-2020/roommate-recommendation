@@ -1,24 +1,35 @@
 package cep;
 
-
 import java.util.HashMap;
 import java.util.List;
 import com.ftn.sbnz.model.models.User
 import com.ftn.sbnz.model.models.Location
+import java.util.Map
 
 // Definisanje globalne promenljive za listu preporučenih cimera
 global List<com.ftn.sbnz.model.models.User> recommendedRoommates;
 global java.lang.Long loggedInId;
-global java.lang.Integer compatibilityLevel;
+global java.util.Map<Long, Integer> userCompatibility;
 
 
 rule "Gender Matching"
+salience 100
 agenda-group "roommate-forward"
 when
     $loggedInUser: User(loggedInId == id, $gender: gender)
     $otherUser: User(gender == $gender, this != $loggedInUser)
 then
-    recommendedRoommates.add($otherUser);
+    userCompatibility.put($otherUser.getId(), 0);
+end
+
+rule "Retract Non-Compatible Users"
+salience 90
+agenda-group "roommate-forward"
+when
+    $loggedInUser: User(id == loggedInId, $gender: gender)
+    $otherUser: User(gender != $gender, this != $loggedInUser)
+then
+    retract($otherUser);
 end
 
 rule "Budget and Location Matching"
@@ -31,7 +42,9 @@ when
         count($locationName))
     eval(Math.abs($budget1 - $budget2) < 50 && $count.intValue() == $locations1.size())
 then
-    compatibilityLevel += 50; 
+    Integer compatibility = (Integer) userCompatibility.get($otherUser.getId());
+    compatibility += 50;
+    userCompatibility.put($otherUser.getId(), compatibility);
 end
 
 rule "Budget and Location Matching with Small Difference"
@@ -45,7 +58,9 @@ when
         count($locationName))
     eval(Math.abs($budget1 - $budget2) < 50 && $count.intValue() > 0)
 then
-    compatibilityLevel += 30; 
+    Integer compatibility = (Integer) userCompatibility.get($otherUser.getId());
+    compatibility += 30;
+    userCompatibility.put($otherUser.getId(), compatibility);
 end
 
 rule "Remove Users with Large Budget Difference or No Common Locations"
@@ -59,49 +74,8 @@ when
         count($locationName))
     eval(Math.abs($budget1 - $budget2) > 100 || $count.intValue() == 0)
 then
-    recommendedRoommates.remove($otherUser);
-    retract($otherUser); 
-end
-
-
-rule "No Matching for Users who dislike pets"
-agenda-group "roommate-forward"
-when
-    $user1: User(loggedInId==id, doesntWantPets == true)
-    $user2: User(hasPets == true, this!=$user1)
-then
-    recommendedRoommates.remove($user2);
-    retract($user2); 
-end
-
-rule "No Matching for Users who have pets"
-agenda-group "roommate-forward"
-when
-    $user1: User(loggedInId==id, hasPets == true)
-    $user2: User(doesntWantPets == true, this!=$user1)
-then
-    recommendedRoommates.remove($user2);
-    retract($user2); 
-end
-
-rule "No Matching for Users who Dislike Smoking"
-agenda-group "roommate-forward"
-when
-    $user1: User(loggedInId==id, dislikesSmokingIndoors == true)
-    $user2: User(smoker == true, this!=$user1)
-then
-    recommendedRoommates.remove($user2);
-    retract($user2); 
-end
-
-rule "No Matching for Users who smoke"
-agenda-group "roommate-forward"
-when
-    $user1: User(loggedInId==id, smoker == true)
-    $user2: User(dislikesSmokingIndoors == true, this!=$user1)
-then
-    recommendedRoommates.remove($user2);
-    retract($user2); 
+    userCompatibility.remove($otherUser.getId());
+    retract($otherUser);
 end
 
 rule "No Matching for Users with Different Accommodation Times"
@@ -110,21 +84,23 @@ when
     $user1: User(loggedInId==id, $time1: moveInMonth)
     $user2: User(moveInMonth != $time1, this != $user1)
 then
-    recommendedRoommates.remove($user2);
-    retract($user2); 
+    userCompatibility.remove($user2.getId());
+    retract($user2);
 end
 
 rule "Similar Hobbies and Interests"
 agenda-group "roommate-forward"
 when
-    $user1: User($interests1: interests)
+    $user1: User($interests1: interests, loggedInId == id)
     $user2: User($interests2: interests, this != $user1)
     $count: Number(intValue >= 0) from accumulate(
 			String($i1: this) from $interests1 and
 			String(this == $i1) from $interests2,
 			count($i1))
 then
-    compatibilityLevel += $count.intValue();
+    Integer compatibility = (Integer) userCompatibility.get($user2.getId());
+    compatibility += $count.intValue() * 30;
+    userCompatibility.put($user2.getId(), compatibility);
 end
 
 rule "Small age difference"
@@ -134,7 +110,9 @@ when
     $otherUser: User($dateOfBirth2: dateOfBirth.getYear(), this != $loggedInUser)
     eval(Math.abs($dateOfBirth1 - $dateOfBirth2) <= 2)
 then
-    compatibilityLevel += 10;
+    Integer compatibility = (Integer) userCompatibility.get($otherUser.getId());
+    compatibility += 10;
+    userCompatibility.put($otherUser.getId(), compatibility);
 end
 
 rule "Medium age difference"
@@ -144,7 +122,9 @@ when
     $otherUser: User($dateOfBirth2: dateOfBirth.getYear(), this != $loggedInUser)
     eval(Math.abs($dateOfBirth1 - $dateOfBirth2) > 2 && Math.abs($dateOfBirth1 - $dateOfBirth2) <= 5)
 then
-    compatibilityLevel += 10;
+    Integer compatibility = (Integer) userCompatibility.get($otherUser.getId());
+    compatibility += 10;
+    userCompatibility.put($otherUser.getId(), compatibility);
 end
 
 rule "Big age difference"
@@ -154,7 +134,9 @@ when
     $otherUser: User($dateOfBirth2: dateOfBirth.getYear(), this != $loggedInUser)
     eval(5 < Math.abs($dateOfBirth1 - $dateOfBirth2))
 then
-    compatibilityLevel -= 50;
+    Integer compatibility = (Integer) userCompatibility.get($otherUser.getId());
+    compatibility -= 50;
+    userCompatibility.put($otherUser.getId(), compatibility);
 end
 
 rule "Same Cleaning habits"
@@ -164,7 +146,9 @@ when
     $otherUser: User($cleaningHabit2: cleaningHabit, this != $loggedInUser)
     eval(Math.abs($cleaningHabit1.getValue() - $cleaningHabit2.getValue()) == 0)
 then
-    compatibilityLevel += 10;
+    Integer compatibility = (Integer) userCompatibility.get($otherUser.getId());
+    compatibility += 10;
+    userCompatibility.put($otherUser.getId(), compatibility);
 end
 
 rule "Similar Cleaning habits"
@@ -174,7 +158,9 @@ when
     $otherUser: User($cleaningHabit2: cleaningHabit, this != $loggedInUser)
     eval(Math.abs($cleaningHabit1.getValue() - $cleaningHabit2.getValue()) == 1)
 then
-    compatibilityLevel += 5;
+    Integer compatibility = (Integer) userCompatibility.get($otherUser.getId());
+    compatibility += 5;
+    userCompatibility.put($otherUser.getId(), compatibility);
 end
 
 rule "Different Cleaning habits"
@@ -184,16 +170,9 @@ when
     $otherUser: User($cleaningHabit2: cleaningHabit, this != $loggedInUser)
     eval(Math.abs($cleaningHabit1.getValue() - $cleaningHabit2.getValue()) == 2)
 then
-    compatibilityLevel -= 10;
-end
-
-rule "Same preference for peace and quiet"
-agenda-group "roommate-forward"
-when
-    $user1: User(loggedInId == id, $likesQuiet: likesQuiet == true)
-    $user2: User(this != $user1, likesQuiet == $likesQuiet)
-then
-    compatibilityLevel += 10;
+    Integer compatibility = (Integer) userCompatibility.get($otherUser.getId());
+    compatibility -= 10;
+    userCompatibility.put($otherUser.getId(), compatibility);
 end
 
 rule "Users with a pet and animal lovers"
@@ -203,7 +182,9 @@ when
     exists(String(this == "AnimalLover") from $interests)
     $user1: User(this != $loggedUser, hasPets == true)
 then
-    compatibilityLevel += 10;
+    Integer compatibility = (Integer) userCompatibility.get($user1.getId());
+    compatibility += 10;
+    userCompatibility.put($user1.getId(), compatibility);
 end
 
 rule "Animal lovers and users with a pet"
@@ -213,7 +194,9 @@ when
     $user1: User(this != $loggedUser, $interests: interests)
     exists(String(this == "AnimalLover") from $interests)
 then
-    compatibilityLevel += 10;
+    Integer compatibility = (Integer) userCompatibility.get($user1.getId());
+    compatibility += 10;
+    userCompatibility.put($user1.getId(), compatibility);
 end
 
 rule "Users with the same personality type"
@@ -222,7 +205,9 @@ when
     $user1: User(loggedInId == id, $personalityType: personalityType)
     $user2: User(this != $user1, personalityType == $personalityType)
 then
-    compatibilityLevel += 10;
+    Integer compatibility = (Integer) userCompatibility.get($user2.getId());
+    compatibility += 10;
+    userCompatibility.put($user2.getId(), compatibility);
 end
 
 rule "Users with the same job status"
@@ -231,7 +216,9 @@ when
     $user1: User(loggedInId == id, $jobStatus: jobStatus)
     $user2: User(this != $user1, jobStatus == $jobStatus)
 then
-    compatibilityLevel += 10;
+    Integer compatibility = (Integer) userCompatibility.get($user2.getId());
+    compatibility += 10;
+    userCompatibility.put($user2.getId(), compatibility);
 end
 
 rule "Final Compatibility Level"
@@ -240,7 +227,18 @@ salience -1
 when
     $user1: User(loggedInId==id)
 then
-    System.out.println(recommendedRoommates); 
+    Object highestKey = null;
+    Integer maxValue = Integer.MIN_VALUE;
+
+    for (Object key : userCompatibility.keySet()) {
+        Integer value = (Integer) userCompatibility.get(key);
+        System.out.println("value: " + value);
+        if (value > maxValue) {
+            maxValue = value;
+            highestKey = key;
+        }
+    }
+    System.out.println("Most compatible roommate's ID: " + highestKey);
 end
 
 

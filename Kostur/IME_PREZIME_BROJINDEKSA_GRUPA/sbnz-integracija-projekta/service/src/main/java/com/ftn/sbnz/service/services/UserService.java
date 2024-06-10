@@ -4,14 +4,13 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.security.SecureRandom;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import javax.persistence.EntityNotFoundException;
 
 import com.ftn.sbnz.model.dto.UserDTO;
+import com.ftn.sbnz.model.models.Role;
+import com.ftn.sbnz.model.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,6 +41,9 @@ public class UserService {
 
     @Autowired
     public PaymentRepository paymentRepository;
+
+    @Autowired
+    public RoleRepository roleRepository;
 
     public ResponseEntity<Map<String,String>> payBill(Long paymentId){
         
@@ -90,6 +92,9 @@ public class UserService {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(6,new SecureRandom());
         String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
+        List<Role> roles=new ArrayList<>();
+        roles.add(roleRepository.findById(1L).get());
+        user.setRoles(roles);
         User u= userRepository.save(user);
         return  ResponseEntity.ok(u);
     }

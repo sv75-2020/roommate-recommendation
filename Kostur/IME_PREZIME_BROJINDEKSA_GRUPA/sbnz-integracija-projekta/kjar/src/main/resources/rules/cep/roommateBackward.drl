@@ -1,0 +1,12 @@
+package cep;
+
+import com.ftn.sbnz.model.models.User
+import com.ftn.sbnz.model.models.Roommates;
+import com.ftn.sbnz.model.models.UserReview;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.List;
+
+global java.util.List recommendedRoommatesList;
+
+

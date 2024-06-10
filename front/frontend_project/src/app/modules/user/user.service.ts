@@ -45,6 +45,10 @@ export class UserService {
     return this.http.get<any>(environment.apiHost + 'api/getUserNotifications/'+id);
   }
 
+  getAdminNotifications(): Observable<any> {
+    return this.http.get<any>(environment.apiHost + 'api/getAdminNotifications');
+  }
+
   acceptRoommate(id:any): Observable<any> {
     return this.http.put<any>(environment.apiHost + 'api/acceptRoommateRequest/'+id,  {headers: this.headers});
   }

@@ -26,6 +26,9 @@ import { NotificationItemComponent } from './modules/user/notification-item/noti
 import { AccommodationHistoryComponent } from './modules/review/accommodation-history/accommodation-history.component';
 import { RateModuleComponent } from './modules/review/rate-module/rate-module.component';
 import { RateDialogComponent } from './modules/review/rate-dialog/rate-dialog.component';
+import { HomeComponent } from './modules/home/home.component';
+import { AccommodationPreferencesComponent } from './modules/accomodation/accommodation-preferences/accommodation-preferences.component';
+import { ReportsComponent } from './modules/report/reports/reports.component';
 
 
 @NgModule({
@@ -41,6 +44,9 @@ import { RateDialogComponent } from './modules/review/rate-dialog/rate-dialog.co
     AccommodationHistoryComponent,
     RateModuleComponent,
     RateDialogComponent
+    HomeComponent,
+    AccommodationPreferencesComponent,
+    ReportsComponent
   ],
   imports: [
     CommonModule,

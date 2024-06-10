@@ -22,7 +22,6 @@ import java.time.LocalDate;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
 public class DepositPaidEvent {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id

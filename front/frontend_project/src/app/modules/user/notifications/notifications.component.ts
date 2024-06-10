@@ -15,10 +15,21 @@ export class NotificationsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.userService.getUserNotifications(this.authService.getId()).subscribe((result: any) =>{
-      console.log(result);
-      this.notifications=result
-     });
+    this.authService.userState$.subscribe((result) => {
+      if(result=="USER"){
+        this.userService.getUserNotifications(this.authService.getId()).subscribe((result: any) =>{
+          console.log(result);
+          this.notifications=result
+         });
+      }
+      else{
+        this.userService.getAdminNotifications().subscribe((result: any) =>{
+          console.log(result);
+          this.notifications=result
+         });
+      }
+    });
+   
 
   }
 }

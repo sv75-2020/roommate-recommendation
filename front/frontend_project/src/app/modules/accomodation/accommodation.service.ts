@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
 import { environment } from 'src/environments/environment';
@@ -8,8 +8,11 @@ import { environment } from 'src/environments/environment';
 })
 export class AccommodationService {
 
-
-
+  private headers = new HttpHeaders({
+    'Access-Control-Allow-Methods':'*',
+    'Content-type':'application/json'
+  });
+  
   constructor(private http: HttpClient) {
   }
   
@@ -36,15 +39,18 @@ export class AccommodationService {
   getReviewForAccommodation(accommodationId: number): Observable<AccommodationReviewDTO> {
     return this.http.get<AccommodationReviewDTO>(environment.apiHost +`api/review/${accommodationId}/accommodation`);
   }
+  addAccommodationPreferences(preferences: any): Observable<any> {
+    return this.http.post<any>(environment.apiHost + 'api/addAccommodationPreferences', preferences,  {headers: this.headers});
+  }
   
 }
 
 export interface AccommodationPage {
-  totalItems: number; // Total number of accommodation listings
-  totalPages: number; // Total number of pages available
-  currentPage: number; // Current page number
-  pageSize: number; // Number of listings per page
-  accommodations: Accommodation[]; // Array of accommodation listings
+  totalItems: number; 
+  totalPages: number;
+  currentPage: number;
+  pageSize: number; 
+  accommodations: Accommodation[]; 
 }
 
 

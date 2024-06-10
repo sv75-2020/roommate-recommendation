@@ -23,7 +23,6 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
 public class DepositNotPaidEvent {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id

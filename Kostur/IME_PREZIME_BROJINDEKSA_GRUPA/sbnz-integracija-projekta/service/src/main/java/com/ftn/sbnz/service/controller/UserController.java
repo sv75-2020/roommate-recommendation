@@ -62,6 +62,13 @@ public class UserController {
 
     }
 
+    @GetMapping(value = "/api/getAdminNotifications")
+    public ResponseEntity<List<Notification>> getUserNotifications() {
+
+        return notificationService.getAdminNotifications();
+
+    }
+
     @PostMapping(consumes = "application/json", value = "/api/registerUser")
     public ResponseEntity<User> registerUser(@RequestBody User user) throws IOException {
         return userService.registerUser(user);
@@ -100,6 +107,16 @@ public class UserController {
 
     @GetMapping(value = "/api/{filename}/file")
     public ResponseEntity<byte[]> serveFile(@PathVariable String filename) throws IOException{
+
+        File  file = new File( "C:\\Users\\zoric\\Documents\\GitHub\\roommate-recommendation\\Kostur\\IME_PREZIME_BROJINDEKSA_GRUPA\\sbnz-integracija-projekta\\service\\src\\main\\resources\\images\\" + filename);
+        byte [] response =  Files.readAllBytes(file.toPath());
+        return ResponseEntity.ok()
+                .contentType(MediaType.valueOf(Files.probeContentType(file.toPath())))
+                .body(response);
+    }
+
+    @GetMapping(value = "/api/findRoommate")
+    public ResponseEntity<byte[]> findRoommate(@PathVariable String filename) throws IOException{
 
         File  file = new File( "C:\\Users\\zoric\\Documents\\GitHub\\roommate-recommendation\\Kostur\\IME_PREZIME_BROJINDEKSA_GRUPA\\sbnz-integracija-projekta\\service\\src\\main\\resources\\images\\" + filename);
         byte [] response =  Files.readAllBytes(file.toPath());

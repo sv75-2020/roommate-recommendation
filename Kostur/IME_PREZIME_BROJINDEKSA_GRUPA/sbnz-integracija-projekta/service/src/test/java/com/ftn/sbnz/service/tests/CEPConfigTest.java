@@ -1,29 +1,37 @@
 package com.ftn.sbnz.service.tests;
 
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import com.ftn.sbnz.model.dto.PopularLocationsDTO;
 import com.ftn.sbnz.model.models.*;
 import org.drools.core.time.SessionPseudoClock;
+import org.drools.template.DataProvider;
+import org.drools.template.DataProviderCompiler;
+import org.drools.template.objects.ArrayDataProvider;
 import org.junit.Test;
 import org.kie.api.KieServices;
+import org.kie.api.builder.Message;
+import org.kie.api.builder.Results;
+import org.kie.api.io.ResourceType;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.rule.QueryResults;
 import org.kie.api.runtime.rule.QueryResultsRow;
+import org.kie.internal.utils.KieHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.ftn.sbnz.model.repository.DepositRepository;
 import com.ftn.sbnz.model.repository.NotifyAdminEvictionRepository;
 import com.ftn.sbnz.model.repository.NotifyAdminForBillRepository;
-import com.ftn.sbnz.model.repository.ReservationRepository;
 import com.ftn.sbnz.model.repository.UserWarningRepository;
 import com.ftn.sbnz.service.services.BillingService;
 import com.ftn.sbnz.service.services.ReservationService;
@@ -168,30 +176,60 @@ User user2 = new User(
 
   Roommates rm1=new Roommates(1L,user1,user2);
   AccommodationRequirements accr1 = new AccommodationRequirements(1L, rm1, 0, false, false, false, new ArrayList<Location>());
-  Accommodation a1=new Accommodation(1L,"address1",2,200,true,true,true,true,l1);
+  Accommodation a1=new Accommodation(1L,"address1",2,200,true,true,true,true,true,true,true,true,true,true,l1);
     @Test
     public void test() {
       //Reservation r1 = reservationService.newReservation(rm1, a1);
       KieServices ks = KieServices.Factory.get();
       KieContainer kContainer = ks.getKieClasspathContainer(); 
-      KieSession ksession = kContainer.newKieSession("cepKsession");
-      SessionPseudoClock clock = ksession.getSessionClock();
+      //KieSession ksession = kContainer.newKieSession("cepKsession");
+      //SessionPseudoClock clock = ksession.getSessionClock();
+      InputStream template = CEPConfigTest.class.getResourceAsStream("/rules/cep/accommodation-template.drt");
+      DataProvider dataProvider = new ArrayDataProvider(new String[][]{
+              new String[]{"closeToUni", "closeToUni", "10", "1", "1"},
+              new String[]{"closeToCenter", "closeToCenter", "30", "2", "1"},
+              new String[]{"groundFloor", "groundFloor", "40", "3", "1"},
+              new String[]{"topFloor", "topFloor", "150", "4", "1"},
+              new String[]{"elevator", "hasElevator", "150", "5", "1"},
+              new String[]{"AC", "hasAc", "150", "6", "1"},
+      });
+
+      DataProviderCompiler converter = new DataProviderCompiler();
+      String drl1 = converter.compile(dataProvider, template);
+      Map<Long, Integer> accommodationMap = new HashMap<>();
+      accommodationMap.put(a1.getId(), 0);
+
+      InputStream template2 = CEPConfigTest.class.getResourceAsStream("/rules/cep/no-matching-rule-template.drt");
+      DataProvider dataProvider2 = new ArrayDataProvider(new String[][]{
+              new String[]{"doesntWantPets", "true", "hasPets", "true", "80"},
+              new String[]{"hasPets", "true", "doesntWantPets", "true", "79"},
+              new String[]{"dislikesSmokingIndoors", "true", "smoker", "true", "78"},
+              new String[]{"smoker", "true", "dislikesSmokingIndoors", "true", "77"},
+              new String[]{"likesQuiet", "true", "likesQuiet", "false", "76"},
+              new String[]{"likesQuiet ", "false", "likesQuiet", "true", "75"},
+      });
+
+      DataProviderCompiler converter2 = new DataProviderCompiler();
+      String drl2 = converter2.compile(dataProvider2, template2);
+
+      KieSession ksession = createKieSessionFromDRL(drl1, drl2);
       ksession.setGlobal("loggedInId", user1.getId());
-      ksession.setGlobal("compatibilityLevel", 0);
-      ksession.setGlobal("recommendedRoommates", new ArrayList<User>());
+      //ksession.setGlobal("userCompatibility", new HashMap<Long, Integer>());
+      ksession.setGlobal("accommodationCompatibility", accommodationMap);
       ksession.setGlobal("notifyAdminForBillRepository", notifyAdminForBillRepository);
       ksession.setGlobal("userWarningRepository", userWarningRepository);
       ksession.setGlobal("notifyAdminEvictionRepository", notifyAdminEvictionRepository);
    
-        ksession.insert(user1);
-        ksession.insert(user2);
-        ksession.insert(user3);
-        ksession.insert(user4);
-        ksession.insert(rm1);
-        ksession.insert(a1);
-        //ksession.insert(r1);
+      ksession.insert(user1);
+      ksession.insert(user2);
+      ksession.insert(user3);
+      ksession.insert(user4);
+      ksession.insert(rm1);
+      ksession.insert(a1);
+      //ksession.insert(r1);
+      //ksession.getAgenda().getAgendaGroup("roommate-forward").setFocus();
 
-        ksession.fireAllRules();
+      ksession.fireAllRules();
     }
 
     @Test
@@ -261,7 +299,7 @@ User user2 = new User(
         ksession.insert(a1);
         //ksession.insert(r1);
         ksession.insert(accr1);
-        ksession.getAgenda().getAgendaGroup("accommodation-requirements").setFocus();
+        ksession.getAgenda().getAgendaGroup("accommodation-forward").setFocus();
         ksession.fireAllRules();
 
     }
@@ -324,6 +362,26 @@ User user2 = new User(
 
 
     }
+
+  private KieSession createKieSessionFromDRL(String drl, String drl2){
+    KieHelper kieHelper = new KieHelper();
+    kieHelper.addContent(drl, ResourceType.DRL);
+    kieHelper.addContent(drl2, ResourceType.DRL);
+
+    Results results = kieHelper.verify();
+    KieServices kieServices = KieServices.Factory.get();
+    kieHelper.addResource(kieServices.getResources().newClassPathResource("rules/cep/accommodationForward.drl"), ResourceType.DRL);
+    if (results.hasMessages(Message.Level.WARNING, Message.Level.ERROR)){
+      List<Message> messages = results.getMessages(Message.Level.WARNING, Message.Level.ERROR);
+      for (Message message : messages) {
+        System.out.println("Error: "+message.getText());
+      }
+
+      throw new IllegalStateException("Compilation errors were found. Check the logs.");
+    }
+
+    return kieHelper.build().newKieSession();
+  }
 
 }
 
