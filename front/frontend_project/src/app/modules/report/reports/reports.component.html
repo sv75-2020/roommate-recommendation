@@ -1,16 +1,22 @@
 <div class="container">
     <h1 class="title">Reports</h1>
+    <mat-form-field appearance="fill">
+      <mat-label>Select Month</mat-label>
+      <mat-select [(value)]="selectedMonth">
+        <mat-option *ngFor="let month of months" [value]="month">{{ month }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Select Year</mat-label>
+      <mat-select [(value)]="selectedYear">
+        <mat-option *ngFor="let year of years" [value]="year">{{ year }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button (click)="fetchReport()" class="button" style="margin-top: 10px;" mat-button>Confirm</button>
   
     <div class="report">
       <h2>Monthly Earnings</h2>
-      <mat-form-field appearance="fill">
-        <mat-label>Select Month</mat-label>
-        <mat-select [(value)]="selectedMonth">
-          <mat-option *ngFor="let month of months" [value]="month">{{ month }}</mat-option>
-        </mat-select>
-      </mat-form-field>
-      <button class="button" style="margin-top: 10px;" mat-button>Confirm</button>
-      <p *ngIf="monthlyEarnings">Total Earnings for {{ selectedMonth }}: {{ monthlyEarnings }} USD</p>
+      <p>Total Earnings for {{ selectedMonth }}/{{ selectedYear}} : <b>{{ monthlyEarnings }}</b> RSD</p>
     </div>
   
     <div class="report">
@@ -23,8 +29,8 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let rating of averageRatings">
-            <td>{{ rating.neighborhood }}</td>
+          <tr *ngFor="let rating of accommodationRatingReport">
+            <td>{{ rating.locationName }}</td>
             <td>{{ rating.averageRating }}</td>
           </tr>
         </tbody>
@@ -32,18 +38,18 @@
     </div>
   
     <div class="report">
-      <h2>Most Popular Locations per Month</h2>
+      <h2>Most Popular Locations in {{selectedMonth}} / {{selectedYear}}</h2>
       <table>
         <thead>
           <tr>
-            <th>Month</th>
+            <th>Number of Reservations</th>
             <th>Location</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let location of popularLocations">
-            <td>{{ location.month }}</td>
-            <td>{{ location.location }}</td>
+            <td>{{ location.count }}</td>
+            <td>{{ location.locationName }}</td>
           </tr>
         </tbody>
       </table>

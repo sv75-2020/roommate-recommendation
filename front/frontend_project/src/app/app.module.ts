@@ -43,7 +43,7 @@ import { ReportsComponent } from './modules/report/reports/reports.component';
     NotificationItemComponent,
     AccommodationHistoryComponent,
     RateModuleComponent,
-    RateDialogComponent
+    RateDialogComponent,
     HomeComponent,
     AccommodationPreferencesComponent,
     ReportsComponent
