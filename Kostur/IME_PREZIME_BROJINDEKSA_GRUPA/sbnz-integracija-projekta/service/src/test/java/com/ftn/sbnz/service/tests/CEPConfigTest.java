@@ -291,9 +291,6 @@ User user2 = new User(
         KieContainer kContainer = ks.getKieClasspathContainer(); 
         KieSession ksession = kContainer.newKieSession("cepKsession");
         SessionPseudoClock clock = ksession.getSessionClock();
-        ksession.setGlobal("loggedInId", user1.getId());
-        ksession.setGlobal("compatibilityLevel", 0);
-        ksession.setGlobal("recommendedRoommates", new ArrayList<User>());
         ksession.setGlobal("notifyAdminForBillRepository", notifyAdminForBillRepository);
         ksession.setGlobal("userWarningRepository", userWarningRepository);
         ksession.setGlobal("notifyAdminEvictionRepository", notifyAdminEvictionRepository);
@@ -306,7 +303,7 @@ User user2 = new User(
         ksession.insert(a1);
         //ksession.insert(r1);
         ksession.insert(accr1);
-        ksession.getAgenda().getAgendaGroup("accommodation-forward").setFocus();
+        ksession.getAgenda().getAgendaGroup("deposit-cep").setFocus();
         ksession.fireAllRules();
 
     }

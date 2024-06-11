@@ -8,6 +8,6 @@ import com.ftn.sbnz.model.models.MonthlyPayment;
 
 @Repository
 public interface MonthlyPaymentRepository extends JpaRepository<MonthlyPayment, Long> {
-    
-    
+
+
 }

@@ -54,7 +54,7 @@ public class NotificationService {
         }
         for(UserWarning warning: userWarningRepository.findAll()){
             if(warning.getUser().getId()==id)
-                notifications.add(new Notification("Warning! You havent paid rent", "warning", 0L));
+                notifications.add(new Notification("Warning! You haven't paid rent", "warning", 0L));
         }
         return ResponseEntity.ok(notifications);
     }

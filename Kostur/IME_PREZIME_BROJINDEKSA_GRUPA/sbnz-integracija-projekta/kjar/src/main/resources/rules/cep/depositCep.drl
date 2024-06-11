@@ -10,6 +10,10 @@ import com.ftn.sbnz.model.events.UserBlockedEvent;
 import java.time.LocalDate;
 import java.sql.Date;
 
+global com.ftn.sbnz.model.repository.DepositNotPaidRepository depositNotPaidRepository;
+global com.ftn.sbnz.model.repository.DepositPaidRepository depositPaidRepository;
+
+
 rule "Check reservation confirmation for roommate1"
 agenda-group "deposit-cep"
     when
@@ -19,7 +23,10 @@ agenda-group "deposit-cep"
         System.out.println("deposit not paid by roommate 1");
         Date currentDate = Date.valueOf(LocalDate.now());
         DepositNotPaidEvent depositNotPaidEvent = new DepositNotPaidEvent(1L, currentDate, $user);
-        DepositNotPaid depositNotPaid = new DepositNotPaid(1L, currentDate, $user);
+        DepositNotPaid depositNotPaid = new DepositNotPaid();
+        depositNotPaid.setUser($user);
+        depositNotPaid.setPaymentDate(currentDate);
+        depositNotPaidRepository.save(depositNotPaid);
         insert(depositNotPaidEvent);
         insert(depositNotPaid);
         modify($reservation) {
@@ -49,7 +56,7 @@ agenda-group "deposit-cep"
     when
         $user : User($userId : id)
         accumulate(
-            $event : DepositNotPaid(user == $user)
+            $event : DepositNotPaidEvent(user == $user)
             over window:time(30d);
             $count : count($event)
         )

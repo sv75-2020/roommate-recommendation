@@ -6,9 +6,13 @@ import com.ftn.sbnz.model.dto.LoginTokenDTO;
 import com.ftn.sbnz.model.exceptions.BadRequestException;
 import com.ftn.sbnz.model.models.User;
 import com.ftn.sbnz.model.models.Admin;
+import com.ftn.sbnz.service.services.KieStatefulSessionService;
 import com.ftn.sbnz.service.utils.TokenUtils;
 import jakarta.servlet.http.HttpServletResponse;
+import org.kie.api.runtime.KieContainer;
+import org.kie.api.runtime.KieSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +32,9 @@ public class LoginController {
     @Autowired
     private TokenUtils tokenUtils;
 
+    @Autowired
+    @Qualifier(value = "eventsSession")
+    private KieSession eventsSession;
     @PostMapping(value = "/api/login")
     public ResponseEntity<LoginTokenDTO> login(@RequestBody LoginDTO loginDTO, HttpServletResponse response) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
