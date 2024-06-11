@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 import com.ftn.sbnz.model.dto.PopularLocationsDTO;
 import com.ftn.sbnz.model.models.*;
+import enums.*;
 import com.ftn.sbnz.model.repository.*;
 import org.drools.core.time.SessionPseudoClock;
 import org.drools.template.DataProvider;
@@ -34,7 +35,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.ftn.sbnz.service.services.BillingService;
 import com.ftn.sbnz.service.services.ReservationService;
 import com.ftn.sbnz.service.services.UserService;
-
 import enums.CleaningHabit;
 import enums.Gender;
 import enums.JobStatus;
@@ -390,6 +390,7 @@ User user2 = new User(
       Reservation reservation = new Reservation();
       reservation.setCreated(LocalDate.now());
       reservation.setAccommodation(a1);
+      reservation.setStatus(ReservationStatus.ACTIVE);
       kSession.insert(reservation);
       reservation = new Reservation();
       reservation.setCreated(LocalDate.now());
@@ -429,10 +430,28 @@ User user2 = new User(
               .collect(Collectors.toList()); // Collect the result back into a list
       System.out.println(top3PopularLocations.size());
 
-      kSession.getAgenda().getAgendaGroup("average-rating-accommodation-by-location").setFocus();
-      kSession.fireAllRules();
+      QueryResults results2 = kSession.getQueryResults("findAverageByLocation");
 
+      for (QueryResultsRow row : results2) {
+        String locationName = (String) row.get("$locationName");
+        Double count = (Double) row.get("$averageRating");
+        System.out.println(locationName + count.toString());
+      }
 
+      QueryResults results3 = kSession.getQueryResults("findAverageUserRating", 2L);
+
+      for (QueryResultsRow row : results3) {
+        Double count = (Double) row.get("$averageRating");
+        System.out.println(count.toString());
+      }
+
+      QueryResults results4 = kSession.getQueryResults("countNewReservations", 2024, 6);
+
+      // Iterate over the results
+      for (QueryResultsRow row : results4) {
+        Long totalEarnings = (Long) row.get("$reservationCount");
+        System.out.println("Total earnings for " + 2024 + "/" + 6 + " is " + totalEarnings);
+      }
 
 
     }

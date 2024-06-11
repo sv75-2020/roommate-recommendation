@@ -31,6 +31,7 @@ public class AccommodationController {
     @GetMapping(value = "/api/accommodations/history")
     public ResponseEntity<List<AccommodationDTO>> getAccommodationsHistory() {
         return accommodationService.getHistoryAccommodations();
+    }
 
     @PostMapping(consumes = "application/json", value = "/api/addAccommodationPreferences")
     public ResponseEntity<AccommodationPreferences> addAccommodationPreferences(@RequestBody AccommodationPreferences accommodationPreferences) throws IOException {

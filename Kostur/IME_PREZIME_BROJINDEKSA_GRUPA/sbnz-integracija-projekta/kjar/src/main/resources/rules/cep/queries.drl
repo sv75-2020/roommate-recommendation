@@ -4,6 +4,7 @@ import com.ftn.sbnz.model.models.AccommodationReview;
 import com.ftn.sbnz.model.models.Reservation;
 import com.ftn.sbnz.model.models.Accommodation;
 import java.util.List;
+import enums.ReservationStatus;
 
 
 query "getMostPopularLocationsForMonth"(int month, int year)
@@ -32,19 +33,58 @@ query "findAverageAccommodationRatingByLocation"
 end;
 
 query "findReviewsByLocation"(Long locationId)
+	$location : Location($locationName:address, $locationId: id)
     $review : AccommodationReview(accommodation.getLocation().getId() == locationId)
 end
 
-rule "calculateAverageRating"
-agenda-group "average-rating-accommodation-by-location"
-when
+query "findAverageByLocation"
     $location : Location($locationName:address, $locationId: id)
-    $results : java.util.List() from collect( AccommodationReview() from findReviewsByLocation($locationId) )
-then
-    double totalRatings = 0.0;
-    for (Object review : $results) {
-        totalRatings += ((AccommodationReview) review).getRating();
-    }
-    double averageRating = $results.size() > 0 ? totalRatings / $results.size() : 0.0;
-    System.out.println("Average rating for location " + $locationId + " is " + averageRating);
+    $averageRating : Double() from accumulate(
+            $review : AccommodationReview(accommodation.getLocation().getId() == $locationId),
+            init( double sum = 0; int count = 0; ),
+            action( sum += $review.getRating(); count++; ),
+            reverse( sum -= $review.getRating(); count--; ),
+            result( count > 0 ? sum / count : 0.0 )
+        )
 end
+
+query "findAverageUserRating"(Long userId)
+    $averageRating : Double() from accumulate(
+            $review : UserReview(ratedUser.getId() == userId),
+            init( double sum = 0; int count = 0; ),
+            action( sum += $review.getRating(); count++; ),
+            reverse( sum -= $review.getRating(); count--; ),
+            result( count > 0 ? sum / count : 0.0 )
+        )
+end
+
+query "findAverageAccommodationRating"(Long accommodationId)
+    $averageRating : Double() from accumulate(
+            $review : AccommodationReview(accommodation.getId() == accommodationId),
+            init( double sum = 0; int count = 0; ),
+            action( sum += $review.getRating(); count++; ),
+            reverse( sum -= $review.getRating(); count--; ),
+            result( count > 0 ? sum / count : 0.0 )
+        )
+end
+
+
+query "calculateMonthlyEarnings"(int year, int month)
+    $totalEarnings : Double() from accumulate(
+            $reservation : Reservation(created.getYear() == year && created.getMonthValue() == month && status == ReservationStatus.ACTIVE),
+            init( double sum = 0; int count = 0; ),
+            action( sum += $reservation.getAccommodation().getPrice(); count++; ),
+            reverse( sum -= $reservation.getAccommodation().getPrice(); count--; ),
+            result( count > 0 ? sum : 0.0 )
+        )
+end
+
+query "countNewReservations"(int year, int month)
+    $reservationCount : Long() from accumulate(
+        $reservation : Reservation(created.getYear() == year && created.getMonthValue() == month && status == ReservationStatus.ACTIVE),
+        count($reservation)
+    )
+end
+
+
+
