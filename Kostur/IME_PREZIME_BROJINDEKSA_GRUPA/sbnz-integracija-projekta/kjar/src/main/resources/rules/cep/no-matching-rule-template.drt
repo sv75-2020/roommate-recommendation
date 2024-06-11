@@ -5,11 +5,12 @@ template header
     attributeValue2
     salience
 
-package cep;
+package roommateForward;
 import com.ftn.sbnz.model.models.User;
 
 global java.util.Map<Long, Integer> userCompatibility;
 global java.lang.Long loggedInId;
+global java.lang.Long recommendedRoommate;
 
 template "no-matching-rule-template"
 

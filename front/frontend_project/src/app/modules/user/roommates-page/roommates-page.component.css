@@ -1,11 +1,59 @@
 
 
-/*#devicesContainer {
+#devicesContainer {
     width: 60%;
     padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}*/
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+  }
+  
+  .user-card:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  }
+
+  
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 0;
+}
+
+.sort-button {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+  
+  .profile-photo {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden; /* Ensure the image stays within the circle */
+    margin-right: 20px;
+  }
+  
+  .profile-photo img {
+    width: 100%;
+    height: auto;
+    object-fit: cover; /* Cover the entire area of the circle */
+  }
+  
+  .user-details {
+    flex: 1;
+  }
+  
+  .user-details h3 {
+    margin-top: 0;
+  }
+  
+  .user-details p {
+    margin: 5px 0;
+  }
+  
 
 .deviceBox {
   background-color: #f8f9fa;

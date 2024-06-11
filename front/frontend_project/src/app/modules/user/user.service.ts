@@ -33,6 +33,10 @@ export class UserService {
     return this.http.get<any>(environment.apiHost + 'api/users');
   }
 
+  findRoommate(): Observable<any> {
+    return this.http.get<any>(environment.apiHost + 'api/findRoommate');
+  }
+
   getPicture(filename: String): Promise<any>{
     return new Promise<any>(resolve => {
       this.http.get(environment.apiHost  + 'api/' + filename + '/file', {observe:'response', responseType: 'blob'}).subscribe(resp => {

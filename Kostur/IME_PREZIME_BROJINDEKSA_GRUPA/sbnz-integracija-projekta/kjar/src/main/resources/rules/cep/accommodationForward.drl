@@ -1,4 +1,4 @@
-package cep;
+package accommodationForward;
 
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +13,8 @@ import enums.ReservationStatus
 global List<com.ftn.sbnz.model.models.User> recommendedRoommates;
 global java.lang.Long loggedInId;
 global java.util.Map<Long, Integer> accommodationCompatibility;
+global java.lang.Long recommendedRoommate;
+
 
 rule "Remove Occupied Accommodations"
 agenda-group "accommodation-forward"
@@ -85,7 +87,5 @@ then
     compatibility += 100;
     accommodationCompatibility.put($accommodation.getId(), compatibility);
 end
-
-
 
 

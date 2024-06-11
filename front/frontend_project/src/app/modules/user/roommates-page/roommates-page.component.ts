@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../user.service';
+import { MatDialog } from '@angular/material/dialog';
+import { OkDialogComponent } from '../../shared/ok-dialog/ok-dialog.component';
 import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
@@ -11,9 +13,8 @@ export class RoommatesPageComponent implements OnInit {
 
     users: RoommatesItemDTO[] = [];
   
-    constructor(private userService: UserService,
-      private sanitizer: DomSanitizer
-    ) {}
+    constructor(private userService: UserService, private dialog:MatDialog, private sanitizer: DomSanitizer) {}
+      
   
     ngOnInit(): void {
       this.getUsers();
@@ -29,6 +30,14 @@ export class RoommatesPageComponent implements OnInit {
         });
     }
 
+    findRoommate(): void {
+      this.userService.findRoommate()
+        .subscribe((roommate: any) => {
+          this.dialog.open(OkDialogComponent, {
+            data: {dialogMessage: "Roommate request sent to user "+roommate.fullName},
+          });  
+        });
+    }
     clickView(_t10: any) {
       console.log("aa")
     }

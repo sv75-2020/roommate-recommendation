@@ -12,6 +12,8 @@ import java.util.Map;
 
 
 global Map<Long, Integer> accommodationCompatibility;
+global java.lang.Long recommendedRoommate;
+
 template "accommodation-template"
 
 rule "Rate accommodation by @{feature}"

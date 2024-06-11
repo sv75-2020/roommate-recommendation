@@ -5,4 +5,10 @@
     <kbase name="cepKbase" eventProcessingMode="stream" packages="cep">
         <ksession name="cepKsession" clockType="pseudo"/>
     </kbase>
+    <kbase name="forwardRoommateBase" eventProcessingMode="stream" packages="roommateForward">
+        <ksession name="roommateKsession" clockType="pseudo"/>
+    </kbase>
+    <kbase name="forwardAccommodationBase" eventProcessingMode="stream" packages="accommodationForward">
+        <ksession name="accommodationKsession" clockType="pseudo"/>
+    </kbase>
 </kmodule>
