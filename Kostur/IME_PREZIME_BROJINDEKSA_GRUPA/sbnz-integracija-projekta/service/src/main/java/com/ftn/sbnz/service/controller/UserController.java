@@ -96,6 +96,12 @@ public class UserController {
 
     }
 
+    @PutMapping(consumes = "application/json", value = "/api/payDeposit/{id}")
+    public ResponseEntity<Map<String,String>> payDeposit(@PathVariable Long id) throws IOException {
+        return userService.payDeposit(id);
+
+    }
+
      @PutMapping("/api/updateUser/{id}")
     public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
         User updatedUser = userService.updateUser(id, user);
@@ -123,7 +129,7 @@ public class UserController {
     @GetMapping(value = "/api/{filename}/file")
     public ResponseEntity<byte[]> serveFile(@PathVariable String filename) throws IOException{
 
-        File  file = new File( "C:\\Users\\zoric\\Documents\\GitHub\\roommate-recommendation\\Kostur\\IME_PREZIME_BROJINDEKSA_GRUPA\\sbnz-integracija-projekta\\service\\src\\main\\resources\\images\\" + filename);
+        File  file = new File( "C:\\Users\\suput\\Documents\\GitHub\\roommate-recommendation\\Kostur\\IME_PREZIME_BROJINDEKSA_GRUPA\\sbnz-integracija-projekta\\service\\src\\main\\resources\\images\\" + filename);
         byte [] response =  Files.readAllBytes(file.toPath());
         return ResponseEntity.ok()
                 .contentType(MediaType.valueOf(Files.probeContentType(file.toPath())))

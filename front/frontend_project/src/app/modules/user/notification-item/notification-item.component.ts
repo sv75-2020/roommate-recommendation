@@ -8,6 +8,7 @@ import { Notification } from '../notifications/notifications.component';
   styleUrls: ['./notification-item.component.css']
 })
 export class NotificationItemComponent {
+
   @Input() notification!: Notification;
 
   constructor(private userService: UserService) {}
@@ -47,6 +48,13 @@ export class NotificationItemComponent {
 
   }
 
+  payDeposit(arg0: any) {
+    
+    this.userService.payDeposit(arg0.requestId).subscribe((result: any) =>{
+      console.log(result)
+      });    
+    }
+
   getDisplayText(type: string): string {
     switch (type) {
       case 'bill':
@@ -61,6 +69,8 @@ export class NotificationItemComponent {
         return 'Bill not paid';
       case 'eviction':
         return 'Eviction';
+      case 'deposit':
+        return 'Deposit not paid';
       default:
         return type;
     }

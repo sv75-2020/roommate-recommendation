@@ -11,6 +11,7 @@ import javax.persistence.EntityNotFoundException;
 
 import com.ftn.sbnz.model.dto.RoommateRequestDTO;
 import com.ftn.sbnz.model.dto.UserDTO;
+import com.ftn.sbnz.model.events.DepositPaidEvent;
 import com.ftn.sbnz.model.models.*;
 import com.ftn.sbnz.model.repository.*;
 import enums.RequestStatus;
@@ -60,6 +61,11 @@ public class UserService {
 
     @Autowired
     public UserReviewRepository userReviewRepository;
+
+    @Autowired
+    public DepositPaidRepository depositPaidRepository;
+    @Autowired
+    public DepositRepository depositRepository;
 
 
     public ResponseEntity<Map<String,String>> payBill(Long paymentId){
@@ -282,5 +288,28 @@ public class UserService {
         ksession.dispose();
 
         return ResponseEntity.ok(users);
+    }
+
+    public ResponseEntity<Map<String, String>> payDeposit(Long id) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user= (User) userRepository.findByUsername(username);
+
+        DepositPaidEvent dpe = new DepositPaidEvent();
+        dpe.setUser(user);
+        dpe.setPaymentDate(LocalDate.now());
+        depositPaidRepository.save(dpe);
+
+        Optional<DepositPayment> payment = depositRepository.findById(id);
+        if (payment.isPresent()) {
+            payment.get().setPaid(true);
+            depositRepository.save(payment.get());
+        } else {
+            throw new EntityNotFoundException("Not found");
+        }
+
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Success");
+        return ResponseEntity.ok(response);
     }
 }

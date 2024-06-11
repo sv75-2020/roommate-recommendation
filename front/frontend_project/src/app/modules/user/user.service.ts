@@ -11,6 +11,7 @@ import { Notification } from './notifications/notifications.component';
 })
 export class UserService {
 
+
  
   private headers = new HttpHeaders({
     'Content-Type': 'application/json',
@@ -75,6 +76,10 @@ export class UserService {
 
   payBill(id:any): Observable<any> {
     return this.http.put<any>(environment.apiHost + 'api/payBill/'+id,  {headers: this.headers});
+  }
+
+  payDeposit(id: any): Observable<any>  {
+    return this.http.put<any>(environment.apiHost + 'api/payDeposit/'+id,  {headers: this.headers});
   }
   
 }

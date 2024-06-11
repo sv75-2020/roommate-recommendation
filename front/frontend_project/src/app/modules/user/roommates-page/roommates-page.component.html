@@ -10,6 +10,7 @@
 <div class="centeredDiv" style="margin-top: -80px;">
 <div fxLayout="row wrap" fxLayoutGap="15px grid" style="width:80%; ">
   <div fxFlex="25%" *ngFor="let user of users">
+    <div *ngIf="user.username !== 'admin'" >
     <mat-card class="mat-elevation-z4">
       <mat-card-header>
         <div class="space-between">
@@ -36,6 +37,7 @@
         <button mat-button (click)="clickView(user)">VIEW</button>
       </mat-card-actions>
     </mat-card>
+  </div>
   </div>
 </div>
 </div>

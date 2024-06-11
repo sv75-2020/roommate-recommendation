@@ -63,7 +63,7 @@ salience 100
 agenda-group "accommodation-forward"
 	when
         $roommates: Roommates($roommate1: roommate1, $roommate2: roommate2,
-                    ($roommate1.smoker == true || $roommate2.smoker == true))
+                    ($roommate1.isSmoker() == true || $roommate2.isSmoker() == true))
         $accommodationRequirements: AccommodationRequirements(roommates.getId() == $roommates.getId());
 	then
 		modify($accommodationRequirements){ setSmokingAllowed(true) };

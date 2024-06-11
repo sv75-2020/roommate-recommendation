@@ -22,7 +22,7 @@ global com.ftn.sbnz.model.repository.NotifyAdminEvictionRepository notifyAdminEv
 rule "Check reservation confirmation for roommate1"
 agenda-group "deposit-cep"
     when
-        $reservation : Reservation(paidDeposit == false, $user : roommates.getRoommate1(), $createdTime : created, status==ReservationStatus.PENDING)
+        $reservation : Reservation(paidDeposit == false, $user : roommates.getRoommate1(), $createdTime : created)
         not(DepositPaidEvent(this after[0d, 1d] $createdTime, user==$user))
     then
         System.out.println("deposit not paid by " + $user.getId());

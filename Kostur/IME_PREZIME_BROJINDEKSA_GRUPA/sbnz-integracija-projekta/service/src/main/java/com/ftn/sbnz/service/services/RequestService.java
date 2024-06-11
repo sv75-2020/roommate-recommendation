@@ -41,14 +41,12 @@ public class RequestService {
 
 
     public ResponseEntity<RoommateRequest> sendRoommateRequest(RoommateRequestDTO requestDTO) {
-
         RoommateRequest request = new RoommateRequest();
         request.setStatus(requestDTO.getStatus());
-        request.setUserId(request.getUserId());
-        request.setRequestedUserId(request.getRequestedUserId());
-        roommateRequestRepository.save(request);
-
-        return ResponseEntity.ok(request);
+        request.setUserId(requestDTO.getUserId());
+        request.setRequestedUserId(requestDTO.getRequestedUserId());
+        RoommateRequest saved = roommateRequestRepository.save(request);
+        return ResponseEntity.ok(saved);
     }
 
     public ResponseEntity<Roommates> acceptRoommateRequest(Long requestId) {

@@ -13,4 +13,5 @@ import java.util.List;
 public interface RoommateRequestRepository extends JpaRepository<RoommateRequest, Long>{
     @Query("SELECT r FROM RoommateRequest r WHERE (r.userId = :userId OR r.requestedUserId = :userId) AND r.status=1")
     List<RoommateRequest> findByUserIdOrRequestedUserId(@Param("userId") Long userId);
+
 }

@@ -28,7 +28,7 @@ rule "Doesnt allow pets"
 salience 98
 agenda-group "accommodation-forward"
 when
-    $accommodationRequirements: AccommodationRequirements($petsAllowed:petsAllowed)
+    $accommodationRequirements: AccommodationRequirements($petsAllowed:petsAllowed, $petsAllowed == true)
     $accommodation: Accommodation($accommodation.petsAllowed!=$petsAllowed)
 then
     retract($accommodation);
@@ -38,7 +38,7 @@ rule "Doesnt have fast wifi"
 salience 97
 agenda-group "accommodation-forward"
 when
-    $accommodationRequirements: AccommodationRequirements($fastInterentNeeded:fastInternet)
+    $accommodationRequirements: AccommodationRequirements($fastInterentNeeded:fastInternet, $fastInterentNeeded == true)
     $accommodation: Accommodation($accommodation.isFastInternet()!=$fastInterentNeeded)
 then
     retract($accommodation);
@@ -87,9 +87,7 @@ when
     $accommodation: Accommodation($price:price)
     eval(2*$budget-$price>50)
 then
-    Integer compatibility = (Integer) accommodationCompatibility.get($accommodation.getId());
-    compatibility += 100;
-    accommodationCompatibility.put($accommodation.getId(), compatibility);
+    accommodationCompatibility.put($accommodation.getId(), 100);
 end
 
 rule "Final Compatibility Level"

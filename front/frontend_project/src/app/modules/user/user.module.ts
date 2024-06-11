@@ -9,7 +9,7 @@ import { NotificationItemComponent } from './notification-item/notification-item
 
 
 @NgModule({
-  declarations: [EditUserComponent, NotificationItemComponent],
+  declarations: [],
   imports: [
     CommonModule,
     MaterialModule,
