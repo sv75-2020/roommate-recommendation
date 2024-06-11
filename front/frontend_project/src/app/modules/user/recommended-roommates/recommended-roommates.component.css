@@ -1,0 +1,262 @@
+
+
+#devicesContainer {
+    width: 60%;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+  }
+  
+  .user-card:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  }
+
+  
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 0;
+}
+
+.sort-button {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+  
+  .profile-photo {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden; /* Ensure the image stays within the circle */
+    margin-right: 20px;
+  }
+  
+  .profile-photo img {
+    width: 100%;
+    height: auto;
+    object-fit: cover; /* Cover the entire area of the circle */
+  }
+  
+  .user-details {
+    flex: 1;
+  }
+  
+  .user-details h3 {
+    margin-top: 0;
+  }
+  
+  .user-details p {
+    margin: 5px 0;
+  }
+  
+
+.deviceBox {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 10px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.list-item {
+  background-color: #f8f9fa; /* Light background color */
+  border-radius: 10px; /* Rounded corners */
+  padding: 10px; /* Padding for content */
+  margin-bottom: 10px; /* Margin between list items */
+  display: flex; /* Use flexbox for layout */
+  align-items: center; /* Center content vertically */
+}
+
+.title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 8px; /* Margin between title and picture */
+}
+
+.online-text {
+  color: #28a745; /* Green color for online status */
+}
+.picture {
+  margin-top: 10px;
+  width: 100%; /* Adjust the width as needed */
+  height: 20%; /* Adjust the height as needed */
+  /*border-radius: 10%;*/
+  background-image: url('https://api-prod.freedom.com.au/medias/800Wx800H-23778207-LIF-1-ORIGINAL.jpeg?context=bWFzdGVyfGltYWdlc3wxODgzNzV8aW1hZ2UvanBlZ3xoM2QvaDljLzkzNDYwOTg5NTQyNzAvODAwV3g4MDBIXzIzNzc4MjA3X0xJRl8xX09SSUdJTkFMLmpwZWd8NTZhN2M3NGU5NjNjNGVmNTg1Nzc3ZGY3OGIwZWYxNGI1ZmU4ZTJjYjNhYzA1YTljMjM3ZGFiZjRkNjA0YzljNg'); /* Placeholder image URL */
+  background-size: cover;
+}
+
+body {
+  margin-top: 10%;
+  height: 150%;
+}
+
+
+.mat-card {
+  width: 100px;
+}
+
+.content {
+  padding: 16px;
+}
+
+.content > mat-card {
+  width: 100px;
+}
+
+.centerPicture {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  margin-bottom: 10px;
+}
+
+.centeredDiv{
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
+}
+.space-between{
+  display: flex;
+  justify-content: space-between;
+  width:100%;
+}
+
+.flex-start{
+display: flex;
+justify-content: flex-start;
+width:100%;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 21px;
+  width: 21px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #14de43
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #14de43;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(20px);
+  -ms-transform: translateX(20px);
+  transform: translateX(20px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+.centerIcon{
+  padding: 4px;
+  margin-bottom: -9px;
+}
+
+.disabledDiv {
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+span.material-icons{
+width: 32px;
+height: 32px;
+display: inline-flex;
+align-items: center;
+justify-content: center;
+}
+
+span.material-symbols-outlined{
+width: 32px;
+height: 32px;
+display: inline-flex;
+align-items: center;
+justify-content: center;
+}
+
+h4{
+margin-left: 5px;
+}
+
+h2{
+display: flex;
+}
+
+.fixed-button {
+background-color: #ff8e00 !important;
+position: fixed;
+font-size: 18px;
+border-radius: 14px;
+font-weight: bold;
+bottom: 20px; /* Adjust as needed for the desired vertical position */
+right: 20px; /* Adjust as needed for the desired horizontal position */
+}
+
+
+:focus {
+outline: 0;
+border-color: #044e1f;
+box-shadow: 0 0 0 4px #b5fcb6;
+}
+
+.mydict div {
+display: flex;
+flex-wrap: wrap;
+margin-top: 0.5rem;
+justify-content: flex-start;
+}
+
+.autoLabels label span {
+display: block;
+cursor: pointer;
+background-color: #fff;
+padding: 0.375em .75em;
+position: relative;
+margin-left: .0625em;
+box-shadow: 0 0 0 0.0625em #b5bfd9;
+letter-spacing: .05em;
+color: #3e4963;
+text-align: center;
+transition: background-color .5s ease;
+}
+
+.autoLabels label:first-child span {
+border-radius: .375em 0 0 .375em;
+}
+
+.autoLabels label:last-child span {
+border-radius: 0 .375em .375em 0;
+}

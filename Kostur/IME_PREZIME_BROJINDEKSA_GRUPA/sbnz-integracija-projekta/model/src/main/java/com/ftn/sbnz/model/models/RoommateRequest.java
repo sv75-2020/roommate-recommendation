@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.kie.api.definition.type.Position;
 
 @Getter
 @Setter
@@ -26,7 +27,9 @@ public class RoommateRequest {
     @Id
     private Long id;
     private RequestStatus status;
+    @Position(0)
     private Long userId;
+    @Position(1)
     private Long requestedUserId;
 
 }

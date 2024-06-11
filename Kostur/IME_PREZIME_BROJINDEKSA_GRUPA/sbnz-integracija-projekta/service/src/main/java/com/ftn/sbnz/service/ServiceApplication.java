@@ -1,5 +1,8 @@
 package com.ftn.sbnz.service;
 
+import com.ftn.sbnz.model.repository.*;
+import org.kie.api.runtime.KieSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -25,6 +28,18 @@ public class ServiceApplication  {
 	
 	
 	private static Logger log = LoggerFactory.getLogger(ServiceApplication.class);
+
+	@Autowired
+	private MonthlyPaymentRepository monthlyPaymentRepository;
+	@Autowired
+	private NotifyAdminForBillRepository notifyAdminForBillRepository;
+	@Autowired
+	private BillPaidRepository billPaidRepository;
+	@Autowired
+	private UserWarningRepository userWarningRepository;
+	@Autowired
+	private NotifyAdminEvictionRepository notifyAdminEvictionRepository;
+
 	public static void main(String[] args) {
 		
 		ApplicationContext ctx = SpringApplication.run(ServiceApplication.class, args);
@@ -48,6 +63,7 @@ public class ServiceApplication  {
 		kScanner.start(1000);
 		return kContainer;
 	}
+
 	
 	/*
 	 * KieServices ks = KieServices.Factory.get(); KieContainer kContainer =

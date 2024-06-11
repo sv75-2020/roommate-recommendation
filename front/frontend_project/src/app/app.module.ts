@@ -29,6 +29,7 @@ import { RateDialogComponent } from './modules/review/rate-dialog/rate-dialog.co
 import { HomeComponent } from './modules/home/home.component';
 import { AccommodationPreferencesComponent } from './modules/accomodation/accommodation-preferences/accommodation-preferences.component';
 import { ReportsComponent } from './modules/report/reports/reports.component';
+import { RecommendedRoommatesComponent } from './modules/user/recommended-roommates/recommended-roommates.component';
 
 
 @NgModule({
@@ -46,7 +47,8 @@ import { ReportsComponent } from './modules/report/reports/reports.component';
     RateDialogComponent,
     HomeComponent,
     AccommodationPreferencesComponent,
-    ReportsComponent
+    ReportsComponent,
+    RecommendedRoommatesComponent
   ],
   imports: [
     CommonModule,

@@ -57,6 +57,12 @@ public class UserController {
 
     }
 
+    @GetMapping(value = "/api/recommended")
+    public ResponseEntity<List<User>> getRecommendedUsers() {
+        return userService.getRecommendedUsers();
+
+    }
+
     @GetMapping(value = "/api/getUser/{id}")
     public ResponseEntity<User> getUser(@PathVariable Long id) {
         System.out.println("aaaaa");

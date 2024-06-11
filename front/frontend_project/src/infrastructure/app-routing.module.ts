@@ -12,6 +12,7 @@ import { AccommodationHistoryComponent } from 'src/app/modules/review/accommodat
 import { HomeComponent } from 'src/app/modules/home/home.component';
 import { AccommodationPreferencesComponent } from 'src/app/modules/accomodation/accommodation-preferences/accommodation-preferences.component';
 import { ReportsComponent } from 'src/app/modules/report/reports/reports.component';
+import { RecommendedRoommatesComponent } from 'src/app/modules/user/recommended-roommates/recommended-roommates.component';
 
 
 const routes: Routes = [
@@ -28,6 +29,8 @@ const routes: Routes = [
   { path: 'accommodation-history', component: AccommodationHistoryComponent},
   { path: 'accommodationPreferences', component: AccommodationPreferencesComponent},
   { path: 'reports', component: ReportsComponent},
+  { path: 'recommended', component: RecommendedRoommatesComponent},
+
 ];
 
 @NgModule({
