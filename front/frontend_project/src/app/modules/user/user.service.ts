@@ -33,6 +33,10 @@ export class UserService {
     return this.http.get<any>(environment.apiHost + 'api/users');
   }
 
+  getRecommendedRoommates(): Observable<any> {
+    return this.http.get<any>(environment.apiHost + 'api/recommended');
+  }
+
   findRoommate(): Observable<any> {
     return this.http.get<any>(environment.apiHost + 'api/findRoommate');
   }

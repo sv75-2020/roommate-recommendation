@@ -63,14 +63,6 @@ public class ServiceApplication  {
 		return kContainer;
 	}
 
-	@Bean(name = "eventsSession")
-	public KieSession eventsSession() {
-		KieSession kieSession = this.kieContainer().newKieSession("eventsSession");
-		System.out.println("Creating new events kie session");
-		monthlyPaymentRepository.findAll().forEach(kieSession::insert);
-
-		return kieSession;
-	}
 	
 	/*
 	 * KieServices ks = KieServices.Factory.get(); KieContainer kContainer =

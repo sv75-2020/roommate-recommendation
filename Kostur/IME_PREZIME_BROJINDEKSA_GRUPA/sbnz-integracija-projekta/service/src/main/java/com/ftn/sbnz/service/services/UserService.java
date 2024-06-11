@@ -55,6 +55,12 @@ public class UserService {
     @Autowired
     public LocationRepository locationRepository;
 
+    @Autowired
+    public RoommateRequestRepository roommateRequestRepository;
+
+    @Autowired
+    public UserReviewRepository userReviewRepository;
+
 
     public ResponseEntity<Map<String,String>> payBill(Long paymentId){
         
@@ -247,5 +253,35 @@ public class UserService {
         }
 
         return kieHelper.build().newKieSession();
+    }
+
+    public ResponseEntity<List<User>> getRecommendedUsers() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User u= (User) userRepository.findByUsername(username);
+
+        KieServices ks = KieServices.Factory.get();
+        KieContainer kContainer = ks.getKieClasspathContainer();
+        KieSession ksession = kContainer.newKieSession("cepKsession");
+
+        ksession.setGlobal("loggedInId", u.getId());
+        ksession.setGlobal("recommendedRoommatesList", new ArrayList<Long>());
+
+        roommateRequestRepository.findAll().forEach(ksession::insert);
+        userReviewRepository.findAll().forEach(ksession::insert);
+
+        ksession.getAgenda().getAgendaGroup("backward").setFocus();
+
+        List<Long> usersId= (List<Long>) ksession.getGlobal("recommendedRoommatesList");
+        List<User> users=new ArrayList<>();
+        for(Long id:usersId){
+            User user=userRepository.findById(id).orElse(null);
+            if(!user.isHasRoommate())
+                users.add(user);
+        }
+
+        ksession.dispose();
+
+        return ResponseEntity.ok(users);
     }
 }

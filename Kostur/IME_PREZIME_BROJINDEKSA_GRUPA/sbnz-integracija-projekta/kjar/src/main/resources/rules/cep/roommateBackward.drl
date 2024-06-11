@@ -1,12 +1,57 @@
 package cep;
 
 import com.ftn.sbnz.model.models.User
+import com.ftn.sbnz.model.models.UserReview;
 import com.ftn.sbnz.model.models.Roommates;
+import com.ftn.sbnz.model.models.RoommateRequest;
 import com.ftn.sbnz.model.models.UserReview;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.List;
 
 global java.util.List recommendedRoommatesList;
+global java.lang.Long loggedInId;
 
+query isRoommate(Long x, Long y)
+    RoommateRequest(x, y;)
+    or
+    (RoommateRequest(z, y;) and isRoommate(x, z;))
+end
+
+rule "Find all roommates of roommates 1"
+agenda-group "backward"
+when
+    isRoommate(loggedInId, $roommate;)
+
+    $averageRating : Double() from accumulate (
+           $review : UserReview($rating : rating,
+           (ratedUser.getId() == $roommate && user.getId() == loggedInId)
+            ||
+           (ratedUser.getId() == loggedInId && user.getId() == $roommate) ) ,
+        average($rating)
+    )
+    eval($averageRating >= 4.0)
+then
+    System.out.println($roommate);
+    recommendedRoommatesList.add($roommate);
+end
+
+
+rule "Find all roommates of roommates 2"
+agenda-group "backward"
+when
+    isRoommate($roommate, loggedInId;)
+
+    $averageRating : Double() from accumulate (
+           $review : UserReview($rating : rating,
+           (ratedUser.getId() == $roommate && user.getId() == loggedInId)
+            ||
+           (ratedUser.getId() == loggedInId && user.getId() == $roommate) ) ,
+        average($rating)
+    )
+    eval($averageRating >= 4.0)
+then
+    System.out.println($roommate);
+    recommendedRoommatesList.add($roommate);
+end
 

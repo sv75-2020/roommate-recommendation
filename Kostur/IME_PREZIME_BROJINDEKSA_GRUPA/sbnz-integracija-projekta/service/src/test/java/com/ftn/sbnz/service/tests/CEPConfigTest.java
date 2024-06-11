@@ -76,7 +76,7 @@ public class CEPConfigTest {
   Location l3=new Location(3L,"Banatic");
   Location l4=new Location(4L,"Telep");
   User user1 = new User(
-          1L,
+          13L,
           "user1@example.com",
           "John Doe",
           "password123",
@@ -102,7 +102,7 @@ public class CEPConfigTest {
           new ArrayList<>()
       );
 User user2 = new User(
-       2L,
+       12L,
           "user2@example.com",
           "Jane Smith",
           "password456",
@@ -129,7 +129,7 @@ User user2 = new User(
       );        
       
       User user3 = new User(
-        3L,
+        18L,
         "user3@example.com",
         "John Does",
         "password123",
@@ -284,6 +284,39 @@ User user2 = new User(
         }
      
     }
+
+  @Test
+  public void testBackward() {
+    KieServices ks = KieServices.Factory.get();
+    KieContainer kContainer = ks.getKieClasspathContainer();
+    KieSession ksession = kContainer.newKieSession("cepKsession");
+
+    ksession.setGlobal("loggedInId", user1.getId());
+    ksession.setGlobal("recommendedRoommatesList", new ArrayList<Long>());
+
+    ksession.insert(new RoommateRequest(1L,RequestStatus.PENDING,13L,12L));
+    ksession.insert(new RoommateRequest(2L,RequestStatus.PENDING,12L,11L));
+    ksession.insert(new RoommateRequest(3L,RequestStatus.PENDING,11L,10L));
+    ksession.insert(new RoommateRequest(4L,RequestStatus.PENDING,18L,13L));
+    ksession.insert(new UserReview(1L,5.0,"comment",user1,user2));
+    ksession.insert(new UserReview(1L,5.0,"comment",user1,user3));
+    ksession.insert(new UserReview(1L,5.0,"comment",user3,user2));
+
+    ksession.getAgenda().getAgendaGroup("backward").setFocus();
+
+    List<Long> usersId= (List<Long>) ksession.getGlobal("recommendedRoommatesList");
+    List<User> users=new ArrayList<>();
+    for(Long id:usersId){
+      User user=userRepository.findById(id).orElse(null);
+      if(!user.isHasRoommate())
+        users.add(user);
+    }
+
+
+
+    ksession.fireAllRules();
+  }
+
     @Test
     public void test_deposit_cep() {
       //Reservation r1 = reservationService.newReservation(rm1, a1);

@@ -32,9 +32,6 @@ public class LoginController {
     @Autowired
     private TokenUtils tokenUtils;
 
-    @Autowired
-    @Qualifier(value = "eventsSession")
-    private KieSession eventsSession;
     @PostMapping(value = "/api/login")
     public ResponseEntity<LoginTokenDTO> login(@RequestBody LoginDTO loginDTO, HttpServletResponse response) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
