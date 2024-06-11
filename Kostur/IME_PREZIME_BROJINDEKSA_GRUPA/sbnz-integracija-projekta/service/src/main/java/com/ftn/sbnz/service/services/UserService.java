@@ -201,11 +201,12 @@ public class UserService {
         DataProviderCompiler converter = new DataProviderCompiler();
         String drl1 = converter.compile(dataProvider, template);
 
-        List<Long> recommendedRoommate=new ArrayList<>();
+        //List<Long> recommendedRoommate=new ArrayList<>();
+        Long bestMatch = 0L;
 
         KieSession ksession = createKieSessionFromDRL(drl1);
         ksession.setGlobal("loggedInId", user.getId());
-        ksession.setGlobal("recommendedRoommate", recommendedRoommate);
+        ksession.setGlobal("bestMatch", bestMatch);
         ksession.setGlobal("userCompatibility", new HashMap<Long, Integer>());
         ksession.setGlobal("recommendedRoommates", new ArrayList<User>());
 
@@ -220,11 +221,11 @@ public class UserService {
 
         ksession.fireAllRules();
 
-        List<Long> recommendedUser= (List<Long>) ksession.getGlobal("recommendedRoommate");
 
-        System.out.println(recommendedUser.get(0));
+        Long recommendedRoommate = (Long) ksession.getGlobal("bestMatch");
+        System.out.println(recommendedRoommate);
 
-        User recommended=userRepository.findById(recommendedUser.get(0)).get();
+        User recommended=userRepository.findById(recommendedRoommate).get();
 
         ksession.dispose();
 
