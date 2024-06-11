@@ -221,14 +221,10 @@ public class UserService {
 
         ksession.fireAllRules();
 
-
         Long recommendedRoommate = (Long) ksession.getGlobal("bestMatch");
         System.out.println(recommendedRoommate);
-
-        User recommended=userRepository.findById(recommendedRoommate).get();
-
+        User recommended = userRepository.findById(recommendedRoommate).orElse(null);
         ksession.dispose();
-
         return recommended;
 
     }

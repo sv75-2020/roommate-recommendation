@@ -12,11 +12,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
 public class AccommodationRequirements {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id
-    private Long id;
     @ManyToOne
     private Roommates roommates;
     private Integer combinedBudget;

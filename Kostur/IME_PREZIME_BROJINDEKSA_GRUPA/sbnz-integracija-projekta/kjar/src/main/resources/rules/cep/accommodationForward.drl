@@ -10,10 +10,9 @@ import com.ftn.sbnz.model.models.Reservation
 import com.ftn.sbnz.model.models.Roommates
 import enums.ReservationStatus
 
-global List<com.ftn.sbnz.model.models.User> recommendedRoommates;
 global java.lang.Long loggedInId;
 global java.util.Map<Long, Integer> accommodationCompatibility;
-global java.lang.Long recommendedRoommate;
+global java.lang.Long bestMatch;
 
 
 rule "Remove Occupied Accommodations"
@@ -86,6 +85,27 @@ then
     Integer compatibility = (Integer) accommodationCompatibility.get($accommodation.getId());
     compatibility += 100;
     accommodationCompatibility.put($accommodation.getId(), compatibility);
+end
+
+rule "Final Compatibility Level"
+agenda-group "roommate-forward"
+salience -1
+when
+    $user1: User(loggedInId==id)
+then
+    Object highestKey = null;
+    Integer maxValue = Integer.MIN_VALUE;
+
+    for (Object key : accommodationCompatibility.keySet()) {
+        Integer value = (Integer) accommodationCompatibility.get(key);
+        System.out.println("value: " + value);
+        if (value > maxValue) {
+            maxValue = value;
+            highestKey = key;
+        }
+    }
+    System.out.println("Best accommodation " + highestKey);
+    kcontext.getKieRuntime().setGlobal("bestMatch", (Long) highestKey);
 end
 
 

@@ -9,6 +9,7 @@ import java.util.List;
 
 
 rule "Location requirements from both users"
+salience 100
 agenda-group "accommodation-requirements"
 	when
 		$roommates: Roommates()
@@ -22,6 +23,7 @@ agenda-group "accommodation-requirements"
 end;
 
 rule "Fast internet requirements"
+salience 100
 agenda-group "accommodation-requirements"
 	when
         $roommates: Roommates($roommate1: roommate1, $roommate2: roommate2,
@@ -33,6 +35,7 @@ end;
 
 
 rule "Pet requirements"
+salience 100
 agenda-group "accommodation-requirements"
 	when
         $roommates: Roommates($roommate1: roommate1, $roommate2: roommate2,
@@ -43,6 +46,7 @@ agenda-group "accommodation-requirements"
 end;
 
 rule "Budget requirements"
+salience 100
 agenda-group "accommodation-requirements"
 	when
 		$roommates: Roommates()
@@ -55,6 +59,7 @@ agenda-group "accommodation-requirements"
 end;
 
 rule "Smoking preference"
+salience 100
 agenda-group "accommodation-requirements"
 	when
         $roommates: Roommates($roommate1: roommate1, $roommate2: roommate2,

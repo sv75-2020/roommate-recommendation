@@ -1,5 +1,6 @@
 package com.ftn.sbnz.service.controller;
 
+import com.ftn.sbnz.model.dto.AccommodationReviewDTO;
 import com.ftn.sbnz.model.dto.RoommateRequestDTO;
 import com.ftn.sbnz.model.dto.UserDTO;
 import com.ftn.sbnz.model.exceptions.BadRequestException;
@@ -129,10 +130,14 @@ public class UserController {
         User user = (User) authentication.getPrincipal();
 
         User recommendedUser=userService.findRecommendedUser();
-        RoommateRequestDTO roommateRequestDTO= new RoommateRequestDTO(RequestStatus.PENDING,user.getId(),recommendedUser.getId());
+        if (recommendedUser != null) {
+            RoommateRequestDTO roommateRequestDTO = new RoommateRequestDTO(RequestStatus.PENDING,user.getId(),recommendedUser.getId());
+            requestService.sendRoommateRequest(roommateRequestDTO);
+            return ResponseEntity.ok(recommendedUser);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
 
-        requestService.sendRoommateRequest(roommateRequestDTO);
-        return ResponseEntity.ok(recommendedUser);
     }
 
 }
