@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { AccommodationItemDTO, AccommodationService } from '../accommodation.service';
 import { AuthService } from '../../auth/auth.service';
+import { MatDialog } from '@angular/material/dialog';
+import { OkDialogComponent } from '../../shared/ok-dialog/ok-dialog.component';
 
 @Component({
   selector: 'app-accommodation-page',
@@ -12,7 +14,7 @@ properties: AccommodationItemDTO[] = [];
 propertiesLength: number = 0;
 hasActiveAccommodation:boolean=false;
 
-constructor(private accommodationService: AccommodationService, private authService:AuthService){
+constructor(private accommodationService: AccommodationService, private authService:AuthService, private dialog:MatDialog){
 
 }
 
@@ -31,6 +33,9 @@ ngOnInit(): void {
 findAccommodation():void{
   this.accommodationService.findAccommodation().subscribe((accommodation: any) =>{
     console.log(accommodation);
+    this.dialog.open(OkDialogComponent, {
+      data: {dialogMessage: "Accommodation request sent to "+accommodation.address},
+    });  
  });
 }
 
