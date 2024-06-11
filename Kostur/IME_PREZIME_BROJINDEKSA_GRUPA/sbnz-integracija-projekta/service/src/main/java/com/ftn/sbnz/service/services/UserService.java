@@ -104,10 +104,10 @@ public class UserService {
         String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
 
-        Role role = new Role("USER");
-        role=roleRepository.save(role);
+        Role role = roleRepository.findByName("USER");
         List<Role> roles = new ArrayList<>();
         roles.add(role);
+
         user.setRoles(roles);
 
         User u= userRepository.save(user);

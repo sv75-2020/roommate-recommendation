@@ -64,6 +64,10 @@ public class RequestService {
         User requestedUser = userRepository.findById(roommateRequest.getRequestedUserId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
+        user.setHasRoommate(true);
+        user = userRepository.save(user);
+        requestedUser.setHasRoommate(true);
+        requestedUser=userRepository.save(requestedUser);
 
         roommates.setRoommate1(user);
         roommates.setRoommate2(requestedUser);

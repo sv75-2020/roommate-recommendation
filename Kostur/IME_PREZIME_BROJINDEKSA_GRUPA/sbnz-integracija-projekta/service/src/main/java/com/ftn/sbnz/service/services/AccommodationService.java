@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import com.ftn.sbnz.model.models.*;
 import com.ftn.sbnz.model.models.User;
 import com.ftn.sbnz.model.repository.*;
+import enums.ReservationStatus;
 import org.drools.template.DataProvider;
 import org.drools.template.DataProviderCompiler;
 import org.drools.template.objects.ArrayDataProvider;
@@ -169,5 +170,15 @@ public class AccommodationService {
         }
 
         return kieHelper.build().newKieSession();
+    }
+
+    public ResponseEntity<Accommodation> getActiveAccommodation(Long id) {
+        Accommodation accommodation=null;
+        for(Reservation reservation: reservationRepository.findAll()){
+            if(reservation.getStatus()== ReservationStatus.ACTIVE && (reservation.getRoommates().getRoommate1().getId()==id || reservation.getRoommates().getRoommate2().getId()==id)){
+                accommodation=reservation.getAccommodation();
+            }
+        }
+        return ResponseEntity.ok(accommodation);
     }
 }

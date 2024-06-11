@@ -5,7 +5,7 @@
 </head>
 <body>
   <div class="header">
-    <button class="sort-button" (click)="findRoommate()">Find Roommate</button>
+    <button *ngIf="user.hasRoommate==false" class="sort-button" (click)="findRoommate()">Find Roommate</button>
 </div>
 <div class="centeredDiv" style="margin-top: -80px;">
 <div fxLayout="row wrap" fxLayoutGap="15px grid" style="width:80%; ">

@@ -32,6 +32,11 @@ public class AccommodationController {
         return accommodationService.getAccommodationById(id);
     }
 
+    @GetMapping(value = "/api/activeAccommodation/{id}")
+    public ResponseEntity<Accommodation> getActiveAccommodation(@PathVariable Long id) {
+        return accommodationService.getActiveAccommodation(id);
+    }
+
     @GetMapping(value = "/api/accommodations/history")
     public ResponseEntity<List<AccommodationDTO>> getAccommodationsHistory() {
         return accommodationService.getHistoryAccommodations();
