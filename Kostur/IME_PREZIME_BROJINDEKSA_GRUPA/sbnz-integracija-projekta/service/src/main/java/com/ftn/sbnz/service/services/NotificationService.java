@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ftn.sbnz.model.events.NotifyAdminEvictionEvent;
+import com.ftn.sbnz.model.events.NotifyAdminForBillEvent;
 import com.ftn.sbnz.model.models.*;
 import com.ftn.sbnz.model.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,10 +63,10 @@ public class NotificationService {
 
     public ResponseEntity<List<Notification>> getAdminNotifications(){
         List<Notification> notifications=new ArrayList<>();
-        for(NotifyAdminForBill notify: notifyAdminForBillRepository.findAll()){
+        for(NotifyAdminForBillEvent notify: notifyAdminForBillRepository.findAll()){
                 notifications.add(new Notification("User "+notify.getUser().getFullName()+" didn't pay the bill!", "billNotPaid",0L));
         }
-        for(NotifyAdminEviction notify: notifyAdminEvictionRepository.findAll()){
+        for(NotifyAdminEvictionEvent notify: notifyAdminEvictionRepository.findAll()){
             notifications.add(new Notification("User "+notify.getUser().getFullName()+" blocked because they didn't pay the bill!", "eviction",0L));
         }
         return ResponseEntity.ok(notifications);

@@ -1,6 +1,7 @@
 package com.ftn.sbnz.service.services;
 import java.util.List;
 
+import com.ftn.sbnz.model.events.NotifyAdminForBillEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +13,7 @@ public class NotifyAdminForBillService {
     @Autowired
     public NotifyAdminForBillRepository notifyAdminForBillRepository;
 
-    public List<NotifyAdminForBill> getNotifications(){
+    public List<NotifyAdminForBillEvent> getNotifications(){
         return notifyAdminForBillRepository.findAll();
     }
 }

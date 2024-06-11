@@ -1,6 +1,7 @@
 package com.ftn.sbnz.model.models;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -23,7 +24,7 @@ public class BillPaid {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
-    private LocalDate paymentDate;
+    private Date paymentDate;
     @ManyToOne
     private User user;
 }

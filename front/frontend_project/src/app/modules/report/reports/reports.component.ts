@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AverageRating, ReportsService } from '../reports.service';
+import { MatDialog } from '@angular/material/dialog';
+import { OkDialogComponent } from '../../shared/ok-dialog/ok-dialog.component';
 
 @Component({
   selector: 'app-reports',
@@ -20,7 +22,7 @@ export class ReportsComponent implements OnInit {
     2024, 2023, 2022
   ];
 
-  constructor(private reportsService: ReportsService) { }
+  constructor(private reportsService: ReportsService, private dialog:MatDialog) { }
 
   ngOnInit(): void {
     this.fetchReport();
@@ -37,5 +39,21 @@ export class ReportsComponent implements OnInit {
 
   onMonthChange(): void {
     this.fetchReport();
+  }
+
+  checkBills() {
+    this.reportsService.checkBills().subscribe(data=> {
+      this.dialog.open(OkDialogComponent, {
+        data: {dialogMessage: "Bills checked. You can see user warnings in notifactions."},
+      }); 
+    });
+  }
+    
+  checkDeposits() {
+    this.reportsService.checkDeposits().subscribe(data=> {
+      this.dialog.open(OkDialogComponent, {
+        data: {dialogMessage: "Deposits checked. You can see user blocked warnings in notifactions."},
+      }); 
+    });
   }
 }

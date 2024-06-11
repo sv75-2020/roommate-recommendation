@@ -39,6 +39,7 @@ public class ServiceApplication  {
 	private UserWarningRepository userWarningRepository;
 	@Autowired
 	private NotifyAdminEvictionRepository notifyAdminEvictionRepository;
+
 	public static void main(String[] args) {
 		
 		ApplicationContext ctx = SpringApplication.run(ServiceApplication.class, args);

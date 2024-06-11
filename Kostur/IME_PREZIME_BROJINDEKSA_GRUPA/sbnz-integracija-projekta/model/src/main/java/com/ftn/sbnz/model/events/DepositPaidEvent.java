@@ -1,8 +1,5 @@
 package com.ftn.sbnz.model.events;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 import org.kie.api.definition.type.Role;
 import org.kie.api.definition.type.Timestamp;
@@ -22,10 +19,12 @@ import java.time.LocalDate;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 public class DepositPaidEvent {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
     private LocalDate paymentDate;
+    @ManyToOne
     private User user;
 }

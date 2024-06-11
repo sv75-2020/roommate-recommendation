@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import com.ftn.sbnz.model.dto.PopularLocationsDTO;
+import com.ftn.sbnz.model.events.NotifyAdminForBillEvent;
 import com.ftn.sbnz.model.models.*;
 import enums.*;
 import com.ftn.sbnz.model.repository.*;
@@ -279,7 +280,7 @@ User user2 = new User(
           System.out.println("roommate1 "+p.isPaidRoommate1());
           System.out.println("roommate2 "+p.isPaidRoommate2());
         }
-        for(NotifyAdminForBill n: notifyAdminForBillRepository.findAll()){
+        for(NotifyAdminForBillEvent n: notifyAdminForBillRepository.findAll()){
           System.out.println(n.getUser());
         }
      
@@ -324,7 +325,7 @@ User user2 = new User(
         KieContainer kContainer = ks.getKieClasspathContainer(); 
         KieSession ksession = kContainer.newKieSession("cepKsession");
         SessionPseudoClock clock = ksession.getSessionClock();
-        ksession.setGlobal("notifyAdminForBillRepository", notifyAdminForBillRepository);
+        ksession.setGlobal("depositNotPaidRepository", notifyAdminForBillRepository);
         ksession.setGlobal("userWarningRepository", userWarningRepository);
         ksession.setGlobal("notifyAdminEvictionRepository", notifyAdminEvictionRepository);
 
@@ -334,7 +335,11 @@ User user2 = new User(
         ksession.insert(user4);
         ksession.insert(rm1);
         ksession.insert(a1);
-        //ksession.insert(r1);
+        Reservation reservation = new Reservation();
+        reservation.setPaidDeposit(false);
+        reservation.setCreated(LocalDate.now().minusDays(2));
+        reservation.setRoommates(rm1);
+        ksession.insert(reservation);
         ksession.insert(accr1);
         ksession.getAgenda().getAgendaGroup("deposit-cep").setFocus();
         ksession.fireAllRules();

@@ -70,11 +70,10 @@ public class UserService {
 
         BillPaidEvent bpe=new BillPaidEvent();
         BillPaid bp=new BillPaid();
-        LocalDate currDate = LocalDate.now();
-        bp.setPaymentDate(currDate);
+        bp.setPaymentDate(new Date());
         bp.setUser(user);
 
-        bpe.setPaymentDate(currDate);
+        bpe.setPaymentDate(LocalDate.now());
         bpe.setUser(user);
 
        
