@@ -1,6 +1,7 @@
 package com.ftn.sbnz.model.models;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.*;
@@ -32,4 +33,13 @@ public class Reservation {
     private List<DepositPayment> depositPayments;
     private ReservationStatus status;
 
+    public Reservation(LocalDate now, boolean b, Accommodation a1, Roommates rm1, ArrayList<Payment> payments, ArrayList<DepositPayment> depositPayments, ReservationStatus pending) {
+        this.created=now;
+        this.paidDeposit=b;
+        this.accommodation=a1;
+        this.roommates=rm1;
+        this.payments=payments;
+        this.depositPayments=depositPayments;
+        this.status=pending;
+    }
 }

@@ -21,4 +21,9 @@ public class DepositPayment {
     @ManyToOne
     private User user;
     private boolean paid;
+
+    public DepositPayment(User user,boolean paid){
+        this.user=user;
+        this.paid=paid;
+    }
 }

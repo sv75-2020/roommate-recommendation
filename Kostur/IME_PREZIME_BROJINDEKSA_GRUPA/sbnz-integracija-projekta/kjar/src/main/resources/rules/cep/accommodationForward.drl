@@ -10,13 +10,13 @@ import com.ftn.sbnz.model.models.Reservation
 import com.ftn.sbnz.model.models.Roommates
 import enums.ReservationStatus
 
-global List<com.ftn.sbnz.model.models.User> recommendedRoommates;
 global java.lang.Long loggedInId;
 global java.util.Map<Long, Integer> accommodationCompatibility;
-global java.lang.Long recommendedRoommate;
+global java.lang.Long bestMatch;
 
 
 rule "Remove Occupied Accommodations"
+salience 99
 agenda-group "accommodation-forward"
 when
     $reservation: Reservation($accommodation:accommodation, status==ReservationStatus.ACTIVE)
@@ -25,6 +25,7 @@ then
 end
 
 rule "Doesnt allow pets"
+salience 98
 agenda-group "accommodation-forward"
 when
     $accommodationRequirements: AccommodationRequirements($petsAllowed:petsAllowed)
@@ -34,6 +35,7 @@ then
 end
 
 rule "Doesnt have fast wifi"
+salience 97
 agenda-group "accommodation-forward"
 when
     $accommodationRequirements: AccommodationRequirements($fastInterentNeeded:fastInternet)
@@ -43,6 +45,7 @@ then
 end
 
 rule "Doesnt match locations"
+salience 96
 agenda-group "accommodation-forward"
 when
     $accommodationRequirements: AccommodationRequirements($locations:combinedLocation)
@@ -54,6 +57,7 @@ end
 
 
 rule "Accommodations with not matching price"
+salience 95
 agenda-group "accommodation-forward"
 when
     $accommodationRequirements: AccommodationRequirements($budget:combinedBudget)
@@ -64,19 +68,19 @@ then
 end
 
 rule "Accommodations with matching price"
+salience 94
 agenda-group "accommodation-forward"
 when
     $accommodationRequirements: AccommodationRequirements($budget:combinedBudget)
     $accommodation: Accommodation($price:price)
     eval($price==2*$budget)
 then
-    Integer compatibility = (Integer) accommodationCompatibility.get($accommodation.getId());
-    compatibility += 50;
-    accommodationCompatibility.put($accommodation.getId(), compatibility);
+    accommodationCompatibility.put($accommodation.getId(), 50);
 
 end
 
 rule "Accommodations with almost matching price"
+salience 93
 agenda-group "accommodation-forward"
 when
     $accommodationRequirements: AccommodationRequirements($budget:combinedBudget)
@@ -86,6 +90,27 @@ then
     Integer compatibility = (Integer) accommodationCompatibility.get($accommodation.getId());
     compatibility += 100;
     accommodationCompatibility.put($accommodation.getId(), compatibility);
+end
+
+rule "Final Compatibility Level"
+agenda-group "accommodation-forward"
+salience -1
+when
+    $user1: User(loggedInId==id)
+then
+    Object highestKey = null;
+    Integer maxValue = Integer.MIN_VALUE;
+
+    for (Object key : accommodationCompatibility.keySet()) {
+        Integer value = (Integer) accommodationCompatibility.get(key);
+        System.out.println("value: " + value);
+        if (value > maxValue) {
+            maxValue = value;
+            highestKey = key;
+        }
+    }
+    System.out.println("Best accommodation " + highestKey);
+    kcontext.getKieRuntime().setGlobal("bestMatch", (Long) highestKey);
 end
 
 

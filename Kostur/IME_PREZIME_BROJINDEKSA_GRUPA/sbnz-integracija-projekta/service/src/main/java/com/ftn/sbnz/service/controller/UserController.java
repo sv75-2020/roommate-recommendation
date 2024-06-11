@@ -1,5 +1,7 @@
 package com.ftn.sbnz.service.controller;
 
+import com.ftn.sbnz.model.dto.AccommodationReviewDTO;
+import com.ftn.sbnz.model.dto.RoommateRequestDTO;
 import com.ftn.sbnz.model.dto.UserDTO;
 import com.ftn.sbnz.model.exceptions.BadRequestException;
 import com.ftn.sbnz.model.models.Location;
@@ -8,12 +10,16 @@ import com.ftn.sbnz.model.models.Payment;
 import com.ftn.sbnz.model.models.User;
 import com.ftn.sbnz.service.services.LocationService;
 import com.ftn.sbnz.service.services.NotificationService;
+import com.ftn.sbnz.service.services.RequestService;
 import com.ftn.sbnz.service.services.UserService;
+import enums.RequestStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,6 +47,9 @@ public class UserController {
 
     @Autowired
     public NotificationService notificationService;
+
+    @Autowired
+    public RequestService requestService;
 
     @GetMapping(value = "/api/users")
     public ResponseEntity<List<UserDTO>> getAllUsers() {
@@ -117,7 +126,18 @@ public class UserController {
 
     @GetMapping(value = "/api/findRoommate")
     public ResponseEntity<User> findRoommate() throws IOException{
-        return userService.findRecommendedUser();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+
+        User recommendedUser=userService.findRecommendedUser();
+        if (recommendedUser != null) {
+            RoommateRequestDTO roommateRequestDTO = new RoommateRequestDTO(RequestStatus.PENDING,user.getId(),recommendedUser.getId());
+            requestService.sendRoommateRequest(roommateRequestDTO);
+            return ResponseEntity.ok(recommendedUser);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
     }
 
 }

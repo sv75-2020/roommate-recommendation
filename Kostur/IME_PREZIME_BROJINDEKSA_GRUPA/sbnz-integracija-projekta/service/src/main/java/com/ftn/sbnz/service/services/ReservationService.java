@@ -26,10 +26,10 @@ public class ReservationService {
   public DepositRepository depositRepository;
 
   public Reservation newReservation(Roommates rm1, Accommodation a1) {
-      Reservation reservation = new Reservation(1L,LocalDate.now(), false, a1,rm1,new ArrayList<>(), new ArrayList<>(), ReservationStatus.PENDING);
+      Reservation reservation = new Reservation(LocalDate.now(), false, a1,rm1,new ArrayList<>(), new ArrayList<>(), ReservationStatus.PENDING);
       List<DepositPayment> depositPayments = new ArrayList<>();
-      DepositPayment depositPayment1 = new DepositPayment(1L, rm1.getRoommate1(), false);
-      DepositPayment depositPayment2 = new DepositPayment(2L, rm1.getRoommate2(), false);
+      DepositPayment depositPayment1 = new DepositPayment(rm1.getRoommate1(), false);
+      DepositPayment depositPayment2 = new DepositPayment(rm1.getRoommate2(), false);
       depositPayments.add(depositPayment1);
       depositPayments.add(depositPayment2);
       reservation.setDepositPayments(depositPayments);

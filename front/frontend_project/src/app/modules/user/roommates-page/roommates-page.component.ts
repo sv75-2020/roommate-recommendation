@@ -3,6 +3,7 @@ import { UserService } from '../user.service';
 import { MatDialog } from '@angular/material/dialog';
 import { OkDialogComponent } from '../../shared/ok-dialog/ok-dialog.component';
 import { DomSanitizer } from '@angular/platform-browser';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-roommates-page',
@@ -12,12 +13,22 @@ import { DomSanitizer } from '@angular/platform-browser';
 export class RoommatesPageComponent implements OnInit {
 
     users: RoommatesItemDTO[] = [];
+    user:any;
   
-    constructor(private userService: UserService, private dialog:MatDialog, private sanitizer: DomSanitizer) {}
+    constructor(private userService: UserService, private dialog:MatDialog, private sanitizer: DomSanitizer, private authService:AuthService) {}
       
   
     ngOnInit(): void {
       this.getUsers();
+      this.getCurrentUser();
+    }
+
+    getCurrentUser(){
+      this.userService.getUser(this.authService.getId())
+        .subscribe((user: any[]) => {
+          this.user = user;
+          console.log(user)
+        });
     }
   
     getUsers(): void {

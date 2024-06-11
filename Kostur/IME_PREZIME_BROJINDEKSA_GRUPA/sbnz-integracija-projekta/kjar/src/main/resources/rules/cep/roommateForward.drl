@@ -9,7 +9,7 @@ import java.util.Map
 global List<com.ftn.sbnz.model.models.User> recommendedRoommates;
 global java.lang.Long loggedInId;
 global java.util.Map<Long, Integer> userCompatibility;
-global List<java.lang.Long> recommendedRoommate;
+global Long bestMatch;
 
 
 rule "Gender Matching"
@@ -254,8 +254,8 @@ then
             highestKey = key;
         }
     }
-    recommendedRoommate.add((Long) highestKey);
     System.out.println("Most compatible roommate's ID: " + highestKey);
+    kcontext.getKieRuntime().setGlobal("bestMatch", (Long) highestKey);
 end
 
 

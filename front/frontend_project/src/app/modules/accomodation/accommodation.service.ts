@@ -24,8 +24,16 @@ export class AccommodationService {
     return this.http.get<Accommodation>(environment.apiHost + 'api/accommodations/'+id);
   }
 
+  getActiveAccommodation(id:any): Observable<any> {
+    return this.http.get<any>(environment.apiHost + 'api/activeAccommodation/'+id);
+  }
+
   getHistoryAccommodations(): Observable<AccommodationItemDTO[]> {
     return this.http.get<AccommodationItemDTO[]>(environment.apiHost + 'api/accommodations/history');
+  }
+
+  findAccommodation(): Observable<any> {
+    return this.http.get<any>(environment.apiHost + 'api/findAccommodation');
   }
 
   rateAccommodation(review: any): Observable<any>  {

@@ -9,9 +9,11 @@ import java.util.*;
 
 import javax.persistence.EntityNotFoundException;
 
+import com.ftn.sbnz.model.dto.RoommateRequestDTO;
 import com.ftn.sbnz.model.dto.UserDTO;
 import com.ftn.sbnz.model.models.*;
 import com.ftn.sbnz.model.repository.*;
+import enums.RequestStatus;
 import org.drools.template.DataProvider;
 import org.drools.template.DataProviderCompiler;
 import org.drools.template.objects.ArrayDataProvider;
@@ -52,6 +54,7 @@ public class UserService {
 
     @Autowired
     public LocationRepository locationRepository;
+
 
     public ResponseEntity<Map<String,String>> payBill(Long paymentId){
         
@@ -100,9 +103,13 @@ public class UserService {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(6,new SecureRandom());
         String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
-        List<Role> roles=new ArrayList<>();
-        roles.add(roleRepository.findById(1L).get());
+
+        Role role = roleRepository.findByName("USER");
+        List<Role> roles = new ArrayList<>();
+        roles.add(role);
+
         user.setRoles(roles);
+
         User u= userRepository.save(user);
         return  ResponseEntity.ok(u);
     }
@@ -172,7 +179,7 @@ public class UserService {
 
     }
 
-    public ResponseEntity<User> findRecommendedUser() {
+    public User findRecommendedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         User user= (User) userRepository.findByUsername(username);
@@ -194,11 +201,12 @@ public class UserService {
         DataProviderCompiler converter = new DataProviderCompiler();
         String drl1 = converter.compile(dataProvider, template);
 
-        List<Long> recommendedRoommate=new ArrayList<>();
+        //List<Long> recommendedRoommate=new ArrayList<>();
+        Long bestMatch = 0L;
 
         KieSession ksession = createKieSessionFromDRL(drl1);
         ksession.setGlobal("loggedInId", user.getId());
-        ksession.setGlobal("recommendedRoommate", recommendedRoommate);
+        ksession.setGlobal("bestMatch", bestMatch);
         ksession.setGlobal("userCompatibility", new HashMap<Long, Integer>());
         ksession.setGlobal("recommendedRoommates", new ArrayList<User>());
 
@@ -213,14 +221,11 @@ public class UserService {
 
         ksession.fireAllRules();
 
-        List<Long> recommendedUser= (List<Long>) ksession.getGlobal("recommendedRoommate");
-
-        System.out.println(recommendedUser.get(0));
-        User recommended=userRepository.findById(recommendedUser.get(0)).get();
-
+        Long recommendedRoommate = (Long) ksession.getGlobal("bestMatch");
+        System.out.println(recommendedRoommate);
+        User recommended = userRepository.findById(recommendedRoommate).orElse(null);
         ksession.dispose();
-
-        return ResponseEntity.ok(recommended);
+        return recommended;
 
     }
 

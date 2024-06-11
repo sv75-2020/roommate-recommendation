@@ -19,8 +19,8 @@ public class RoommateRequestDTO {
 
     public RoommateRequestDTO(RoommateRequest request){
         this.status=request.getStatus();
-        this.userId=request.getUser().getId();
-        this.requestedUserId=request.getRequestedUser().getId();
+        this.userId=request.getUserId();
+        this.requestedUserId=request.getRequestedUserId();
     }
 
 }

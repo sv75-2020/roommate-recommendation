@@ -5,7 +5,7 @@ template header
     salience
     number
 
-package cep;
+package accommodationForward;
 import com.ftn.sbnz.model.models.Accommodation;
 import com.ftn.sbnz.model.models.AccommodationPreferences;
 import java.util.Map;
@@ -18,9 +18,10 @@ template "accommodation-template"
 
 rule "Rate accommodation by @{feature}"
 salience @{salience}
+agenda-group "accommodation-forward"
 when
     $accommodation:Accommodation($feature:@{feature})
-    $count : Number(intValue == @{number}) from accumulate(
+    $count : Number(intValue > 0) from accumulate(
             $preference : AccommodationPreferences( @{preference} == $feature ),
             count($preference)
         )
