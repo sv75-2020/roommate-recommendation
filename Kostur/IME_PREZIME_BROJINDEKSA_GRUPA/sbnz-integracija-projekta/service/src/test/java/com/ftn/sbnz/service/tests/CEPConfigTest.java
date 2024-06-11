@@ -182,7 +182,7 @@ User user2 = new User(
   );
 
   Roommates rm1=new Roommates(1L,user1,user2);
-  AccommodationRequirements accr1 = new AccommodationRequirements(1L, rm1, 0, false, false, false, new ArrayList<Location>());
+  AccommodationRequirements accr1 = new AccommodationRequirements(rm1, 0, false, false, false, new ArrayList<Location>());
   Accommodation a1=new Accommodation(1L,"address1",2,200,true,true,true,true,true,true,true,true,true,true,l1);
     @Test
     public void test() {

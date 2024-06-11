@@ -28,6 +28,10 @@ export class AccommodationService {
     return this.http.get<AccommodationItemDTO[]>(environment.apiHost + 'api/accommodations/history');
   }
 
+  findAccommodation(): Observable<any> {
+    return this.http.get<any>(environment.apiHost + 'api/findAccommodation');
+  }
+
   rateAccommodation(review: any): Observable<any>  {
     return this.http.post<any>(environment.apiHost + 'api/rateAccommodation', review);
   }

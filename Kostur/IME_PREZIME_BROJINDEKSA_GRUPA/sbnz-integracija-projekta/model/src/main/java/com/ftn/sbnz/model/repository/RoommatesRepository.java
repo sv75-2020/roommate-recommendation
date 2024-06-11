@@ -15,7 +15,7 @@ import java.util.List;
 @Repository
 public interface RoommatesRepository extends JpaRepository<Roommates, Long> {
 
-    @Query("SELECT distinct r FROM Roommates r WHERE (r.roommate1 = :userId AND r.roommate2 = :userId2) OR (r.roommate2 = :userId AND r.roommate1 = :userId2) ")
+    @Query("SELECT r FROM Roommates r WHERE (r.roommate1.id = :userId1 AND r.roommate2.id = :userId2) OR (r.roommate2.id = :userId1 AND r.roommate1.id = :userId2) ")
     Roommates findRoommatesFromRequest(@Param("userId1") Long userId1, @Param("userId2") Long userId2);
 
 }

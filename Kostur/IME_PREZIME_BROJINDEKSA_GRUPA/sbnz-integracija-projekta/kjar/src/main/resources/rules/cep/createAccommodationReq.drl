@@ -1,4 +1,4 @@
-package cep;
+package accommodationForward;
 import com.ftn.sbnz.model.models.User;
 import com.ftn.sbnz.model.models.Roommates;
 import com.ftn.sbnz.model.models.AccommodationRequirements;
@@ -10,7 +10,7 @@ import java.util.List;
 
 rule "Location requirements from both users"
 salience 100
-agenda-group "accommodation-requirements"
+agenda-group "accommodation-forward"
 	when
 		$roommates: Roommates()
 		$user1: User(id == $roommates.getRoommate1().getId())
@@ -24,7 +24,7 @@ end;
 
 rule "Fast internet requirements"
 salience 100
-agenda-group "accommodation-requirements"
+agenda-group "accommodation-forward"
 	when
         $roommates: Roommates($roommate1: roommate1, $roommate2: roommate2,
                     ($roommate1.isWorksFromHome() == true || $roommate2.isWorksFromHome() == true))
@@ -36,7 +36,7 @@ end;
 
 rule "Pet requirements"
 salience 100
-agenda-group "accommodation-requirements"
+agenda-group "accommodation-forward"
 	when
         $roommates: Roommates($roommate1: roommate1, $roommate2: roommate2,
                     ($roommate1.isHasPets() == true || $roommate2.isHasPets() == true))
@@ -47,7 +47,7 @@ end;
 
 rule "Budget requirements"
 salience 100
-agenda-group "accommodation-requirements"
+agenda-group "accommodation-forward"
 	when
 		$roommates: Roommates()
 		$user1: User(id == $roommates.getRoommate1().getId(), $budget1: budget)
@@ -60,7 +60,7 @@ end;
 
 rule "Smoking preference"
 salience 100
-agenda-group "accommodation-requirements"
+agenda-group "accommodation-forward"
 	when
         $roommates: Roommates($roommate1: roommate1, $roommate2: roommate2,
                     ($roommate1.smoker == true || $roommate2.smoker == true))

@@ -46,6 +46,7 @@ public class AccommodationService {
     public ReservationRepository reservationRepository;
     @Autowired
     public RoommateRequestRepository roommateRequestRepository;
+    @Autowired
 
     public ResponseEntity<List<AccommodationDTO>> getAllAccommodations() {
         List<AccommodationDTO> accommodationDTOs = accommodationRepository.findAllAccommodationDTOs();
@@ -84,7 +85,7 @@ public class AccommodationService {
         return ResponseEntity.ok(accommodationPreferencesRepository.save(accommodationPreferences));
     }
 
-    public Accommodation findReccommendedAccommodation() {
+    public Accommodation findRecommendedAccommodation() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         User user= (User) userRepository.findByUsername(username);
@@ -113,9 +114,11 @@ public class AccommodationService {
         ksession.setGlobal("bestMatch", bestMatch);
         ksession.setGlobal("accommodationCompatibility", accommodationMap);
 
+        Roommates roommates = null;
+
         List<RoommateRequest> requests = roommateRequestRepository.findByUserIdOrRequestedUserId(user.getId());
         for(RoommateRequest request : requests) {
-            Roommates roommates = roommatesRepository.findRoommatesFromRequest(request.getUserId(), request.getRequestedUserId());
+            roommates = roommatesRepository.findRoommatesFromRequest(request.getUserId(), request.getRequestedUserId());
             ksession.insert(roommates.getRoommate1());
             ksession.insert(roommates.getRoommate2());
             ksession.insert(roommates);
@@ -138,7 +141,9 @@ public class AccommodationService {
         Long recommendedAccommodation = (Long) ksession.getGlobal("bestMatch");
         System.out.println(recommendedAccommodation);
 
-        Accommodation recommended=accommodationRepository.findById(recommendedAccommodation).get();
+        Accommodation recommended=accommodationRepository.findById(recommendedAccommodation).orElse(null);
+
+        reservationService.newReservation(roommates,recommended);
 
         ksession.dispose();
 

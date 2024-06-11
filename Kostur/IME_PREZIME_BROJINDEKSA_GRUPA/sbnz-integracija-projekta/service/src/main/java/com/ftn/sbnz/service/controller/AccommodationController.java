@@ -47,9 +47,10 @@ public class AccommodationController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
 
-        Accommodation accommodation=accommodationService.findReccommendedAccommodation();
+        Accommodation accommodation=accommodationService.findRecommendedAccommodation();
 
         return ResponseEntity.ok(new AccommodationDTO(accommodation));
     }
+
 
 }

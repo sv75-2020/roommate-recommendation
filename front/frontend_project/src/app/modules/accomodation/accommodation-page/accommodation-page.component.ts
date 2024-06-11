@@ -21,6 +21,12 @@ ngOnInit(): void {
    });
 }
 
+findAccommodation():void{
+  this.accommodationService.findAccommodation().subscribe((accommodation: any) =>{
+    console.log(accommodation);
+ });
+}
+
 }
 
 
