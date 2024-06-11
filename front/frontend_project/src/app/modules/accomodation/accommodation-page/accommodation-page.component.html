@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Property Listings</title>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button *ngIf="hasActiveAccommodation==false" class="sort-button" (click)="findAccommodation()">Find Accommodation</button>
+            <h1>{{ propertiesLength }} oglasa</h1>
+        </div>
+        <div class="property-list">
+            <a *ngFor="let property of properties" 
+               class="property-card" 
+               [routerLink]="['/accommodation-page', property.id]">
+                <img src="assets/property1.jpg" alt="Property Image" class="property-image">
+                <div class="property-details">
+                    <h2>{{ property.address }}</h2>
+                    <p>{{ property.location.address }}</p>
+                    <p class="property-info">velicina • {{ property.numOfRooms }} soba</p>
+                    <p class="agency">Agencija</p>
+                </div>
+                <div class="price-tag">
+                    <p class="price">{{ property.price }} €</p>
+                </div>
+            </a>
+        </div>
+    </div>
+</body>
+</html>

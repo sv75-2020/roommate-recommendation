@@ -12,6 +12,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Objects;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -22,5 +24,23 @@ public class Location {
     @Id
     private Long id;
     private String address;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Location location = (Location) o;
+        return Objects.equals(id, location.id);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+    @Override
+    public String toString() {
+        return "Location{" +
+                "id=" + id +
+                ", address='" + address + '\'' +
+                '}';
+    }
 }

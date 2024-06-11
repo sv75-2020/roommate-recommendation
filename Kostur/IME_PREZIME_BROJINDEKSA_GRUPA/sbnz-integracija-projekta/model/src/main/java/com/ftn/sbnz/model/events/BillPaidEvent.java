@@ -3,10 +3,7 @@ package com.ftn.sbnz.model.events;
 import java.time.LocalDate;
 import java.util.Date;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 import org.kie.api.definition.type.Role;
 import org.kie.api.definition.type.Timestamp;
@@ -26,10 +23,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 public class BillPaidEvent {
-
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
     private LocalDate paymentDate;
+    @ManyToOne
     private User user;
 }

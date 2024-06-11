@@ -1,0 +1,14 @@
+<head>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined"
+    rel="stylesheet"/>
+  </head>
+  <mat-toolbar id="toolbar" [ngStyle]="{'background-color':'#3d405b'}">
+    <app-link class="link" text="Home" source="home"></app-link>
+    <app-link class="link" text="Notifications" source="notifications"></app-link>
+    <app-link class="link" text="Roommate history" source="requests"></app-link>
+    <app-link class="link" text="Accomodation history" source="accommodation-history"></app-link>
+    <app-link class="link" text="Recommended" source="recommended"></app-link>
+    <app-link class="link" text="Account" source="user"></app-link>
+    <app-link class="link" text="Logout" (click)="logout()" ></app-link>
+
+  </mat-toolbar>

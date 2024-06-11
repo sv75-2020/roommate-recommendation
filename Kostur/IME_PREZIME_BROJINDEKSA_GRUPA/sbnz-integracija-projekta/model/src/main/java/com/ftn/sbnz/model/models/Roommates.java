@@ -1,9 +1,6 @@
 package com.ftn.sbnz.model.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,7 +16,8 @@ public class Roommates {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
+    @ManyToOne
     private User roommate1;
+    @ManyToOne
     private User roommate2;
-    private boolean accepted;
 }

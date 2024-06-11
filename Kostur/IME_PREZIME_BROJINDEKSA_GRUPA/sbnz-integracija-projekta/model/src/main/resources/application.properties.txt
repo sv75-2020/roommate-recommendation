@@ -1,7 +1,0 @@
-spring.datasource.url=jdbc:postgresql://localhost:5432/RoommatesDB
-spring.datasource.username=ftn
-spring.datasource.password=ftn
-spring.datasource.driver-class-name=org.postgresql.Driver
-spring.jpa.defer-datasource-initialization=true
-spring.jpa.hibernate.ddl-auto=update
-spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.PostgreSQLDialect

@@ -1,10 +1,7 @@
 package com.ftn.sbnz.model.events;
-import java.sql.Date;
+import java.util.Date;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 import org.kie.api.definition.type.Role;
 import org.kie.api.definition.type.Timestamp;
@@ -29,5 +26,6 @@ public class DepositNotPaidEvent {
     @Id
     private Long id;
     private Date paymentDate;
+    @ManyToOne
     private User user;
 }

@@ -1,9 +1,6 @@
 package com.ftn.sbnz.model.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 import com.ftn.sbnz.model.models.User;
 
@@ -21,6 +18,12 @@ public class DepositPayment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
+    @ManyToOne
     private User user;
     private boolean paid;
+
+    public DepositPayment(User user,boolean paid){
+        this.user=user;
+        this.paid=paid;
+    }
 }

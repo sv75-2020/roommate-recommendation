@@ -1,0 +1,261 @@
+package roommateForward;
+
+import java.util.HashMap;
+import java.util.List;
+import com.ftn.sbnz.model.models.User
+import com.ftn.sbnz.model.models.Location
+import java.util.Map
+
+global List<com.ftn.sbnz.model.models.User> recommendedRoommates;
+global java.lang.Long loggedInId;
+global java.util.Map<Long, Integer> userCompatibility;
+global Long bestMatch;
+
+
+rule "Gender Matching"
+salience 100
+agenda-group "roommate-forward"
+when
+    $loggedInUser: User(loggedInId == id, $gender: gender)
+    $otherUser: User(gender == $gender, this != $loggedInUser)
+then
+    userCompatibility.put($otherUser.getId(), 0);
+end
+
+rule "Retract Non-Compatible Users"
+salience 90
+agenda-group "roommate-forward"
+when
+    $loggedInUser: User(id == loggedInId, $gender: gender)
+    $otherUser: User(gender != $gender, this != $loggedInUser)
+then
+    retract($otherUser);
+end
+
+rule "Budget and Location Matching"
+salience 89
+agenda-group "roommate-forward"
+when
+    $loggedInUser: User(loggedInId == id, $budget1: budget, $locations1: locations)
+    $otherUser: User($budget2 : budget, $locations2: locations, this != $loggedInUser)
+    $count: Number(intValue >= 0) from accumulate(
+        Location($locationName: address) from $locations1 and
+        Location(address == $locationName) from $locations2,
+        count($locationName))
+    eval(Math.abs($budget1 - $budget2) < 50 && $count.intValue() == $locations1.size())
+then
+    Integer compatibility = (Integer) userCompatibility.get($otherUser.getId());
+    compatibility += 50;
+    userCompatibility.put($otherUser.getId(), compatibility);
+end
+
+rule "Budget and Location Matching with Small Difference"
+agenda-group "roommate-forward"
+salience 88
+when
+    $loggedInUser: User(loggedInId == id, $budget1: budget, $locations1: locations)
+    $otherUser: User($budget2 : budget, $locations2: locations, this != $loggedInUser)
+    $count: Number(intValue >= 0) from accumulate(
+        Location($locationName: address) from $locations1 and
+        Location(address == $locationName) from $locations2,
+        count($locationName))
+    eval(Math.abs($budget1 - $budget2) < 50 && $count.intValue() > 0)
+then
+    Integer compatibility = (Integer) userCompatibility.get($otherUser.getId());
+    compatibility += 30;
+    userCompatibility.put($otherUser.getId(), compatibility);
+end
+
+rule "Remove Users with Large Budget Difference or No Common Locations"
+agenda-group "roommate-forward"
+salience 87
+when
+    $loggedInUser: User(loggedInId == id, $budget1: budget, $locations1: locations)
+    $otherUser: User($budget2 : budget, $locations2: locations, this != $loggedInUser)
+    $count: Number(intValue >= 0) from accumulate(
+        Location($locationName: address) from $locations1 and
+        Location(address == $locationName) from $locations2,
+        count($locationName))
+    eval(Math.abs($budget1 - $budget2) > 100 || $count.intValue() == 0)
+then
+    userCompatibility.remove($otherUser.getId());
+    retract($otherUser);
+end
+
+rule "No Matching for Users with Different Accommodation Times"
+agenda-group "roommate-forward"
+salience 86
+when
+    $user1: User(loggedInId==id, $time1: moveInMonth)
+    $user2: User(moveInMonth != $time1, this != $user1)
+then
+    userCompatibility.remove($user2.getId());
+    retract($user2);
+end
+
+rule "Similar Hobbies and Interests"
+agenda-group "roommate-forward"
+salience 85
+when
+    $user1: User($interests1: interests, loggedInId == id)
+    $user2: User($interests2: interests, this != $user1)
+    $count: Number(intValue >= 0) from accumulate(
+			String($i1: this) from $interests1 and
+			String(this == $i1) from $interests2,
+			count($i1))
+then
+    Integer compatibility = (Integer) userCompatibility.get($user2.getId());
+    compatibility += $count.intValue() * 30;
+    userCompatibility.put($user2.getId(), compatibility);
+end
+
+rule "Small age difference"
+agenda-group "roommate-forward"
+salience 84
+when
+    $loggedInUser: User(loggedInId == id, $dateOfBirth1: dateOfBirth.getYear())
+    $otherUser: User($dateOfBirth2: dateOfBirth.getYear(), this != $loggedInUser)
+    eval(Math.abs($dateOfBirth1 - $dateOfBirth2) <= 2)
+then
+    Integer compatibility = (Integer) userCompatibility.get($otherUser.getId());
+    compatibility += 10;
+    userCompatibility.put($otherUser.getId(), compatibility);
+end
+
+rule "Medium age difference"
+agenda-group "roommate-forward"
+salience 83
+when
+    $loggedInUser: User(loggedInId == id, $dateOfBirth1: dateOfBirth.getYear())
+    $otherUser: User($dateOfBirth2: dateOfBirth.getYear(), this != $loggedInUser)
+    eval(Math.abs($dateOfBirth1 - $dateOfBirth2) > 2 && Math.abs($dateOfBirth1 - $dateOfBirth2) <= 5)
+then
+    Integer compatibility = (Integer) userCompatibility.get($otherUser.getId());
+    compatibility += 10;
+    userCompatibility.put($otherUser.getId(), compatibility);
+end
+
+rule "Big age difference"
+agenda-group "roommate-forward"
+salience 82
+when
+    $loggedInUser: User(loggedInId == id, $dateOfBirth1: dateOfBirth.getYear())
+    $otherUser: User($dateOfBirth2: dateOfBirth.getYear(), this != $loggedInUser)
+    eval(5 < Math.abs($dateOfBirth1 - $dateOfBirth2))
+then
+    Integer compatibility = (Integer) userCompatibility.get($otherUser.getId());
+    compatibility -= 50;
+    userCompatibility.put($otherUser.getId(), compatibility);
+end
+
+rule "Same Cleaning habits"
+agenda-group "roommate-forward"
+salience 81
+when
+    $loggedInUser: User(loggedInId == id, $cleaningHabit1: cleaningHabit)
+    $otherUser: User($cleaningHabit2: cleaningHabit, this != $loggedInUser)
+    eval(Math.abs($cleaningHabit1.getValue() - $cleaningHabit2.getValue()) == 0)
+then
+    Integer compatibility = (Integer) userCompatibility.get($otherUser.getId());
+    compatibility += 10;
+    userCompatibility.put($otherUser.getId(), compatibility);
+end
+
+rule "Similar Cleaning habits"
+agenda-group "roommate-forward"
+salience 80
+when
+    $loggedInUser: User(loggedInId == id, $cleaningHabit1: cleaningHabit)
+    $otherUser: User($cleaningHabit2: cleaningHabit, this != $loggedInUser)
+    eval(Math.abs($cleaningHabit1.getValue() - $cleaningHabit2.getValue()) == 1)
+then
+    Integer compatibility = (Integer) userCompatibility.get($otherUser.getId());
+    compatibility += 5;
+    userCompatibility.put($otherUser.getId(), compatibility);
+end
+
+rule "Different Cleaning habits"
+agenda-group "roommate-forward"
+salience 79
+when
+    $loggedInUser: User(loggedInId == id, $cleaningHabit1: cleaningHabit)
+    $otherUser: User($cleaningHabit2: cleaningHabit, this != $loggedInUser)
+    eval(Math.abs($cleaningHabit1.getValue() - $cleaningHabit2.getValue()) == 2)
+then
+    Integer compatibility = (Integer) userCompatibility.get($otherUser.getId());
+    compatibility -= 10;
+    userCompatibility.put($otherUser.getId(), compatibility);
+end
+
+rule "Users with a pet and animal lovers"
+agenda-group "roommate-forward"
+salience 78
+when
+    $loggedUser: User(loggedInId == id, $interests: interests)
+    exists(String(this == "AnimalLover") from $interests)
+    $user1: User(this != $loggedUser, hasPets == true)
+then
+    Integer compatibility = (Integer) userCompatibility.get($user1.getId());
+    compatibility += 10;
+    userCompatibility.put($user1.getId(), compatibility);
+end
+
+rule "Animal lovers and users with a pet"
+agenda-group "roommate-forward"
+salience 77
+when
+    $loggedUser: User(loggedInId == id, hasPets == true)
+    $user1: User(this != $loggedUser, $interests: interests)
+    exists(String(this == "AnimalLover") from $interests)
+then
+    Integer compatibility = (Integer) userCompatibility.get($user1.getId());
+    compatibility += 10;
+    userCompatibility.put($user1.getId(), compatibility);
+end
+
+rule "Users with the same personality type"
+agenda-group "roommate-forward"
+salience 76
+when
+    $user1: User(loggedInId == id, $personalityType: personalityType)
+    $user2: User(this != $user1, personalityType == $personalityType)
+then
+    Integer compatibility = (Integer) userCompatibility.get($user2.getId());
+    compatibility += 10;
+    userCompatibility.put($user2.getId(), compatibility);
+end
+
+rule "Users with the same job status"
+agenda-group "roommate-forward"
+salience 75
+when
+    $user1: User(loggedInId == id, $jobStatus: jobStatus)
+    $user2: User(this != $user1, jobStatus == $jobStatus)
+then
+    Integer compatibility = (Integer) userCompatibility.get($user2.getId());
+    compatibility += 10;
+    userCompatibility.put($user2.getId(), compatibility);
+end
+
+rule "Final Compatibility Level"
+agenda-group "roommate-forward"
+salience -1
+when
+    $user1: User(loggedInId==id)
+then
+    Object highestKey = null;
+    Integer maxValue = Integer.MIN_VALUE;
+
+    for (Object key : userCompatibility.keySet()) {
+        Integer value = (Integer) userCompatibility.get(key);
+        System.out.println("value: " + value);
+        if (value > maxValue) {
+            maxValue = value;
+            highestKey = key;
+        }
+    }
+    System.out.println("Most compatible roommate's ID: " + highestKey);
+    kcontext.getKieRuntime().setGlobal("bestMatch", (Long) highestKey);
+end
+
+

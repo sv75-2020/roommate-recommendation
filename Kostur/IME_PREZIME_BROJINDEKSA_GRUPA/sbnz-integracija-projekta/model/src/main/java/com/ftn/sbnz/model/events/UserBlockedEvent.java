@@ -3,10 +3,7 @@ package com.ftn.sbnz.model.events;
 import java.time.LocalDate;
 import java.sql.Date;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 import org.kie.api.definition.type.Role;
 import org.kie.api.definition.type.Timestamp;
@@ -30,5 +27,6 @@ public class UserBlockedEvent {
     @Id
     private Long id;
     private Date paymentDate;
+    @ManyToOne
     private User user;
 }

@@ -1,0 +1,27 @@
+template header
+    attributeName1
+    attributeValue1
+    attributeName2
+    attributeValue2
+    salience
+
+package roommateForward;
+import com.ftn.sbnz.model.models.User;
+
+global java.util.Map<Long, Integer> userCompatibility;
+global java.lang.Long loggedInId;
+global java.lang.Long recommendedRoommate;
+
+template "no-matching-rule-template"
+
+rule "No Matching for Users who @{attributeName1} and @{attributeName2}"
+salience @{salience}
+agenda-group "roommate-forward"
+when
+    $user1: User(loggedInId==id, @{attributeName1} == @{attributeValue1})
+    $user2: User(@{attributeName2} == @{attributeValue2}, this!=$user1)
+then
+    userCompatibility.remove($user2.getId());
+    retract($user2);
+end
+end template

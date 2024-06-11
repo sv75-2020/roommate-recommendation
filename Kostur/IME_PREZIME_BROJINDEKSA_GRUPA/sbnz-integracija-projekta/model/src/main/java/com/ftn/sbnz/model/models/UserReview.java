@@ -1,9 +1,6 @@
 package com.ftn.sbnz.model.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,6 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Table(name = "user_review")
 public class UserReview {
     // Attributes
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,8 +20,11 @@ public class UserReview {
     private Long id;
     private Double rating;
     private String comment;
-    private Integer userId;
+    @ManyToOne
+    @JoinColumn(name = "user_gives_rating_id")
     private User user;
+    @ManyToOne
+    @JoinColumn(name = "rated_user_id")
     private User ratedUser;
 
 }

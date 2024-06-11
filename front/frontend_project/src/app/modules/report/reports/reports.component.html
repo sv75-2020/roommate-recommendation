@@ -1,0 +1,60 @@
+<div class="container">
+    <h1 class="title">Reports</h1>
+    <mat-form-field appearance="fill">
+      <mat-label>Select Month</mat-label>
+      <mat-select [(value)]="selectedMonth">
+        <mat-option *ngFor="let month of months" [value]="month">{{ month }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Select Year</mat-label>
+      <mat-select [(value)]="selectedYear">
+        <mat-option *ngFor="let year of years" [value]="year">{{ year }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button (click)="fetchReport()" class="button" style="margin-top: 10px;" mat-button>Confirm</button>
+  
+    <div class="report">
+      <h2>Monthly Earnings</h2>
+      <p>Total Earnings for {{ selectedMonth }}/{{ selectedYear}} : <b>{{ monthlyEarnings }}</b> RSD</p>
+    </div>
+  
+    <div class="report">
+      <h2>Average Accommodation Rating per Location</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Location</th>
+            <th>Average Rating</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let rating of accommodationRatingReport">
+            <td>{{ rating.locationName }}</td>
+            <td>{{ rating.averageRating }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  
+    <div class="report">
+      <h2>Most Popular Locations in {{selectedMonth}} / {{selectedYear}}</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Number of Reservations</th>
+            <th>Location</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let location of popularLocations">
+            <td>{{ location.count }}</td>
+            <td>{{ location.locationName }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <button (click)="checkDeposits()"  class="button" style="margin-top: 10px;" mat-button>Check Deposits</button>
+    <button (click)="checkBills()"  class="button" style="margin-top: 10px;" mat-button>Check Bills</button>
+  </div>
+  

@@ -1,15 +1,19 @@
 package cep;
 
 import com.ftn.sbnz.model.events.BillPaidEvent;
-import com.ftn.sbnz.model.events.MonthlyPaymentEvent;
-import com.ftn.sbnz.model.events.NotifyAdminEviction;
-import com.ftn.sbnz.model.events.NotifyAdminForBill;
+import com.ftn.sbnz.model.models.BillPaid;
+import com.ftn.sbnz.model.models.MonthlyPayment;
+import com.ftn.sbnz.model.events.NotifyAdminEvictionEvent;
+import com.ftn.sbnz.model.events.NotifyAdminForBillEvent;
+import com.ftn.sbnz.model.models.NotifyAdminForBill;
+import com.ftn.sbnz.model.models.NotifyAdminEviction;
 import com.ftn.sbnz.model.models.UserWarning;
 import com.ftn.sbnz.model.models.User;
 import com.ftn.sbnz.model.repository.NotifyAdminEvictionRepository;
 import com.ftn.sbnz.model.repository.NotifyAdminForBillRepository;
 import com.ftn.sbnz.model.repository.UserWarningRepository;
 import java.time.LocalDate;
+import java.util.Date;
 
 global com.ftn.sbnz.model.repository.UserWarningRepository userWarningRepository;
 global com.ftn.sbnz.model.repository.NotifyAdminEvictionRepository notifyAdminEvictionRepository;
@@ -17,29 +21,38 @@ global com.ftn.sbnz.model.repository.NotifyAdminForBillRepository notifyAdminFor
 
 
 rule "Notify Admin for Unpaid Bills"
+agenda-group "bills-cep"
     when
-        $monthyPayment:MonthlyPaymentEvent(
+        $monthyPayment:MonthlyPayment(
             $paymentDate:paymentDate,
             $user:user
         )
         eval($paymentDate.getMonth()== LocalDate.now().getMonth() &&  $paymentDate.getYear() == LocalDate.now().getYear())
-        //not($payment:BillPaidEvent(user==$user) over window:time(7d) from $paymentDate)
-        not(BillPaidEvent(this after[0d, 7d] $monthyPayment, user==$user))
+        not($payment:BillPaidEvent(user==$user, this after[0d, 7d] $paymentDate))
+        not(UserWarning(user==$user, date.getMonth() == LocalDate.now().getMonth(), date.getYear() == LocalDate.now().getYear()))
     then
-        NotifyAdminForBill notify=new NotifyAdminForBill($user,LocalDate.now());
-        notifyAdminForBillRepository.save(notify);
-        insert(notify);
+        System.out.println("Unpaid bill by " + $user.getId());
+        NotifyAdminForBillEvent notifyEvent=new NotifyAdminForBillEvent($user,LocalDate.now());
+        notifyAdminForBillRepository.save(notifyEvent);
+        insert(notifyEvent);
+        UserWarning userWarning=new UserWarning();
+        userWarning.setDate(LocalDate.now());
+        userWarning.setUser($user);
+        userWarningRepository.save(userWarning);
+        insert(notifyEvent);
 end
 
 rule "User warning paid"
+agenda-group "bills-cep"
     when
         $warning:UserWarning(
             $paymentDate:date,
             $user:user
         )
-         eval($paymentDate.getMonth()== LocalDate.now().getMonth() &&  $paymentDate.getYear() == LocalDate.now().getYear())
+        eval($paymentDate.getMonth()== LocalDate.now().getMonth() && $paymentDate.getYear() == LocalDate.now().getYear())
         $payment:BillPaidEvent(user==$user, this after[0d, 3d] $paymentDate)
     then
+        System.out.println("Warning removed for " + $user.getId());
         delete($warning);
         userWarningRepository.delete($warning);
 
@@ -47,16 +60,17 @@ end
 
 
 rule "User warning not paid"
+agenda-group "bills-cep"
     when
         $warning:UserWarning(
             $paymentDate:date,
             $user:user
         )
         eval($paymentDate.getMonth()== LocalDate.now().getMonth() &&  $paymentDate.getYear() == LocalDate.now().getYear())
-
         not($payment:BillPaidEvent(user==$user, this after[0d, 3d] $paymentDate))
     then
-        NotifyAdminEviction notify=new NotifyAdminEviction($user,LocalDate.now());
-        notifyAdminEvictionRepository.save(notify);
-        insert(notify);
+        System.out.println("Eviction for user " + $user.getId());
+        NotifyAdminEvictionEvent notifyEvent=new NotifyAdminEvictionEvent($user,LocalDate.now());
+        notifyAdminEvictionRepository.save(notifyEvent);
+        insert(notifyEvent);
 end

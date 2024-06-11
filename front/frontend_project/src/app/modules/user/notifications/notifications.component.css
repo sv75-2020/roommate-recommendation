@@ -1,0 +1,13 @@
+.notification-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0 auto;
+  width: 60%; 
+}
+
+.title{
+  text-align: center;
+  margin-top: 25px;
+  font-size: 27pt;
+}

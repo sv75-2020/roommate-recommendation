@@ -4,41 +4,62 @@ import com.ftn.sbnz.model.models.Reservation;
 import enums.ReservationStatus;
 import com.ftn.sbnz.model.events.DepositPaidEvent;
 import com.ftn.sbnz.model.events.DepositNotPaidEvent;
+import com.ftn.sbnz.model.models.DepositPaid;
+import com.ftn.sbnz.model.models.DepositNotPaid;
 import com.ftn.sbnz.model.events.UserBlockedEvent;
+import com.ftn.sbnz.model.events.NotifyAdminEvictionEvent;
 import java.time.LocalDate;
-import java.sql.Date;
+import java.util.Date
+import java.time.LocalDateTime
+
+global com.ftn.sbnz.model.repository.DepositNotPaidRepository depositNotPaidRepository;
+global com.ftn.sbnz.model.repository.DepositPaidRepository depositPaidRepository;
+global com.ftn.sbnz.model.repository.UserRepository userRepository;
+global com.ftn.sbnz.model.repository.ReservationRepository reservationRepository;
+global com.ftn.sbnz.model.repository.NotifyAdminEvictionRepository notifyAdminEvictionRepository;
+
 
 rule "Check reservation confirmation for roommate1"
+agenda-group "deposit-cep"
     when
-        $reservation : Reservation(paidDeposit == false, $user : roommates.getRoommate1(), $createdTime : created)
+        $reservation : Reservation(paidDeposit == false, $user : roommates.getRoommate1(), $createdTime : created, status==ReservationStatus.PENDING)
         not(DepositPaidEvent(this after[0d, 1d] $createdTime, user==$user))
     then
-        System.out.println("deposit not paid by roommate 1");
-        Date currentDate = Date.valueOf(LocalDate.now());
-        DepositNotPaidEvent depositNotPaidEvent = new DepositNotPaidEvent(1L, currentDate, $user);
+        System.out.println("deposit not paid by " + $user.getId());
+        Date currentDate = new Date();
+        DepositNotPaidEvent depositNotPaidEvent = new DepositNotPaidEvent();
+        depositNotPaidEvent.setUser($user);
+        depositNotPaidEvent.setPaymentDate(currentDate);
         insert(depositNotPaidEvent);
         modify($reservation) {
             setStatus(ReservationStatus.DENIED);
         }
+        reservationRepository.save($reservation);
 end
 
 rule "Check reservation confirmation for roommate2"
+agenda-group "deposit-cep"
     when
-        $reservation : Reservation(paidDeposit == false, $user : roommates.getRoommate2(), $createdTime : created)
+        $reservation : Reservation(paidDeposit == false, $user : roommates.getRoommate2(), $createdTime : created, status==ReservationStatus.PENDING)
         not(DepositPaidEvent(this after[0d, 1d] $createdTime, user==$user))
     then
-        System.out.println("deposit not paid by roommate 2");
-        Date currentDate = Date.valueOf(LocalDate.now());
-        DepositNotPaidEvent depositNotPaidEvent = new DepositNotPaidEvent(2L, currentDate, $user);
+        System.out.println("deposit not paid by " + $user.getId());
+        Date currentDate = new Date();
+        DepositNotPaidEvent depositNotPaidEvent = new DepositNotPaidEvent();
+        depositNotPaidEvent.setUser($user);
+        depositNotPaidEvent.setPaymentDate(currentDate);
+        depositNotPaidRepository.save(depositNotPaidEvent);
         insert(depositNotPaidEvent);
         modify($reservation) {
             setStatus(ReservationStatus.DENIED);
         }
+        reservationRepository.save($reservation);
 end
 
 rule "Block user if they have two or more DepositNotPaidEvent in last 30 days"
+agenda-group "deposit-cep"
     when
-        $user : User($userId : id)
+        $user : User($userId : id, blocked == false)
         accumulate(
             $event : DepositNotPaidEvent(user == $user)
             over window:time(30d);
@@ -46,11 +67,14 @@ rule "Block user if they have two or more DepositNotPaidEvent in last 30 days"
         )
         eval($count >= 2)
     then
-        Date currentDate = Date.valueOf(LocalDate.now());
-        UserBlockedEvent event = new UserBlockedEvent(1L, currentDate, $user);
+        LocalDate currentDate = LocalDate.now();
+        NotifyAdminEvictionEvent event = new NotifyAdminEvictionEvent($user, currentDate);
+
         insert(event);
-        System.out.println("blocked user");
+        notifyAdminEvictionRepository.save(event);
+        System.out.println("blocked user " + $user.getId());
         modify($user) {
             setBlocked(true);
         }
+        userRepository.save($user);
 end

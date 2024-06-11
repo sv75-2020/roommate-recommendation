@@ -1,0 +1,19 @@
+<h1 mat-dialog-title>Rate the ride</h1>
+<div mat-dialog-content>
+    <br>
+    <br>
+    <form [formGroup]="rateForm" >
+      <mat-form-field class="input" ngDefaultControl appearance="outline">
+        <mat-label>Comment</mat-label>
+        <input formControlName="accComment" matInput>
+      </mat-form-field>
+      <mat-form-field class="input" ngDefaultControl appearance="outline">
+        <mat-label>Rating</mat-label>
+        <input formControlName="accRating" matInput>
+      </mat-form-field>
+      <hr/>
+    </form>   
+</div>
+<div mat-dialog-actions>
+  <button (click)="rate()" style="background-color: orange;" mat-button mat-dialog-close >Rate</button>
+</div>

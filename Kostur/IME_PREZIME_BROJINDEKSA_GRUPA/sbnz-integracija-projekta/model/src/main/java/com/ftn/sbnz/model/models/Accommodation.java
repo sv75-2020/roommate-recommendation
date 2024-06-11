@@ -1,9 +1,6 @@
 package com.ftn.sbnz.model.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,5 +24,12 @@ public class Accommodation {
     private boolean smokingAllowed;
     private boolean parking;
     private boolean fastInternet;
+    private boolean closeToCenter;
+    private boolean closeToUni;
+    private boolean groundFloor;
+    private boolean topFloor;
+    private boolean hasElevator;
+    private boolean hasAc;
+    @ManyToOne
     private Location location;
 }

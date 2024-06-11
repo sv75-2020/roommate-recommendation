@@ -1,0 +1,148 @@
+.space-between{
+    display: flex;
+    justify-content: space-between;
+    width:100%;
+   margin-top: 3%;
+   right: 30px;
+}
+
+.picture{
+    width:100%;
+    height:100%;
+   
+}
+
+.infoDiv{
+    margin-top: 50px;
+    margin-left: 40px;
+    width:40%
+}
+
+.pictureDiv{
+    width:60%
+}
+
+.title{
+    font-size: 24pt;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.property-header h1 {
+    margin: 0;
+    font-size: 32px;
+}
+
+.property-header p {
+    font-size: 16px;
+    color: #666;
+}
+
+.location-icon {
+    color: #007bff;
+}
+
+.location-link {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.property-gallery {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.property-gallery .main-image img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+.thumbnail-images {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.thumbnail-images img {
+    width: 48%;
+    height: auto;
+    object-fit: cover;
+}
+
+.more-images {
+    width: 48%;
+    height: auto;
+    background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #007bff;
+    cursor: pointer;
+}
+
+.property-info {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.ratings h2 {
+    margin: 0;
+    font-size: 24px;
+    color: #333;
+}
+
+.rating-score {
+    font-size: 32px;
+    color: #007bff;
+}
+
+.review-summary {
+    max-width: 400px;
+}
+
+.review-summary blockquote {
+    font-style: italic;
+    color: #666;
+    margin: 0;
+}
+
+.reviews {
+    margin-top: 40px;
+}
+
+.reviews h3 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.review {
+    background-color: #f9f9f9;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+}
+
+.review blockquote {
+    margin: 0;
+    font-style: italic;
+    color: #666;
+}
+
+.review a {
+    color: #007bff;
+    text-decoration: none;
+}

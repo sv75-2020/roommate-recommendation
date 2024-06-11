@@ -1,12 +1,10 @@
 package com.ftn.sbnz.model.models;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 import enums.ReservationStatus;
 import lombok.AllArgsConstructor;
@@ -25,10 +23,23 @@ public class Reservation {
     private Long id;
     private LocalDate created;
     private boolean paidDeposit;
+    @ManyToOne
     private Accommodation accommodation;
+    @OneToOne
     private Roommates roommates;
+    @ManyToMany
     private List<Payment> payments;
+    @ManyToMany
     private List<DepositPayment> depositPayments;
     private ReservationStatus status;
 
+    public Reservation(LocalDate now, boolean b, Accommodation a1, Roommates rm1, ArrayList<Payment> payments, ArrayList<DepositPayment> depositPayments, ReservationStatus pending) {
+        this.created=now;
+        this.paidDeposit=b;
+        this.accommodation=a1;
+        this.roommates=rm1;
+        this.payments=payments;
+        this.depositPayments=depositPayments;
+        this.status=pending;
+    }
 }
