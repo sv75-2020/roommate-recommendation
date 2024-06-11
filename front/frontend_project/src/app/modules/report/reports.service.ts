@@ -18,10 +18,10 @@ export class ReportsService {
   }
 
   checkDeposits(): Observable<any>{
-    return this.http.get<any>(environment.apiHost+'/api/events/deposit')
+    return this.http.get<any>(environment.apiHost+'api/events/deposit')
   }
   checkBills() : Observable<any>{
-    return this.http.get<any>(environment.apiHost+'/api/events/bills')
+    return this.http.get<any>(environment.apiHost+'api/events/bills')
   }
 }
 
